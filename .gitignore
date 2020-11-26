@@ -1,0 +1,8 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+blogdown
+hugodown
+.DS_Store
+public/
