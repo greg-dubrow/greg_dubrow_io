@@ -17,9 +17,6 @@ organizations:
   url: https://www.berkeley.edu/
 role: Director of Information Strategy & Analytics, Haas School of Business, Development and Alumni Relations
 social:
-- icon: envelope
-  icon_pack: fas
-  link: /#contact
 - icon: github
   icon_pack: fab
   link: https://github.com/greg-dubrow
@@ -29,6 +26,9 @@ social:
 - icon: twitter
   icon_pack: fab
   link: https://twitter.com/greg_dubrow
+- icon: flickr
+  icon_pack: fab
+  link: https://www.flickr.com/photos/dannebrog/
 - icon: graduation-cap
   icon_pack: fas
   link: https://scholar.google.com/citations?user=zgZlz-QAAAAJ&hl
