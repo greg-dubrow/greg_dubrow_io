@@ -39,7 +39,7 @@ user_groups:
 - Principal Investigators
 ---
 
-I'm a data analyst/data scientist with experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. 
+I'm a data analyst/data scientist with experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. I work in r for everything from data import & cleaning, to analysis, modeling & viszualization. 
 
 In this space I'll mostly be posting results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work. All views expressed here are my own.
 
