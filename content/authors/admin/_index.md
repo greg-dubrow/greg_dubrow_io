@@ -1,50 +1,44 @@
 ---
-bio: My research interests include distributed robotics, mobile computing and programmable matter.
+bio: My research interests include college access & success, data science/analysis, data visauzlization.
 education:
   courses:
-  - course: PhD in Artificial Intelligence
-    institution: Stanford University
-    year: 2012
-  - course: MEng in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2009
-  - course: BSc in Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    year: 2008
+  - course: PhD, Higher Education
+    institution: University of Pennsylvania
+  - course: BA, Film & Media Communications
+    institution: Temple University
 email: ""
 highlight_name: false
 interests:
-- Artificial Intelligence
-- Computational Linguistics
-- Information Retrieval
+- Data analysis/data science
+- Post-secondary education access & equity 
+- r, data visualization
 organizations:
-- name: Stanford University
-  url: https://www.stanford.edu/
-role: Professor of Artificial Intelligence
+- name: University of California, Berkeley
+  url: https://www.berkeley.edu/
+role: Director of Information Strategy & Analytics, Haas School of Business, Development and Alumni Relations
 social:
 - icon: envelope
   icon_pack: fas
   link: /#contact
-- icon: twitter
-  icon_pack: fab
-  link: https://twitter.com/GeorgeCushen
-- icon: graduation-cap
-  icon_pack: fas
-  link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
 - icon: github
   icon_pack: fab
-  link: https://github.com/gcushen
+  link: https://github.com/greg-dubrow
 - icon: linkedin
   icon_pack: fab
-  link: https://www.linkedin.com/
+  link: https://www.linkedin.com/in/dubrowg/
+- icon: twitter
+  icon_pack: fab
+  link: https://twitter.com/greg_dubrow
+- icon: graduation-cap
+  icon_pack: fas
+  link: https://scholar.google.com/citations?user=zgZlz-QAAAAJ&hl
+
 superuser: true
-title: Nelson Bighetti
+title: Greg Dubrow
 user_groups:
 - Principal Investigators
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+I'm a data analyst/data scientist with specific experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. 
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
-
-{{< icon name="download" pack="fas" >}} Download my {{< staticref "media/demo_resume.pdf" "newtab" >}}resumé{{< /staticref >}}.
+In this space I'll mostly be posting results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work.
