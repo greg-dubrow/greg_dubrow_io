@@ -10,15 +10,13 @@ email: ""
 highlight_name: false
 interests:
 - Data analysis/data science, data visualization
-- Post-secondary education access & equity 
+- Post-secondary education; access & equity, admissions & college choice, development & alumni relations
+- Music, film, photography, cycling, 
 organizations:
 - name: University of California, Berkeley
   url: https://www.berkeley.edu/
 role: Director of Information Strategy & Analytics, Haas School of Business, Development and Alumni Relations
 social:
-- icon: envelope
-  icon_pack: fas
-  link: /#contact
 - icon: github
   icon_pack: fab
   link: https://github.com/greg-dubrow
@@ -31,6 +29,9 @@ social:
 - icon: graduation-cap
   icon_pack: fas
   link: https://scholar.google.com/citations?user=zgZlz-QAAAAJ&hl
+- icon: flickr
+  icon_pack: fab
+  link: https://www.flickr.com/photos/dannebrog/
 
 superuser: true
 title: Greg Dubrow
@@ -41,3 +42,5 @@ user_groups:
 I'm a data analyst/data scientist with experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. 
 
 In this space I'll mostly be posting results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work. All views expressed here are my own.
+
+Over the years I've made some music with [Gosta Berling](https://gostaberling.bandcamp.com/), [Slowness](https://slowness.bandcamp.com/) & [Big Still](https://bigstill.bandcamp.com/). My photography is at [Flickr](https://www.flickr.com/photos/dannebrog/)
