@@ -25,7 +25,7 @@ output:
 First, some text, and a picture of my cat Leo
 
 {{< figure src="leo_chair.jpg" title="Leo" >}}
-
+![Leo](leo_chair.jpg)
 
 Now, let's try some r code with a plot to see how things look
 
