@@ -2,15 +2,14 @@
 bio: My research interests include college access & success, data science/analysis, data visauzlization.
 education:
   courses:
-  - course: PhD, Higher Education
+  - course: MS & PhD, Higher Education
     institution: University of Pennsylvania
   - course: BA, Film & Media Communications
     institution: Temple University
 email: ""
 highlight_name: false
 interests:
-- Data analysis/data science
-- r, data visualization
+- Data analysis/data science, data visualization
 - Post-secondary education access & equity 
 organizations:
 - name: University of California, Berkeley
@@ -39,6 +38,6 @@ user_groups:
 - Principal Investigators
 ---
 
-I'm a data analyst/data scientist with specific experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. 
+I'm a data analyst/data scientist with experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. 
 
 In this space I'll mostly be posting results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work. All views expressed here are my own.
