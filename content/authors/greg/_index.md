@@ -41,7 +41,4 @@ user_groups:
 
 I'm a data analyst/data scientist with specific experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. 
 
-Currently I'm the Director of Information 
-
-# {{< icon name="download" pack="fas" >}} Download my {{< staticref "media/demo_resume.pdf" "newtab" 
-# >}}resumé{{< /staticref >}}.
+In this space I'll mostly be posting results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work.
