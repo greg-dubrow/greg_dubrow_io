@@ -10,8 +10,8 @@ email: ""
 highlight_name: false
 interests:
 - Data analysis/data science
-- Post-secondary education access & equity 
 - r, data visualization
+- Post-secondary education access & equity 
 organizations:
 - name: University of California, Berkeley
   url: https://www.berkeley.edu/
@@ -41,4 +41,4 @@ user_groups:
 
 I'm a data analyst/data scientist with specific experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. 
 
-In this space I'll mostly be posting results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work.
+In this space I'll mostly be posting results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work. All views expressed here are my own.
