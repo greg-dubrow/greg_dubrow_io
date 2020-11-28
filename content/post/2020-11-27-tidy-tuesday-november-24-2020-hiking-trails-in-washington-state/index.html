@@ -1,0 +1,293 @@
+---
+title: Tidy Tuesday, November 24, 2020 - Hiking Trails in Washington State
+author: Greg Dubrow
+date: '2020-11-27'
+slug: tidy-tuesday-november-24-2020-hiking-trails-in-washington-state
+categories: []
+tags:
+  - R
+  - rstats
+  - ggplot
+  - tidytuesday
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-11-27T22:52:49-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<div id="diving-deep-into-the-tidy-tuesday-pool" class="section level3">
+<h3>Diving deep into the Tidy Tuesday pool…</h3>
+<p>Every week I’m so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday</a>, the weekly data project that evolved out of the <a href="https://twitter.com/R4DScommunity">R4DS Learning Community</a>. And every week I say to myself, “I should really give it a go, grab the data and post some results”. Then life intervenes, work gets crazy, and before I know it…</p>
+<p>Well, this week, with some slack time and some inspiration I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up.</p>
+<p>Anyway, here’s the code and resulting charts. I’ve also got a <a href="https://github.com/greg-dubrow/">github repo</a> set up for <a href="https://github.com/greg-dubrow/tidy-tuesday-projects">tidytuesday projects</a>. Right now the only other completed work is the Maryland brdige set from 2018, that I only got around to finishing in March of 2020 during my week between job. Thought I’d get the blog set up then, but started a new job, pandemic lockdown and stresses…a post on that set coming soon, but you can always check out the <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2018/tt_2018-11-27_md_bridges">results on github</a>.</p>
+<pre class="r"><code># readin in data, create df for plots
+library(tidytuesdayR) # to load tidytuesday data
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what&#39;s happening to the data
+library(patchwork) # stitch plots together
+library(gt) # lets make tables
+library(RColorBrewer) # colors!
+library(scales) # format chart output</code></pre>
+</div>
+<div id="first-lets-read-in-the-file-using-the-tidytuesdayr-package.-well-also-look-at-the-raw-data" class="section level3">
+<h3>First let’s read in the file using the tidytuesdayR package. We’ll also look at the raw data</h3>
+<pre class="r"><code>tt_watrail &lt;- tt_load(&quot;2020-11-24&quot;)
+#&gt; 
+#&gt;  Downloading file 1 of 1: `hike_data.rds`
+
+glimpse(tt_watrail$hike_data)
+#&gt; Rows: 1,958
+#&gt; Columns: 8
+#&gt; $ name        &lt;chr&gt; &quot;Lake Hills Greenbelt&quot;, &quot;Snow Lake&quot;, &quot;Skookum Flats&quot;, &quot;Te…
+#&gt; $ location    &lt;chr&gt; &quot;Puget Sound and Islands -- Seattle-Tacoma Area&quot;, &quot;Snoqua…
+#&gt; $ length      &lt;chr&gt; &quot;2.3 miles, roundtrip&quot;, &quot;7.2 miles, roundtrip&quot;, &quot;7.8 mile…
+#&gt; $ gain        &lt;chr&gt; &quot;50&quot;, &quot;1800&quot;, &quot;300&quot;, &quot;1585&quot;, &quot;500&quot;, &quot;500&quot;, &quot;425&quot;, &quot;450&quot;, …
+#&gt; $ highpoint   &lt;chr&gt; &quot;330.0&quot;, &quot;4400.0&quot;, &quot;2550.0&quot;, &quot;2370.0&quot;, &quot;1000.0&quot;, &quot;2200.0&quot;…
+#&gt; $ rating      &lt;chr&gt; &quot;3.67&quot;, &quot;4.16&quot;, &quot;3.68&quot;, &quot;3.92&quot;, &quot;4.14&quot;, &quot;3.14&quot;, &quot;5.00&quot;, &quot;…
+#&gt; $ features    &lt;list&gt; [&lt;&quot;Dogs allowed on leash&quot;, &quot;Wildlife&quot;, &quot;Good for kids&quot;, …
+#&gt; $ description &lt;chr&gt; &quot;Hike through a pastoral area first settled and farmed in…</code></pre>
+</div>
+<div id="there-are-a-few-things-we-want-to-do-with-the-data-for-the-working-dataframe" class="section level3">
+<h3>There are a few things we want to do with the data for the working dataframe:</h3>
+<ul>
+<li>create columns for miles, direction, type from length</li>
+<li>create specific location columns frolm location</li>
+<li>change rating, gain and highpoint to numeric</li>
+<li>create a rating group</li>
+<li>change features to character vector, also unnest; makes the resulting df long. we’ll use distinct when we only need 1 obs per trail</li>
+</ul>
+<pre class="r"><code>tt_watraildf &lt;- tt_watrail$hike_data %&gt;%
+  mutate(length_miles = parse_number(length)) %&gt;%
+  mutate(across(gain:rating, as.numeric)) %&gt;%
+  mutate(rating_grp = case_when(rating == 0 ~ &quot;0&quot;,
+                                rating &gt;0 &amp; rating &lt; 2 ~ &quot;1&quot;,
+                                rating &gt;=2 &amp; rating &lt; 3 ~ &quot;2&quot;,
+                                rating &gt;=3 &amp; rating &lt; 4 ~ &quot;3&quot;,
+                                rating &gt;=4 &amp; rating &lt; 5 ~ &quot;4&quot;,
+                                rating == 5 ~ &quot;5&quot;)) %&gt;%
+  mutate(trail_type = case_when(grepl(&quot;roundtrip&quot;, length) ~ &quot;Round trip&quot;,
+                          grepl(&quot;one-way&quot;, length) ~ &quot;One Way&quot;,
+                          grepl(&quot;of trails&quot;, length) ~ &quot;Trails&quot;)) %&gt;% 
+  mutate(location_split = location) %&gt;%
+  separate(location_split, c(&quot;location_region&quot;,&quot;location_specific&quot;), sep = &#39; -- &#39;) %&gt;%
+  mutate(features = lapply(features, sort, na.last = TRUE)) %&gt;%
+  mutate(feature_v = sapply(features,FUN = function(x) if (all(is.na(x))) NA else paste(x,collapse = &quot;, &quot;))) %&gt;%
+  mutate(feature_v = str_trim(feature_v)) %&gt;%
+  mutate(features_unnest = features) %&gt;%
+  unnest(cols = c(features_unnest), keep_empty = TRUE) %&gt;% 
+  mutate(feature_v = ifelse(is.na(feature_v), &quot;none&quot;, feature_v)) %&gt;%
+  mutate(features_unnest = ifelse(is.na(features_unnest), &quot;none&quot;, features_unnest)) %&gt;%
+  mutate(feature_init = case_when(features_unnest == &quot;Dogs allowed on leash&quot; ~ &quot;DA&quot;,
+                                  features_unnest == &quot;Dogs not allowed&quot; ~ &quot;DN&quot;,
+                                  features_unnest == &quot;Wildlife&quot; ~ &quot;Wl&quot;,
+                                  features_unnest == &quot;Good for kids&quot; ~ &quot;GK&quot;,
+                                  features_unnest == &quot;Lakes&quot; ~ &quot;Lk&quot;,
+                                  features_unnest == &quot;Fall foliage&quot; ~ &quot;FF&quot;,
+                                  features_unnest == &quot;Ridges/passes&quot; ~ &quot;RP&quot;,
+                                  features_unnest == &quot;Established campsites&quot; ~ &quot;EC&quot;,
+                                  features_unnest == &quot;Mountain views&quot; ~ &quot;MV&quot;,
+                                  features_unnest == &quot;Old growth&quot; ~ &quot;OG&quot;,
+                                  features_unnest == &quot;Waterfalls&quot; ~ &quot;Wf&quot;,
+                                  features_unnest == &quot;Wildflowers/Meadows&quot; ~ &quot;WM&quot;,
+                                  features_unnest == &quot;Rivers&quot; ~ &quot;Ri&quot;,
+                                  features_unnest == &quot;Coast&quot; ~ &quot;Co&quot;,
+                                  features_unnest == &quot;Summits&quot; ~ &quot;Su&quot;)) %&gt;%
+  mutate(feature_init = ifelse(is.na(feature_init), &quot;none&quot;, feature_init)) %&gt;%
+  mutate(feature_type = if_else(feature_init %in% c(&quot;DA&quot;,&quot;DN&quot;,&quot;GK&quot;), &quot;Companion&quot;, &quot;Feature&quot;)) %&gt;%
+  mutate(feature_type = ifelse(feature_init == &quot;none&quot;, &quot;none&quot;, feature_type)) %&gt;%
+  group_by(name) %&gt;%
+  mutate(feature_n = n()) %&gt;%
+  ungroup() %&gt;%
+  mutate(feature_n = ifelse(feature_init == &quot;none&quot;, 0, feature_n)) %&gt;%
+  select(name, location_region, location_specific, trail_type, length_miles, 
+         gain, highpoint, rating, rating_grp, features, feature_v, features_unnest, 
+         feature_init, feature_type, feature_n, description, location, length)</code></pre>
+</div>
+<div id="to-get-a-sense-of-what-the-data-look-like-ill-run-some-historgrams-and-scatterplots-to-see-how-things-cluster-if-there-are-outliers-or-anything-else-especially-noticable." class="section level3">
+<h3>To get a sense of what the data look like, I’ll run some historgrams and scatterplots to see how things cluster, if there are outliers or anything else especially noticable.</h3>
+<p>Using log10 for the length scale to even out the spread. <a href="https://patchwork.data-imaginist.com/">Patchwork</a> stitches the plots together in a neat panel.</p>
+<pre class="r"><code>hist_length &lt;-
+tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  ggplot(aes(length_miles)) +
+  geom_histogram(alpha = 0.8) +
+  scale_x_log10() +
+  labs(x = &quot;Length (miles), log10&quot;)
+
+hist_gain &lt;-
+  tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  ggplot(aes(gain)) +
+  geom_histogram(alpha = 0.8) +
+  scale_x_log10()
+
+hist_high &lt;-
+  tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  ggplot(aes(highpoint)) +
+  geom_histogram(alpha = 0.8) 
+
+hist_rate &lt;-
+  tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  ggplot(aes(rating)) +
+  geom_histogram(alpha = 0.8) 
+
+(hist_length | hist_gain) /
+  (hist_high | hist_rate)</code></pre>
+<p><img src="images/tt_watr01-1.png" width="100%" />
+For the scatterplots, I plotted length by gain, faceting by ratings groups and then by region. We do have to be careful with ratings, as they are user-generated and some trails have very few votes. Log10 used again for length.</p>
+<pre class="r"><code>
+tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  ggplot(aes(length_miles, gain)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  labs(x = &quot;Length (miles) log10&quot;, y = &quot;Total Gain&quot;,
+       title = &quot;Length v Gain, by Rating Group&quot;) +
+  facet_wrap(vars(rating_grp))</code></pre>
+<p><img src="images/tt_watr02-1.png" width="100%" /></p>
+<pre class="r"><code>
+tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  ggplot(aes(length_miles, gain)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_log10() +
+  labs(x = &quot;Length (miles) log 10&quot;, y = &quot;Total Gain&quot;,
+       title = &quot;Length v Gain, by Region&quot;) +
+  facet_wrap(vars(location_region))</code></pre>
+<p><img src="images/tt_watr02-2.png" width="100%" /></p>
+<p>The outliers in terms of gain &amp; length clustered in a few regions, so I wanted to see which they were. Not a surprise they clustered in the Cascades &amp; Rainier.</p>
+<pre class="r"><code>tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  filter(gain &gt; 15000) %&gt;%
+  filter(length_miles &gt; 90) %&gt;%
+  select(location_region, name, length_miles, gain) %&gt;%
+  arrange(name) 
+#&gt; # A tibble: 5 x 4
+#&gt;   location_region    name                                     length_miles  gain
+#&gt;   &lt;chr&gt;              &lt;chr&gt;                                           &lt;dbl&gt; &lt;dbl&gt;
+#&gt; 1 Southwest Washing… Pacific Crest Trail (PCT) Section H - B…         148. 27996
+#&gt; 2 South Cascades     Pacific Crest Trail (PCT) Section I - W…          99  17771
+#&gt; 3 Central Cascades   Pacific Crest Trail (PCT) Section K - S…         117  26351
+#&gt; 4 North Cascades     Pacific Northwest Trail - Pasayten Trav…         119  21071
+#&gt; 5 Mount Rainier Area Wonderland Trail                                  93  22000</code></pre>
+</div>
+<div id="now-that-we-see-how-the-length-gain-highpoint-ratings-spread-out-i-want-build-a-table-to-see-the-averages-by-region." class="section level3">
+<h3>Now that we see how the length, gain, highpoint &amp; ratings spread out, I want build a table to see the averages by region.</h3>
+<p>I’ve been wanting to take a deeper dive into <a href="https://gt.rstudio.com/">gt</a> &amp; <a href="https://glin.github.io/reactable/">reactable</a>. Since I’m doing this as a markdown doc &amp; not HTML, I’ll output using gt here. I’ve got some basic gt calls down, this excercise is all about conditionally formatting columns based on value. So inspired by <a href="https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables">Thomas Mock’s gt primer</a>, a basic table with heatmap-like formatting for some columns. See his explainer for details on the code, and for more features than I’m including.</p>
+<pre class="r"><code># create by region averages df
+byregion &lt;-  tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  group_by(location_region) %&gt;%
+  summarise(n_region = n(),
+            avglength = mean(length_miles),
+            avgrating = mean(rating),
+            avggain = mean(gain),
+            avghigh = mean(highpoint),
+            minhigh = min(highpoint),
+            maxhigh = max(highpoint)) %&gt;%
+  mutate_at(vars(avglength:avgrating), round, 2) %&gt;%
+  mutate_at(vars(avggain:avghigh), round, 0) 
+
+# create table - code commented out so html doesn&#39;t show up in md output. 
+# image saved from tt_20201124_watrails.r code
+# byregion %&gt;%
+#   gt() %&gt;%
+#   fmt_number(columns = vars(avggain, avghigh, minhigh, maxhigh), decimals = 0, use_seps = TRUE) %&gt;%
+  # sets the columns and palette to format cell color by value range
+  # data_color(
+  #   columns = vars(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),
+  #   colors = scales::col_numeric(
+  #     palette = c(&quot;#ffffff&quot;, &quot;#f2fbd2&quot;, &quot;#c9ecb4&quot;, &quot;#93d3ab&quot;, &quot;#35b0ab&quot;),
+  #     domain = NULL)) %&gt;%
+  # tab_style calls add border boxes first to column labels, then body cells
+  # tab_style(
+  #   style = list(
+  #     cell_borders(
+  #       sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
+  #   locations = list(
+  #     cells_column_labels(
+  #       columns = gt::everything()
+  #       ))) %&gt;%
+  # tab_style(
+  #   style = list(
+  #     cell_borders(
+  #       sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
+  #   locations = list(
+  #     cells_body(
+  #       rows = gt::everything()
+  #     ))) %&gt;%
+  #   cols_align(columns = TRUE, align = &quot;center&quot;) %&gt;%
+  # cols_align(columns = &quot;location_region&quot;, align = &quot;left&quot;) %&gt;%
+  # tab_header(title = &quot;Regional Averages&quot;,
+  #            subtitle = md(&quot;_North Cascades have longest trails, 
+  #                          all mountain areas have lots of gain and highest points_&quot;)) %&gt;%
+#  cols_label(location_region = &quot;Region&quot;, n_region = &quot;N&quot;, avglength = &quot;Avg Length (miles)&quot;,
+#            avgrating = &quot;Avg Rating&quot;, avggain = &quot;Avg Gain (ft)&quot;,avghigh = &quot;Avg Highpoint&quot;,
+#             minhigh = &quot;Lowest high point&quot;, maxhigh = &quot;Max high point&quot;)</code></pre>
+<p><img src="tt11242020_gtavgbyregion.png" /></p>
+</div>
+<div id="now-lets-look-at-the-effect-of-trail-features-on-rating." class="section level3">
+<h3>Now let’s look at the effect of trail features on rating.</h3>
+<p>First we’ll look at average rating by feature, then fit a model.
+First, a scatter-plot of number of features listed for a trail with user rating. Looks like at a certain point, it’s diminshing returns on trail features in terms of effect on rating.</p>
+<pre class="r"><code>
+tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) %&gt;%
+  ggplot(aes(feature_n, rating)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x = &quot;# of features on a trail&quot;, y = &quot;User rating&quot;,
+       title = &quot;Features and Rating by Trail Region&quot;) +
+  facet_wrap(vars(location_region))</code></pre>
+<p><img src="images/tt_watr05-1.png" width="100%" /></p>
+<p>Here’s a table similar to the one for averages by region. I used the unnested features, so trails will be represented more than once. While dog-free trails do get the highest ratings, it’s likely because they’re the highest, so offer views and challenge and get good ratings.
+<img src="tt11242020_gtavgbyfeature.png" /></p>
+</div>
+<div id="and-finally-a-quick-model-to-see-what-might-affect-a-trail-rating." class="section level3">
+<h3>And finally a quick model to see what might affect a trail rating.</h3>
+<p>It’s a simple linear model using length, gain, highpoint, &amp; number of features to predict rating. The elevation of the highest point and number of features are both significant. I’d need to do more digging to see what the power of the estimate is on the rating. It’s also slightly counter-intuitive given that we saw in the charts that length, elevation and gain seem to positively affect rating. But then the model only accounts for 4% of varaince, so it’s not telling us much.</p>
+<pre class="r"><code>
+# creat df with distinct observations for each trail 
+tt_watraildf_dist &lt;- tt_watraildf %&gt;%
+  distinct(name, .keep_all = TRUE) 
+
+wtmodel1 &lt;- lm(rating ~ length_miles + gain + highpoint + feature_n, data = tt_watraildf_dist)
+summary(wtmodel1)
+#&gt; 
+#&gt; Call:
+#&gt; lm(formula = rating ~ length_miles + gain + highpoint + feature_n, 
+#&gt;     data = tt_watraildf_dist)
+#&gt; 
+#&gt; Residuals:
+#&gt;     Min      1Q  Median      3Q     Max 
+#&gt; -3.6984 -0.3776  0.3716  0.9284  2.4565 
+#&gt; 
+#&gt; Coefficients:
+#&gt;                Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)   2.205e+00  8.942e-02  24.663  &lt; 2e-16 ***
+#&gt; length_miles -6.565e-03  5.678e-03  -1.156    0.248    
+#&gt; gain         -3.590e-05  3.100e-05  -1.158    0.247    
+#&gt; highpoint     8.318e-05  1.742e-05   4.775 1.93e-06 ***
+#&gt; feature_n     1.272e-01  1.484e-02   8.576  &lt; 2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+#&gt; 
+#&gt; Residual standard error: 1.398 on 1919 degrees of freedom
+#&gt; Multiple R-squared:  0.0488, Adjusted R-squared:  0.04682 
+#&gt; F-statistic: 24.61 on 4 and 1919 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Plenty more to do with the set, and some responses I’ve seen have been creative…network graphs, better models…but I was able to brush up on gt, learned how to unnest and keep obs where the list was empty. So a successful #tudytuesday</p>
+</div>
