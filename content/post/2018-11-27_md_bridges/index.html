@@ -1,0 +1,235 @@
+---
+title: Tidy Tuesday, November 27, 2018 - Maryland Bridges
+author: Greg Dubrow
+date: '2020-11-29'
+slug: tidy-tuesday-november-27-2018-maryland-bridges
+categories:
+  - post
+tags:
+  - R
+  - rstats
+  - ggplot
+  - tidytuesday
+subtitle: ''
+summary: 'Exploring the #tidytuesday dataset for 11-27-2018'
+authors: []
+#lastmod: '2020-11-29T07:46:54-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<pre class="r"><code># readin in data, create df for plots
+library(tidytuesdayR) # to load tidytuesday data
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what&#39;s happening to the data
+library(patchwork) # stitch plots together
+library(gt) # lets make tables
+library(RColorBrewer) # colors!
+library(scales) # format chart output</code></pre>
+<div id="first-lets-read-in-the-file-from-the-raw-data-file-on-github" class="section level3">
+<h3>First let’s read in the file from the raw data file on github</h3>
+<pre class="r"><code>tt_balt_gh &lt;-
+read_csv(&quot;https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2018/2018-11-27/baltimore_bridges.csv&quot;,
+         progress = show_progress())</code></pre>
+</div>
+<div id="organize-and-clean-the-data-for-analysis" class="section level3">
+<h3>Organize and clean the data for analysis</h3>
+<ul>
+<li>clean up some date and name issues</li>
+<li>a decade-built field, factored for sorting</li>
+<li>time since last inspection</li>
+</ul>
+<pre class="r"><code>
+# keeping the comparison date March 21 when I originally did analysis
+today &lt;- as.Date(c(&quot;2020-03-21&quot;))
+#Sys.Date()
+today_yr &lt;- as.numeric(format(today, format=&quot;%Y&quot;))
+
+tt_mdbrdf &lt;- as.data.frame(tt_balt_gh) %&gt;%
+  mutate(age = today_yr - yr_built) %&gt;%
+  #  mutate(vehicles_n = as.numeric(str_remove(vehicles, &quot; vehicles&quot;)))
+  ## not needed, avg_daily_traffic has same info
+  mutate(inspection_yr = inspection_yr + 2000) %&gt;%
+  mutate(county = ifelse(county == &quot;Baltimore city&quot;, &quot;Baltimore City&quot;, county)) %&gt;%
+  mutate(county = str_replace(county, &quot; County&quot;, &quot;&quot;)) %&gt;%
+  mutate(bridge_condition = factor(bridge_condition, levels = c(&quot;Good&quot;, &quot;Fair&quot;, &quot;Poor&quot;))) %&gt;%
+  mutate(decade_built = case_when(yr_built &lt;= 1899 ~ &quot;pre 1900&quot;, 
+                                  yr_built &gt;= 1900 &amp; yr_built &lt;1910 ~ &quot;1900-09&quot;,
+                                  yr_built &gt;= 1910 &amp; yr_built &lt;1920 ~ &quot;1910-19&quot;,
+                                  yr_built &gt;= 1920 &amp; yr_built &lt;1930 ~ &quot;1920-29&quot;,
+                                  yr_built &gt;= 1930 &amp; yr_built &lt;1940 ~ &quot;1930-39&quot;,
+                                  yr_built &gt;= 1940 &amp; yr_built &lt;1950 ~ &quot;1940-49&quot;,
+                                  yr_built &gt;= 1950 &amp; yr_built &lt;1960 ~ &quot;1950-59&quot;,
+                                  yr_built &gt;= 1960 &amp; yr_built &lt;1970 ~ &quot;1960-69&quot;,
+                                  yr_built &gt;= 1970 &amp; yr_built &lt;1980 ~ &quot;1970-79&quot;,
+                                  yr_built &gt;= 1980 &amp; yr_built &lt;1990 ~ &quot;1980-89&quot;,
+                                  yr_built &gt;= 1990 &amp; yr_built &lt;2000 ~ &quot;1990-99&quot;,
+                                  yr_built &gt;= 2000 &amp; yr_built &lt;2010 ~ &quot;2000-09&quot;,
+                                  TRUE ~ &quot;2010-19&quot;)) %&gt;%
+  mutate(decade_built = factor(decade_built, levels = 
+                                 c(&quot;pre 1900&quot;, &quot;1900-09&quot;, &quot;1910-19&quot;, &quot;1920-29&quot;, &quot;1930-39&quot;,
+                                   &quot;1940-49&quot;, &quot;1950-59&quot;, &quot;1960-69&quot;, &quot;1970-79&quot;, 
+                                   &quot;1980-89&quot;, &quot;1990-99&quot;, &quot;2000-09&quot;, &quot;2010-19&quot;))) %&gt;%
+  mutate(inspect_mmyy = ISOdate(year = inspection_yr, month = inspection_mo, day = &quot;01&quot;)) %&gt;%
+  mutate(inspect_mmyy = as.Date(inspect_mmyy, &quot;%m/%d/%y&quot;)) %&gt;%
+  mutate(inspect_days = today - inspect_mmyy) %&gt;%
+  mutate(inspect_daysn = as.numeric(inspect_days)) %&gt;%
+  mutate(inspect_years = inspect_daysn/ 365.25) %&gt;%
+  mutate(inspect_months = inspect_daysn / 30.417)</code></pre>
+</div>
+<div id="first-few-charts-look-at-bridges-built-by-decade-the-condition-of-all-bridges-by-county-and-how-long-since-last-inspection." class="section level3">
+<h3>First few charts look at bridges built by decade, the condition of all bridges by county, and how long since last inspection.</h3>
+<p>Peak bridge-biulding in Maryland was 19502 through 1990s, with a significant drop since then.</p>
+<pre class="r"><code>tt_mdbrdf %&gt;% 
+  mutate(county = str_replace(county, &quot; County&quot;, &quot;&quot;)) %&gt;%
+  count(decade_built) %&gt;%
+  ggplot(aes(decade_built, n)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;navy&quot;) +
+  geom_text(aes(label = n), color = &quot;white&quot;, vjust = 1.2) +
+  labs(title = &quot;Bridges built by decade&quot; ,
+        x = &quot;&quot;, y = &quot;&quot;) +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())</code></pre>
+<p><img src="images/tt_mdbr01-1.png" width="100%" /></p>
+<p>Baltimore City has the lowest percentage of bridges in good condition, Anne Arundel the most. Baltimore City &amp; Harford County seems to have the largest percentage of bridges in poor condition.</p>
+<pre class="r"><code>## percent bridge condition by county
+# need to create df object to do subset label call in bar chart
+brcondcty &lt;- 
+tt_mdbrdf %&gt;%
+  count(county, bridge_condition) %&gt;%
+  group_by(county) %&gt;%
+  mutate(pct = n / sum(n)) %&gt;%
+  ungroup() 
+
+ggplot(brcondcty, aes(x = county, y = pct, fill = bridge_condition)) +
+  geom_bar(stat = &quot;identity&quot;) +
+  geom_text(data = subset(brcondcty, bridge_condition != &quot;Poor&quot;), 
+            aes(label = percent(pct)), position = &quot;stack&quot;, 
+            color= &quot;#585858&quot;, vjust = 1, size = 3.5) +
+  scale_y_continuous(label = percent_format()) +
+  labs(title = &quot;Percent bridge condition by county&quot; , 
+        x = &quot;&quot;, y = &quot;&quot;, fill = &quot;Bridge Condition&quot;) +
+  scale_fill_brewer(type = &quot;seq&quot;, palette = &quot;Blues&quot;) +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())</code></pre>
+<p><img src="images/tt_mdbr02-1.png" width="100%" /></p>
+<p>Give the condition percentages, no surprise that Baltimore County &amp; City and Harford County bridges are older than in other counties.</p>
+<pre class="r"><code>## median age of bridges by county
+tt_mdbrdf %&gt;%
+  group_by(county) %&gt;%
+  summarise(medage = median(age)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(x = county, y = medage)) +
+  geom_bar(stat = &quot;identity&quot;, fill= &quot;navy&quot;) +
+  geom_text(aes(label = round(medage, digits = 1)), 
+            size = 5, color = &quot;white&quot;, vjust = 1.6) +
+  ylim(0, 60) +
+  labs(title = &quot;Median bridge age by county&quot; , 
+        x = &quot;&quot;, y = &quot;&quot;) +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())</code></pre>
+<p><img src="images/tt_mdbr03-1.png" width="100%" /></p>
+<p>It’s somewhat reassuring then that Baltimore City bridges at least have less time in months since last inspection than do the counties.</p>
+<pre class="r"><code>
+## median months since last inspection by county
+tt_mdbrdf %&gt;%
+  group_by(county) %&gt;%
+  summarise(medinsp = median(inspect_months)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(x = county, y = medinsp)) +
+  geom_bar(stat = &quot;identity&quot;, fill= &quot;navy&quot;) +
+  geom_text(aes(label = round(medinsp, digits = 1)), 
+            size = 5, color = &quot;white&quot;, vjust = 1.6) +
+  ylim(0, 60) +
+  labs(title = &quot;Median months since last inspection, by county&quot;,
+       subtitle = &quot;as of March 2020&quot;,
+       x = &quot;&quot;, y = &quot;&quot;) +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())</code></pre>
+<p><img src="images/tt_mdbr04-1.png" width="100%" /></p>
+<p>It might be the outliers pulling the smoothing line straight, but doesn’t seem to be too much of a relartionship between age and time since last inspection.</p>
+<pre class="r"><code>## age by months since last inspection
+tt_mdbrdf %&gt;%
+  ggplot(aes(inspect_months, age)) +
+  geom_point(color = &quot;navy&quot;) +
+  geom_smooth() +
+  labs(x = &quot;Months since last inspection (as of March 2020)&quot;,
+       y = &quot;Age _(in years)_&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="images/tt_mdbr05-1.png" width="100%" /></p>
+<p>And in fact, removing the outliers shows a slight relationship; the older bridges do seem to get inspected more frequently. In terms of a better visualization, looking at this again, I wonder if some jittering or another type of plot might have been more visually appealing, givne the clustering of most recent inspections.</p>
+<pre class="r"><code># same but outliers removed
+tt_mdbrdf %&gt;%
+  filter(age &lt;150, inspect_months &lt;60) %&gt;%
+  ggplot(aes(inspect_months, age)) +
+  geom_point(color = &quot;navy&quot;) +
+  geom_smooth() +
+  labs(title = &quot;Months since inspection, outliers removed&quot;, 
+       x = &quot;Months since last inspection (as of March 2020)&quot;,
+       y = &quot;Age _(in years)_&quot;) +
+  theme_minimal()</code></pre>
+<p><img src="images/tt_mdbr06-1.png" width="100%" /></p>
+<p>Not sure if scatter-plot with colors by county is best way to go for this idea. Maybe a tree map?</p>
+<pre class="r"><code># same but colors by county
+tt_mdbrdf %&gt;%
+  ggplot(aes(inspect_months, age, color = county)) +
+  geom_point() +
+  scale_color_brewer(palette=&quot;Dark2&quot;) +
+  labs(title = &quot;Months since last inspection (from current date)&quot;, 
+       x = &quot;Months since last inspection (from current date)&quot;,
+       y = &quot;Age (in years)&quot;) +
+  theme_minimal() +
+  theme(legend.position = c(.8, .95),
+        legend.justification = c(&quot;right&quot;, &quot;top&quot;),
+        legend.box.just = &quot;right&quot;,
+        legend.margin = margin(6, 6, 6, 6))</code></pre>
+<p><img src="images/tt_mdbr07-1.png" width="100%" /></p>
+<p>Funky distributions here…Anne Arundel &amp; Baltimore City have the highest median daily riders, but Howard County’s upper quartile is way out there.</p>
+<pre class="r"><code># median &amp; interquartiles of daily riders of bridges by county -
+tt_mdbrdf %&gt;%
+  group_by(county) %&gt;%
+  summarise(medtraf = median(avg_daily_traffic),
+            lq = quantile(avg_daily_traffic, 0.25),
+            uq = quantile(avg_daily_traffic, 0.75)) %&gt;%
+  ungroup() %&gt;%
+  ggplot(aes(county, medtraf)) +
+  geom_linerange(aes(ymin = lq, ymax = uq), size = 2, color = &quot;navy&quot;) +
+  geom_point(size = 3, color = &quot;orange&quot;, alpha = .8) +
+  geom_text(aes(label = comma(medtraf, digits = 0)), 
+            size = 4, color = &quot;orange&quot;, hjust = 1.2) +
+  geom_text(aes(y = uq, label = comma(uq, digits = 0)), 
+            size = 4, color = &quot;navy&quot;, hjust = 1.2) +
+  geom_text(aes(y = lq, label = comma(lq, digits = 0)), 
+            size = 4, color = &quot;navy&quot;, hjust = 1.2) +
+  scale_y_continuous(label = comma) +
+  labs(title = &quot;Median &amp; interquartile ranges of average daily riders per bridge, by county&quot; , 
+       x = &quot;&quot;, y = &quot;&quot;) +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())</code></pre>
+<p><img src="images/tt_mdbr08-1.png" width="100%" /></p>
+<p>As with the other scatterplot with colors for county, might need a different way to see relationship between bridge age and daily traffic by county.</p>
+<pre class="r"><code>## age by avg daily riders by county
+tt_mdbrdf %&gt;%
+  ggplot(aes(avg_daily_traffic, age, color = county)) +
+  geom_point() +
+  scale_color_brewer(palette=&quot;Dark2&quot;) +
+  scale_x_continuous(labels = comma) +
+  labs(title = &quot;Average daily traffic per bridge, by county&quot; , 
+        x = &quot;Average daily traffic&quot;,
+       y = &quot;Age (in years)&quot;) +
+  theme_minimal() +
+  theme(legend.position = c(.75, .95),
+        legend.justification = c(&quot;right&quot;, &quot;top&quot;),
+        legend.box.just = &quot;right&quot;,
+        legend.margin = margin(6, 6, 6, 6))</code></pre>
+<p><img src="images/tt_mdbr09-1.png" width="100%" /></p>
+<p><em>This post was last updated on 2020-11-29</em></p>
+</div>

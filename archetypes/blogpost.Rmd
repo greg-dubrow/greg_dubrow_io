@@ -13,3 +13,27 @@ output:
 always_allow_html: yes
 image: ""
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "images/",
+  out.width = "100%") 
+```
+
+```{r pkg load, message=FALSE, ECHO = TRUE}
+# readin in data, create df for plots
+library(tidytuesdayR) # to load tidytuesday data
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(patchwork) # stitch plots together
+library(gt) # lets make tables
+library(RColorBrewer) # colors!
+library(scales) # format chart output
+```
+
+### First let's read in the file using the tidytuesdayR package. We'll also look at the raw data
+
+
+_This post was last updated on `r format(Sys.Date(), "%Y-%m-%d")`_
