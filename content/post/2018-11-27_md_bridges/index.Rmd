@@ -22,6 +22,8 @@ image:
 projects: []
 ---
 
+This dataset was posted to the [#TidyTuesday repo](https://github.com/rfordatascience/tidytuesday) back in [November 2018](https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-11-27). I worked on it a bit then, but didn't properly finish it until March of 2020. With the blog finally set up figured I might as well post it as an entry. 
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
