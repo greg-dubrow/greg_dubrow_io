@@ -4,6 +4,7 @@ author: Greg Dubrow
 date: '2020-11-27'
 slug: tidy-tuesday-november-24-2020-hiking-trails-in-washington-state
 codefolding_nobutton: false
+codefolding_show: hide
 categories: [post]
 tags:
   - R
