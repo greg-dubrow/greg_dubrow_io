@@ -3,6 +3,8 @@ title: Tidy Tuesday, November 24, 2020 - Hiking Trails in Washington State
 author: Greg Dubrow
 date: '2020-11-27'
 slug: tidy-tuesday-november-24-2020-hiking-trails-in-washington-state
+codefolding_nobutton: false
+codefolding_show: hide
 categories: [post]
 tags:
   - R
@@ -66,7 +68,8 @@ glimpse(tt_watrail$hike_data)
 <li>create a rating group</li>
 <li>change features to character vector, also unnest; makes the resulting df long. we’ll use distinct when we only need 1 obs per trail</li>
 </ul>
-<pre class="r"><code>tt_watraildf &lt;- tt_watrail$hike_data %&gt;%
+<pre class="r"><code># echo = TRUE, warning=FALSE, message = FALSE, error= FALSE
+tt_watraildf &lt;- tt_watrail$hike_data %&gt;%
   mutate(length_miles = parse_number(length)) %&gt;%
   mutate(across(gain:rating, as.numeric)) %&gt;%
   mutate(rating_grp = case_when(rating == 0 ~ &quot;0&quot;,
@@ -111,7 +114,10 @@ glimpse(tt_watrail$hike_data)
   mutate(feature_n = ifelse(feature_init == &quot;none&quot;, 0, feature_n)) %&gt;%
   select(name, location_region, location_specific, trail_type, length_miles, 
          gain, highpoint, rating, rating_grp, features, feature_v, features_unnest, 
-         feature_init, feature_type, feature_n, description, location, length)</code></pre>
+         feature_init, feature_type, feature_n, description, location, length)
+#&gt; Warning: Expected 2 pieces. Missing pieces filled with `NA` in 38 rows [34, 73,
+#&gt; 271, 306, 537, 559, 599, 652, 672, 708, 718, 749, 799, 800, 835, 836, 889, 1014,
+#&gt; 1033, 1100, ...].</code></pre>
 </div>
 <div id="to-get-a-sense-of-what-the-data-look-like-ill-run-some-historgrams-and-scatterplots-to-see-how-things-cluster-if-there-are-outliers-or-anything-else-especially-noticable." class="section level3">
 <h3>To get a sense of what the data look like, I’ll run some historgrams and scatterplots to see how things cluster, if there are outliers or anything else especially noticable.</h3>
@@ -290,5 +296,5 @@ summary(wtmodel1)
 #&gt; Multiple R-squared:  0.0488, Adjusted R-squared:  0.04682 
 #&gt; F-statistic: 24.61 on 4 and 1919 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Plenty more to do with the set, and some responses I’ve seen have been creative…network graphs, better models…but I was able to brush up on gt, learned how to unnest and keep obs where the list was empty. So a successful #tudytuesday</p>
-<p><em>This post was last updated on 2020-11-29</em></p>
+<p><em>This post was last updated on 2020-11-30</em></p>
 </div>
