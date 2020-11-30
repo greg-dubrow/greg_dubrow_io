@@ -9,3 +9,13 @@
 
 #blogdown::serve_site()
 blogdown::stop_server()
+
+
+#### re: code folding
+# from https://www.jepusto.com/code-folding-update/
+# The above parameters are defaults for your entire site.
+# To over-ride the defaults, you can also set the parameters in the YAML header of any post:
+#
+# 	Set disable_codefolding: true to turn off code folding for the post.
+# Set codefolding_show: hide to hide the code blocks in the post (as in this post).
+# Set codefolding_nobutton: true to turn off the “Show/hide code” button at the top of the post (as in the present post).
