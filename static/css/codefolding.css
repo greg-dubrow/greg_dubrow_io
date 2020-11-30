@@ -3,7 +3,7 @@
 /* Each code block button */
 .code-folding-btn {
     margin-bottom: 4px;
-	float: right;
+	     float: right;
 }
 .row {
     display: flex;
