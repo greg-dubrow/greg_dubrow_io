@@ -27,10 +27,10 @@ projects: []
 
 Every week I'm so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from [#TidyTuesday](https://github.com/rfordatascience/tidytuesday), the weekly data project that evolved out of the [R4DS Learning Community](https://twitter.com/R4DScommunity). And every week I say to myself, "I should really give it a go, grab the data and post some results". Then life intervenes, work gets crazy, and before I know it...
 
-Well, around Thanksgiving, with some slack time and some inspiration, I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up. 
+Well, around Thanksgiving, with some slack time and some inspiration, I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up. My [github repo](https://github.com/greg-dubrow/) has a folder for any [tidytuesday projects](https://github.com/greg-dubrow/tidy-tuesday-projects) I get around to. 
 
-Here's the code and resulting charts & tables. I've got a [github repo](https://github.com/greg-dubrow/) set up for [tidytuesday projects](https://github.com/greg-dubrow/tidy-tuesday-projects). 
 
+Here's the code and resulting charts & tables. 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -116,7 +116,7 @@ tt_watraildf <- tt_watrail$hike_data %>%
 ```
 
 ### To get a sense of what the data look like, I'll run some historgrams and scatterplots to see how things cluster, if there are outliers or anything else especially noticable.
-Using log10 for the length scale to even out the spread. [Patchwork](https://patchwork.data-imaginist.com/) stitches the plots together in a neat panel.
+Using log10 for the length scale to even out the spread. The [`patchwork` package](https://patchwork.data-imaginist.com/) stitches the plots together in a neat panel.
 ```{r tt_watr01, fig.width=7.5, fig.height=4.0, dpi = 300, echo = TRUE, warning=FALSE, message = FALSE, error= FALSE }
 hist_length <-
 tt_watraildf %>%
