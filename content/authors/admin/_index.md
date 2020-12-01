@@ -11,7 +11,7 @@ highlight_name: false
 interests:
 - Data analysis/data science, data visualization
 - Post-secondary education; access & equity, admissions & college choice, development & alumni relations
-- Music, film, photography, cycling, 
+- Music, film, photography, cycling 
 organizations:
 - name: University of California, Berkeley
   url: https://www.berkeley.edu/
