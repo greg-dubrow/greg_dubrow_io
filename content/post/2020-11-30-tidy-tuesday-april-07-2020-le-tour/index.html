@@ -1,0 +1,218 @@
+---
+title: Tidy Tuesday, April 07, 2020 - Le Tour! (cleaning the data)
+author: Greg Dubrow
+date: '2020-11-30'
+slug: tidy-tuesday-april-07-2020-le-tour
+categories:
+  - post
+tags:
+  - R
+  - rstats
+  - tidytuesday
+  - tour de france
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-11-30T16:34:40-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<div id="a-mountain-of-data-about-the-tour-de-france" class="section level3">
+<h3>A mountain of data about the Tour de France…</h3>
+<p>Having looked at <a href="https://www.gregdubrow.io/2020/11/27/tidy-tuesday-november-24-2020-hiking-trails-in-washington-state/">hiking trails in Washington state</a> and <a href="https://www.gregdubrow.io/2020/11/29/tidy-tuesday-november-27-2018-maryland-bridges/">bridges in Maryland</a> I poked around the <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday repo</a> and saw this <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-04-07">trove of data</a> on <a href="https://www.letour.fr/en/">The Tour de France</a>. I love this race, I cycle for exercise, and I love the Kraftwerk album, so of course I had to dig in.</p>
+<p><img src="Kraftwerk_Tour_De_France_Soundtracks_album_cover.png" /> <img src="bike_twinpeaks.jpg" /></p>
+<p>So I don’t bury the lede, this is a two-part post. Why? Because there was a lot of data munging &amp; cleaning needed to get the data into shape for whart I wanted to do. So this post is all about what I needed to do on that end. The analysis post will come soon. Also, I’m trying to work out how to do a code show/hide thing in hugo academic so bear with me that the code takes up lots of pixels.</p>
+<p>So let’s dig in…first we’ll load packages and create a ’%notin% operator…</p>
+<pre class="r"><code># load packages
+library(tidytuesdayR) # to load tidytuesday data
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what&#39;s happening to the data
+library(tdf) # to get original stage results file
+
+# create notin operator to help with cleaning &amp; analysis
+`%notin%` &lt;- negate(`%in%`)</code></pre>
+<p>There’s a ton of data here, sourced from the <a href="https://github.com/alastairrushworth/tdf"><code>tdf</code> package from Alastair Rushworth</a> and (Thomas Camminady’s data set) (<a href="https://github.com/camminady/LeTourDataSet" class="uri">https://github.com/camminady/LeTourDataSet</a>), via <a href="https://www.kaggle.com/jaminliu/a-brief-tour-of-tour-de-france-in-numbers/">Kaggle</a></p>
+<p>There are three distinct sets to work thru, each going back to the first run of the race in 1903:<br />
+* A dataframe of overall (<a href="https://en.wikipedia.org/wiki/General_classification_in_the_Tour_de_France">General Classification, or Yellow Jersey / <em>maillot jaune</em></a>) winners from 1903 to 2019 comes from the Tidy Tuesday frame.<br />
+* A dataframe with stage winners for races 1903 to 2017, also in the Tidy Tuesday set, sourced from Kaggle.<br />
+* A frame of overall stage results, sourced from the <code>tdf</code> pacakge due to issues with date conversion in the data included in the Tidy Tuesday set.</p>
+<p>The stage winner set needs a bit of mungung…I created a stage_results_id column similar to the one in the stage results set. But it needs leading zeros for stages 1-9 so it sorts properly.</p>
+<p>I then got it in my head I wanted results through 2020, so I grabbed them from wikipedia; but the hard way, with copy-paste since my scraping skills aren’t there &amp; I just wanted it done. Data is uploaded to my <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2020/tt_2020-04-07_letour/data">github repo</a> if you want to use it. (yes, it’s in an excel file…)</p>
+<pre class="r"><code># load main file from tt repo
+tt_tdf &lt;- tidytuesdayR::tt_load(&#39;2020-04-07&#39;)</code></pre>
+<pre><code>## 
+##  Downloading file 1 of 3: `stage_data.csv`
+##  Downloading file 2 of 3: `tdf_stages.csv`
+##  Downloading file 3 of 3: `tdf_winners.csv`</code></pre>
+<pre class="r"><code># create race winners set. comes from tdf package. includes up to 2019
+tdf_winners &lt;- as_tibble(tt_tdf$tdf_winners)
+
+# create stage winner set. in tt file, comes from kaggle, includes up to 2017
+tdf_stagewin1 &lt;- tt_tdf$tdf_stages %&gt;%
+  mutate_if(is.character, str_trim)
+  
+# pulled 2018 - 2020 from wikipedia
+# read in excel - need to separate route field to Origin &amp; Destination
+tdf_stagewin2 &lt;- readxl::read_excel(&quot;data/tdf_stagewinners_2018-20.xlsx&quot;) %&gt;%
+  mutate(Stage = as.character(Stage)) %&gt;%
+  mutate(Date = lubridate::as_date(Date)) %&gt;% 
+  separate(Course, c(&quot;Origin&quot;, &quot;Destination&quot;), &quot;to&quot;, extra = &quot;merge&quot;) %&gt;%
+  mutate_if(is.character, str_trim) %&gt;%
+  select(Stage, Date, Distance, Origin, Destination, Type, Winner, Winner_Country = Winner_country)
+
+# join with rbind (since I made sure to put 2018-2020 data in same shape as tt set)
+# clean up a bit
+tdf_stagewin &lt;- rbind(tdf_stagewin1, tdf_stagewin2) %&gt;%
+  mutate(race_year = lubridate::year(Date)) %&gt;% 
+  mutate(Stage = ifelse(Stage == &quot;P&quot;, &quot;0&quot;, Stage)) %&gt;%
+  mutate(stage_ltr = case_when(str_detect(Stage, &quot;a&quot;) ~ &quot;a&quot;,
+                               str_detect(Stage, &quot;b&quot;) ~ &quot;b&quot;,
+                               str_detect(Stage, &quot;c&quot;) ~ &quot;c&quot;,
+                               TRUE ~ &quot;&quot;)) %&gt;%
+  mutate(stage_num = str_remove_all(Stage, &quot;[abc]&quot;)) %&gt;%
+  mutate(stage_num = stringr::str_pad(stage_num, 2, side = &quot;left&quot;, pad = 0)) %&gt;% 
+  mutate(stage_results_id = paste0(&quot;stage-&quot;, stage_num, stage_ltr)) %&gt;%
+  mutate(split_stage = ifelse(stage_ltr %in% c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;%
+  
+  # extract first and last names from winner field
+  mutate(winner_first = str_match(Winner, &quot;(^.+)\\s&quot;)[, 2]) %&gt;%
+  mutate(winner_last= gsub(&quot;.* &quot;, &quot;&quot;, Winner)) %&gt;%
+
+  # clean up stage types, collapse into fewer groups
+  mutate(stage_type = case_when(Type %in% c(&quot;Flat cobblestone stage&quot;, &quot;Flat stage&quot;, &quot;Flat&quot;,
+                                            &quot;Flat Stage&quot;, &quot;Hilly stage&quot;, &quot;Plain stage&quot;, 
+                                            &quot;Plain stage with cobblestones&quot;) 
+                                ~ &quot;Flat / Plain / Hilly&quot;,
+                                Type %in% c(&quot;High mountain stage&quot;, &quot;Medium mountain stage&quot;,
+                                            &quot;Mountain stage&quot;, &quot;Mountain Stage&quot;, &quot;Stage with mountain&quot;,
+                                            &quot;Stage with mountain(s)&quot;, &quot;Transition stage&quot;)
+                                ~ &quot;Mountain&quot;,
+                                Type %in% c(&quot;Individual time trial&quot;, &quot;Mountain time trial&quot;) 
+                                ~ &quot;Time Trail - Indiv&quot;,
+                                Type == &quot;Team time trial&quot; ~ &quot;Time Trail - Team&quot;,
+                                TRUE ~ &quot;Other&quot;)) %&gt;% 
+  mutate_if(is.character, str_trim) %&gt;%
+  arrange(desc(race_year), stage_results_id) %&gt;%
+  select(race_year, stage_results_id, stage_date = Date, stage_type, Type, split_stage,
+         Origin, Destination, Distance, Winner, winner_first, winner_last,
+         Winner_Country, everything())
+
+# take a look at this awesome dataset
+glimpse(tdf_stagewin)</code></pre>
+<pre><code>## Rows: 2,299
+## Columns: 16
+## $ race_year        &lt;dbl&gt; 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020, 2020…
+## $ stage_results_id &lt;chr&gt; &quot;stage-01&quot;, &quot;stage-02&quot;, &quot;stage-03&quot;, &quot;stage-04&quot;, &quot;sta…
+## $ stage_date       &lt;date&gt; 2020-08-29, 2020-08-30, 2020-08-31, 2020-09-01, 202…
+## $ stage_type       &lt;chr&gt; &quot;Flat / Plain / Hilly&quot;, &quot;Mountain&quot;, &quot;Flat / Plain / …
+## $ Type             &lt;chr&gt; &quot;Flat stage&quot;, &quot;Medium mountain stage&quot;, &quot;Flat stage&quot;,…
+## $ split_stage      &lt;chr&gt; &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;…
+## $ Origin           &lt;chr&gt; &quot;Nice&quot;, &quot;Nice&quot;, &quot;Nice&quot;, &quot;Sisteron&quot;, &quot;Gap&quot;, &quot;Le Teil&quot;…
+## $ Destination      &lt;chr&gt; &quot;Nice&quot;, &quot;Nice&quot;, &quot;Sisteron&quot;, &quot;Orcières-Merlette&quot;, &quot;Pr…
+## $ Distance         &lt;dbl&gt; 156.0, 186.0, 198.0, 160.5, 183.0, 191.0, 168.0, 141…
+## $ Winner           &lt;chr&gt; &quot;Alexander Kristoff&quot;, &quot;Julian Alaphilippe&quot;, &quot;Caleb E…
+## $ winner_first     &lt;chr&gt; &quot;Alexander&quot;, &quot;Julian&quot;, &quot;Caleb&quot;, &quot;Primož&quot;, &quot;Wout van&quot;…
+## $ winner_last      &lt;chr&gt; &quot;Kristoff&quot;, &quot;Alaphilippe&quot;, &quot;Ewan&quot;, &quot;Roglič&quot;, &quot;Aert&quot;,…
+## $ Winner_Country   &lt;chr&gt; &quot;NOR&quot;, &quot;FRA&quot;, &quot;AUS&quot;, &quot;SLO&quot;, &quot;BEL&quot;, &quot;KAZ&quot;, &quot;BEL&quot;, &quot;FR…
+## $ Stage            &lt;chr&gt; &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;…
+## $ stage_ltr        &lt;chr&gt; &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, …
+## $ stage_num        &lt;chr&gt; &quot;01&quot;, &quot;02&quot;, &quot;03&quot;, &quot;04&quot;, &quot;05&quot;, &quot;06&quot;, &quot;07&quot;, &quot;08&quot;, &quot;09&quot;…</code></pre>
+<p>Stage data in CSV from tt repository seems to have truncated the times, leaving only the seconds in a character field. To get complete results we need to pull from <code>tdf</code> package using the cleaning script from the Tidy Tuesday page. Some operations will take a while. Those parts of the code commented out here so they don’t run while the page kints &amp; compiles. For analysis, I’ll load in the saved rds set.</p>
+<p>In terms of cleaning:<br />
+* The stage_results_id &amp; rank fields needs leading zeros.<br />
+* The rank field needs a bit of clean-up to fix the 1000s codes.<br />
+* Since rider names were last-first, I wanted to separate out first and last, and also make a field with the full name, but first name in front. Stackoverlflow was my regex friend here.<br />
+* Other minor fixes</p>
+<p>In the process of cleaning and comparing to the stage winners set, I noticed there were some problems in years where individual stages were split into 2 or 3 legs (A, B &amp; C). Either while it was scraped or combined, the A leg results ended up repeating to the B leg, and in some cases the C leg wasn’t reported. I put it in as an issue in the github repo. But that shouldn’t take away from what’s an amazing dataset to work with. In the analysis section I’ll work around the problems with those stages.</p>
+<pre class="r"><code># all_years &lt;- tdf::editions %&gt;% 
+#   unnest_longer(stage_results) %&gt;% 
+#   mutate(stage_results = map(stage_results, ~ mutate(.x, rank = as.character(rank)))) %&gt;% 
+#   unnest_longer(stage_results) 
+# 
+# stage_all &lt;- all_years %&gt;% 
+#   select(stage_results) %&gt;% 
+#   flatten_df()
+# 
+# combo_df &lt;- bind_cols(all_years, stage_all) %&gt;% 
+#   select(-stage_results)
+# 
+# tdf_stagedata &lt;- as_tibble(combo_df %&gt;% 
+#   select(edition, start_date,stage_results_id:last_col()) %&gt;% 
+#   mutate(race_year = lubridate::year(start_date)) %&gt;% 
+#   rename(age = age...25) %&gt;% 
+#   
+#   # to add leading 0 to stage, extract num, create letter, add 0s to num, paste
+#   mutate(stage_num = str_replace(stage_results_id, &quot;stage-&quot;, &quot;&quot;)) %&gt;%
+#   mutate(stage_ltr = case_when(str_detect(stage_num, &quot;a&quot;) ~ &quot;a&quot;,
+#                                str_detect(stage_num, &quot;b&quot;) ~ &quot;b&quot;,
+#                                TRUE ~ &quot;&quot;))) %&gt;%
+#   mutate(stage_num = str_remove_all(stage_num, &quot;[ab]&quot;)) %&gt;%
+#   mutate(stage_num = stringr::str_pad(stage_num, 2, side = &quot;left&quot;, pad = 0)) %&gt;%
+#   mutate(stage_results_id2 = paste0(&quot;stage-&quot;, stage_num, stage_ltr)) %&gt;%
+#   mutate(split_stage = ifelse(stage_ltr %in% c(&quot;a&quot;, &quot;b&quot;), &quot;yes&quot;, &quot;no&quot;)) %&gt;% 
+#   
+#   # fix 1000s rank. change to DNF
+#   mutate(rank = ifelse(rank %in% c(&quot;1003&quot;, &quot;1005&quot;, &quot;1006&quot;), &quot;DNF&quot;, rank)) %&gt;%
+#   mutate(rank2 = ifelse(rank %notin% c(&quot;DF&quot;, &quot;DNF&quot;, &quot;DNS&quot;, &quot;DSQ&quot;,&quot;NQ&quot;,&quot;OTL&quot;), 
+#                         stringr::str_pad(rank, 3, side = &quot;left&quot;, pad = 0), rank)) %&gt;% 
+#   
+#   # extract first and last names from rider field
+#   mutate(rider_last = str_match(rider, &quot;(^.+)\\s&quot;)[, 2]) %&gt;%
+#   mutate(rider_first= gsub(&quot;.* &quot;, &quot;&quot;, rider)) %&gt;%
+#   mutate(rider_firstlast = paste0(rider_first, &quot; &quot;, rider_last)) %&gt;%
+#   select(-stage_results_id, -start_date, ) %&gt;%
+#   
+#   # fix 1967 &amp; 1968
+#   mutate(stage_results_id2 = ifelse((race_year %in% c(1967, 1968) &amp; stage_results_id2 == &quot;stage-00&quot;),
+#          &quot;stage-01a&quot;, stage_results_id2)) %&gt;%
+#   mutate(stage_results_id2 = ifelse((race_year %in% c(1967, 1968) &amp; stage_results_id2 == &quot;stage-01&quot;),
+#          &quot;stage-01b&quot;, stage_results_id2)) %&gt;%
+#   mutate(split_stage = ifelse((race_year %in% c(1967, 1968) &amp; 
+#                                  stage_results_id2 %in% c(&quot;stage-01a&quot;, &quot;stage-01b&quot;)), 
+#                               &quot;yes&quot;, split_stage)) %&gt;%
+#   
+#   select(edition, race_year, stage_results_id = stage_results_id2, split_stage, 
+#          rider, rider_first, rider_last, rider_firstlast, rank2, 
+#          time, elapsed, points, bib_number, team, age, everything())
+# 
+# saveRDS(tdf_stagedata, &quot;data/tdf_stagedata.rds&quot;)
+
+tdf_stagedata &lt;- readRDS(&quot;data/tdf_stagedata.rds&quot;)
+glimpse(tdf_stagedata)</code></pre>
+<pre><code>## Rows: 255,752
+## Columns: 18
+## $ edition          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+## $ race_year        &lt;dbl&gt; 1903, 1903, 1903, 1903, 1903, 1903, 1903, 1903, 1903…
+## $ stage_results_id &lt;chr&gt; &quot;stage-01&quot;, &quot;stage-01&quot;, &quot;stage-01&quot;, &quot;stage-01&quot;, &quot;sta…
+## $ split_stage      &lt;chr&gt; &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;, &quot;no&quot;…
+## $ rider            &lt;chr&gt; &quot;Garin Maurice&quot;, &quot;Pagie Émile&quot;, &quot;Georget Léon&quot;, &quot;Aug…
+## $ rider_first      &lt;chr&gt; &quot;Maurice&quot;, &quot;Émile&quot;, &quot;Léon&quot;, &quot;Fernand&quot;, &quot;Jean&quot;, &quot;Marc…
+## $ rider_last       &lt;chr&gt; &quot;Garin&quot;, &quot;Pagie&quot;, &quot;Georget&quot;, &quot;Augereau&quot;, &quot;Fischer&quot;, …
+## $ rider_firstlast  &lt;chr&gt; &quot;Maurice Garin&quot;, &quot;Émile Pagie&quot;, &quot;Léon Georget&quot;, &quot;Fer…
+## $ rank2            &lt;chr&gt; &quot;001&quot;, &quot;002&quot;, &quot;003&quot;, &quot;004&quot;, &quot;005&quot;, &quot;006&quot;, &quot;007&quot;, &quot;00…
+## $ time             &lt;Period&gt; 17H 45M 13S, 55S, 34M 59S, 1H 2M 48S, 1H 4M 53S, …
+## $ elapsed          &lt;Period&gt; 17H 45M 13S, 17H 46M 8S, 18H 20M 12S, 18H 48M 1S,…
+## $ points           &lt;int&gt; 100, 70, 50, 40, 32, 26, 22, 18, 14, 10, 8, 6, 4, 2,…
+## $ bib_number       &lt;int&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+## $ team             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+## $ age              &lt;int&gt; 32, 32, 23, 20, 36, 37, 25, 33, NA, 22, 26, 28, 21, …
+## $ rank             &lt;chr&gt; &quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;, &quot;7&quot;, &quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;…
+## $ stage_num        &lt;chr&gt; &quot;01&quot;, &quot;01&quot;, &quot;01&quot;, &quot;01&quot;, &quot;01&quot;, &quot;01&quot;, &quot;01&quot;, &quot;01&quot;, &quot;01&quot;…
+## $ stage_ltr        &lt;chr&gt; &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, …</code></pre>
+<p>Poking around the Kaggle site referenced I found this dataset of final results for all riders in all races since 1903. A few different fields than in the tidy tuesday winners set.</p>
+<pre class="r"><code>## overall race results for finishers up to 2020...need to figure out how to merge with tdf package sets
+tdf_bigset &lt;- read.csv(&quot;https://github.com/camminady/LeTourDataSet/blob/master/Riders.csv?raw=true&quot;) %&gt;%
+  mutate(Rider = str_to_title(Rider)) %&gt;%
+  rename(rownum = X)</code></pre>
+<p>Now this is a ton of data to work with, and I won’t use it all. Figured I’d include the code to get it all in case you get inspired to grab it and take a look.</p>
+<p>Ok…that’s it for now…charts and tables to come soon.</p>
+</div>
