@@ -24,9 +24,9 @@ projects: []
 
 ### A mountain of data about the Tour de France...
 
-Having looked at [hiking trails in Washington state](https://www.gregdubrow.io/2020/11/27/tidy-tuesday-november-24-2020-hiking-trails-in-washington-state/) and [bridges in Maryland](https://www.gregdubrow.io/2020/11/29/tidy-tuesday-november-27-2018-maryland-bridges/) I poked around the [#TidyTuesday repo](https://github.com/rfordatascience/tidytuesday) and saw this [trove of data](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-04-07) on [The Tour de France](https://www.letour.fr/en/). I love this race, I cycle for exercise, and I love the Kraftwerk album, so of course I had to dig in.
+Having looked at [hiking trails in Washington state](https://www.gregdubrow.io/2020/11/27/tidy-tuesday-november-24-2020-hiking-trails-in-washington-state/) and [bridges in Maryland](https://www.gregdubrow.io/2020/11/29/tidy-tuesday-november-27-2018-maryland-bridges/) I poked around the [#TidyTuesday repo](https://github.com/rfordatascience/tidytuesday) and saw this [trove of data](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-04-07) from back in April on [The Tour de France](https://www.letour.fr/en/). I love this race, I cycle for exercise, and I love the Kraftwerk album, so of course I had to dig in.
 
-![](Kraftwerk_Tour_De_France_Soundtracks_album_cover.png) ![](bike_twinpeaks.jpg)
+![](Kraftwerk_Tour_De_France_Soundtracks_album_cover.png) ![](bike_twinpeaks.jpg){width=50%}
 
 So I don't bury the lede, this is a two-part post. Why? Because there was a lot of data munging & cleaning needed to get the data into shape for whart I wanted to do. So this post is all about what I needed to do on that end. The analysis post will come soon. Also, I'm trying to work out how to do a code show/hide thing in hugo academic so bear with me that the code takes up lots of pixels.
 
