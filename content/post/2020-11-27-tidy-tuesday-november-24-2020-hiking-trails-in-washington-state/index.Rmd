@@ -27,10 +27,9 @@ projects: []
 
 Every week I'm so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from [#TidyTuesday](https://github.com/rfordatascience/tidytuesday), the weekly data project that evolved out of the [R4DS Learning Community](https://twitter.com/R4DScommunity). And every week I say to myself, "I should really give it a go, grab the data and post some results". Then life intervenes, work gets crazy, and before I know it...
 
-Well, this week, with some slack time and some inspiration I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up. 
+Well, around Thanksgiving, with some slack time and some inspiration, I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up. 
 
-Anyway, here's the code and resulting charts. I've also got a [github repo](https://github.com/greg-dubrow/) set up for [tidytuesday projects](https://github.com/greg-dubrow/tidy-tuesday-projects). Right now the only other completed work is the Maryland brdige set from 2018, that I only got around to finishing in March of 2020 during my week between job. Thought I'd get the blog set up then, but started a new job, pandemic lockdown and stresses...a post on that set coming soon, but you can always check out the [results on github](https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2018/tt_2018-11-27_md_bridges).
-
+Here's the code and resulting charts & tables. I've got a [github repo](https://github.com/greg-dubrow/) set up for [tidytuesday projects](https://github.com/greg-dubrow/tidy-tuesday-projects). 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
@@ -187,7 +186,7 @@ tt_watraildf %>%
 
 ### Now that we see how the length, gain, highpoint & ratings spread out, I want build a table to see the averages by region. 
 
-I've been wanting to take a deeper dive into [gt](https://gt.rstudio.com/) & [reactable](https://glin.github.io/reactable/). Since I'm doing this as a markdown doc & not HTML, I'll output using gt here. I've got some basic gt calls down, this excercise is all about conditionally formatting columns based on value. So inspired by [Thomas Mock's gt primer](https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables), a basic table with heatmap-like formatting for some columns. See his explainer for details on the code, and for more features than I'm including.
+I've been wanting to take a deeper dive into [gt](https://gt.rstudio.com/) & [reactable](https://glin.github.io/reactable/). I've got some basic gt calls down, but for this excercise I wanted to learn how to conditionally format columns based on value. So inspired by [Thomas Mock's gt primer](https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables), a basic table with heatmap-like formatting for some columns. See his explainer for details on the code, and for more features than I'm including.
 ```{r  tt_watr04, echo = TRUE, warning=FALSE, message = FALSE, error= FALSE }
 # create by region averages df
 byregion <-  tt_watraildf %>%
@@ -203,44 +202,46 @@ byregion <-  tt_watraildf %>%
   mutate_at(vars(avglength:avgrating), round, 2) %>%
   mutate_at(vars(avggain:avghigh), round, 0) 
 
-# create table - code commented out so html doesn't show up in md output. 
-# image saved from tt_20201124_watrails.r code
-# byregion %>%
-#   gt() %>%
-#   fmt_number(columns = vars(avggain, avghigh, minhigh, maxhigh), decimals = 0, use_seps = TRUE) %>%
+byregion %>%
+  gt() %>%
+  fmt_number(columns = vars(avggain, avghigh, minhigh, maxhigh), decimals = 0, use_seps = TRUE) %>%
   # sets the columns and palette to format cell color by value range
-  # data_color(
-  #   columns = vars(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),
-  #   colors = scales::col_numeric(
-  #     palette = c("#ffffff", "#f2fbd2", "#c9ecb4", "#93d3ab", "#35b0ab"),
-  #     domain = NULL)) %>%
-  # tab_style calls add border boxes first to column labels, then body cells
-  # tab_style(
-  #   style = list(
-  #     cell_borders(
-  #       sides = "all", color = "grey", weight = px(1))),
-  #   locations = list(
-  #     cells_column_labels(
-  #       columns = gt::everything()
-  #       ))) %>%
-  # tab_style(
-  #   style = list(
-  #     cell_borders(
-  #       sides = "all", color = "grey", weight = px(1))),
-  #   locations = list(
-  #     cells_body(
-  #       rows = gt::everything()
-  #     ))) %>%
-  #   cols_align(columns = TRUE, align = "center") %>%
-  # cols_align(columns = "location_region", align = "left") %>%
-  # tab_header(title = "Regional Averages",
-  #            subtitle = md("_North Cascades have longest trails, 
-  #                          all mountain areas have lots of gain and highest points_")) %>%
-#  cols_label(location_region = "Region", n_region = "N", avglength = "Avg Length (miles)",
-#            avgrating = "Avg Rating", avggain = "Avg Gain (ft)",avghigh = "Avg Highpoint",
-#             minhigh = "Lowest high point", maxhigh = "Max high point")
+  data_color(
+    columns = vars(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),
+    colors = scales::col_numeric(
+      palette = c("#ffffff", "#f2fbd2", "#c9ecb4", "#93d3ab", "#35b0ab"),
+      domain = NULL)) %>%
+#  tab_style calls add border boxes first to column labels, then body cells
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = "all", color = "grey", weight = px(1))),
+    locations = list(
+      cells_column_labels(
+        columns = gt::everything()
+        ))) %>%
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = "all", color = "grey", weight = px(1))),
+    locations = list(
+      cells_body(
+        rows = gt::everything()
+      ))) %>%
+    cols_align(columns = TRUE, align = "center") %>%
+  cols_align(columns = "location_region", align = "left") %>%
+  cols_width(vars(location_region) ~ px(150),
+             vars(n_region) ~ px(60),
+             starts_with("avg") ~ px(80),
+             ends_with("high") ~ px(90)
+             ) %>%
+  tab_header(title = "Regional Averages",
+             subtitle = md("_North Cascades have longest trails,
+                           all mountain areas have lots of gain and highest points_")) %>%
+  cols_label(location_region = "Region", n_region = "N", avglength = "Avg Length (miles)",
+            avgrating = "Avg Rating", avggain = "Avg Gain (ft)",avghigh = "Avg high point",
+             minhigh = "Lowest high point", maxhigh = "Max high point")
 ```
-![](tt11242020_gtavgbyregion.png)
 
 ### Now let's look at the effect of trail features on rating.
 
@@ -259,13 +260,69 @@ tt_watraildf %>%
 
 ```
 
-Here's a table similar to the one for averages by region. I used the unnested features, so trails will be represented more than once. While dog-free trails do get the highest ratings, it's likely because they're the highest, so offer views and challenge and get good ratings. 
-![](tt11242020_gtavgbyfeature.png)
+Here's a table similar to the one for averages by region. I used the unnested features, so trails will be represented more than once. Dog-free trails do get the highest ratings, but it's likely because they also tend to have highest high points, so offer views, are challenging, and so get good ratings. 
+
+```{r  tt_watr06, echo = TRUE, warning=FALSE, message = FALSE, error= FALSE }
+byfeature <- 
+tt_watraildf %>%
+  group_by(features_unnest) %>%
+  summarise(n_feature = n(),
+            avgrating = mean(rating),
+            avglength = mean(length_miles),
+            avggain = mean(gain),
+            avghigh = mean(highpoint),
+            minhigh = min(highpoint),
+            maxhigh = max(highpoint)) %>%
+  mutate_at(vars(avglength:avgrating), round, 2) %>%
+  mutate_at(vars(avggain:avghigh), round, 0) %>%
+  arrange(desc(avgrating))
+
+## create table
+byfeature %>%
+  gt() %>%
+  fmt_number(columns = vars(n_feature, avggain, avghigh, minhigh, maxhigh), decimals = 0, use_seps = TRUE) %>%
+  # sets the columns and palette to format cell color by value range
+  data_color(
+    columns = vars(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),
+    colors = scales::col_numeric(
+      palette = c("#ffffff", "#f2fbd2", "#c9ecb4", "#93d3ab", "#35b0ab"),
+      domain = NULL)) %>%
+  # tab_style calls add border boxes first to column labels, then body cells
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = "all", color = "grey", weight = px(1))),
+    locations = list(
+      cells_column_labels(
+        columns = gt::everything()
+      ))) %>%
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = "all", color = "grey", weight = px(1))),
+    locations = list(
+      cells_body(
+        rows = gt::everything()
+      ))) %>%
+  tab_header(title = "Averages by Feature",
+             subtitle = md("_Dog-free trails with waterfalls & high peaks earn high ratings_")) %>%
+  cols_align(columns = TRUE, align = "center") %>%
+  cols_align(columns = "features_unnest", align = "left") %>%
+  cols_width(vars(features_unnest) ~ px(150),
+             vars(n_feature) ~ px(60),
+             starts_with("avg") ~ px(80),
+             ends_with("high") ~ px(90)
+             ) %>%
+  cols_label(features_unnest = "Feature", n_feature = "N", avglength = "Avg Length (miles)",
+             avgrating = "Avg Rating", avggain = "Avg Gain (ft)",avghigh = "Avg high point",
+             minhigh = "Lowest high point", maxhigh = "Max high point") 
+```
+
 
 ### And finally a quick model to see what might affect a trail rating.
 
 It's a simple linear model using length, gain, highpoint, & number of features to predict rating. The elevation of the highest point and number of features are both significant. I'd need to do more digging to see what the power of the estimate is on the rating. It's also slightly counter-intuitive given that we saw in the charts that length, elevation and gain seem to positively affect rating. But then the model only accounts for 4% of varaince, so it's not telling us much. 
-```{r tt_watr06, echo = TRUE, warning=FALSE, message = FALSE, error= FALSE }
+```{r tt_watr07, echo = TRUE, warning=FALSE, message = FALSE, error= FALSE }
 
 # creat df with distinct observations for each trail 
 tt_watraildf_dist <- tt_watraildf %>%
@@ -275,7 +332,7 @@ wtmodel1 <- lm(rating ~ length_miles + gain + highpoint + feature_n, data = tt_w
 summary(wtmodel1)
 ```
 
-Plenty more to do with the set, and some responses I've seen have been creative...network graphs, better models...but I was able to brush up on gt, learned how to unnest and keep obs where the list was empty. So a successful #tudytuesday
+There's plenty more to do with the set, and some responses I've seen on Twitter have been creative...network graphs, better models...but I was able to brush up on gt, learned how to unnest and keep obs where the list was empty. So a successful #tudytuesday.
 
 
 _This post was last updated on `r format(Sys.Date(), "%Y-%m-%d")`_

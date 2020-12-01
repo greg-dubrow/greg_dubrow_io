@@ -30,8 +30,8 @@ projects: []
 <div id="diving-deep-into-the-tidy-tuesday-pool" class="section level3">
 <h3>Diving deep into the Tidy Tuesday pool…</h3>
 <p>Every week I’m so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday</a>, the weekly data project that evolved out of the <a href="https://twitter.com/R4DScommunity">R4DS Learning Community</a>. And every week I say to myself, “I should really give it a go, grab the data and post some results”. Then life intervenes, work gets crazy, and before I know it…</p>
-<p>Well, this week, with some slack time and some inspiration I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up.</p>
-<p>Anyway, here’s the code and resulting charts. I’ve also got a <a href="https://github.com/greg-dubrow/">github repo</a> set up for <a href="https://github.com/greg-dubrow/tidy-tuesday-projects">tidytuesday projects</a>. Right now the only other completed work is the Maryland brdige set from 2018, that I only got around to finishing in March of 2020 during my week between job. Thought I’d get the blog set up then, but started a new job, pandemic lockdown and stresses…a post on that set coming soon, but you can always check out the <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2018/tt_2018-11-27_md_bridges">results on github</a>.</p>
+<p>Well, around Thanksgiving, with some slack time and some inspiration, I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up.</p>
+<p>Here’s the code and resulting charts &amp; tables. I’ve got a <a href="https://github.com/greg-dubrow/">github repo</a> set up for <a href="https://github.com/greg-dubrow/tidy-tuesday-projects">tidytuesday projects</a>.</p>
 <pre class="r"><code># readin in data, create df for plots
 library(tidytuesdayR) # to load tidytuesday data
 library(tidyverse) # to do tidyverse things
@@ -193,7 +193,7 @@ tt_watraildf %&gt;%
 </div>
 <div id="now-that-we-see-how-the-length-gain-highpoint-ratings-spread-out-i-want-build-a-table-to-see-the-averages-by-region." class="section level3">
 <h3>Now that we see how the length, gain, highpoint &amp; ratings spread out, I want build a table to see the averages by region.</h3>
-<p>I’ve been wanting to take a deeper dive into <a href="https://gt.rstudio.com/">gt</a> &amp; <a href="https://glin.github.io/reactable/">reactable</a>. Since I’m doing this as a markdown doc &amp; not HTML, I’ll output using gt here. I’ve got some basic gt calls down, this excercise is all about conditionally formatting columns based on value. So inspired by <a href="https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables">Thomas Mock’s gt primer</a>, a basic table with heatmap-like formatting for some columns. See his explainer for details on the code, and for more features than I’m including.</p>
+<p>I’ve been wanting to take a deeper dive into <a href="https://gt.rstudio.com/">gt</a> &amp; <a href="https://glin.github.io/reactable/">reactable</a>. I’ve got some basic gt calls down, but for this excercise I wanted to learn how to conditionally format columns based on value. So inspired by <a href="https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables">Thomas Mock’s gt primer</a>, a basic table with heatmap-like formatting for some columns. See his explainer for details on the code, and for more features than I’m including.</p>
 <pre class="r"><code># create by region averages df
 byregion &lt;-  tt_watraildf %&gt;%
   distinct(name, .keep_all = TRUE) %&gt;%
@@ -208,43 +208,528 @@ byregion &lt;-  tt_watraildf %&gt;%
   mutate_at(vars(avglength:avgrating), round, 2) %&gt;%
   mutate_at(vars(avggain:avghigh), round, 0) 
 
-# create table - code commented out so html doesn&#39;t show up in md output. 
-# image saved from tt_20201124_watrails.r code
-# byregion %&gt;%
-#   gt() %&gt;%
-#   fmt_number(columns = vars(avggain, avghigh, minhigh, maxhigh), decimals = 0, use_seps = TRUE) %&gt;%
+byregion %&gt;%
+  gt() %&gt;%
+  fmt_number(columns = vars(avggain, avghigh, minhigh, maxhigh), decimals = 0, use_seps = TRUE) %&gt;%
   # sets the columns and palette to format cell color by value range
-  # data_color(
-  #   columns = vars(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),
-  #   colors = scales::col_numeric(
-  #     palette = c(&quot;#ffffff&quot;, &quot;#f2fbd2&quot;, &quot;#c9ecb4&quot;, &quot;#93d3ab&quot;, &quot;#35b0ab&quot;),
-  #     domain = NULL)) %&gt;%
-  # tab_style calls add border boxes first to column labels, then body cells
-  # tab_style(
-  #   style = list(
-  #     cell_borders(
-  #       sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
-  #   locations = list(
-  #     cells_column_labels(
-  #       columns = gt::everything()
-  #       ))) %&gt;%
-  # tab_style(
-  #   style = list(
-  #     cell_borders(
-  #       sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
-  #   locations = list(
-  #     cells_body(
-  #       rows = gt::everything()
-  #     ))) %&gt;%
-  #   cols_align(columns = TRUE, align = &quot;center&quot;) %&gt;%
-  # cols_align(columns = &quot;location_region&quot;, align = &quot;left&quot;) %&gt;%
-  # tab_header(title = &quot;Regional Averages&quot;,
-  #            subtitle = md(&quot;_North Cascades have longest trails, 
-  #                          all mountain areas have lots of gain and highest points_&quot;)) %&gt;%
-#  cols_label(location_region = &quot;Region&quot;, n_region = &quot;N&quot;, avglength = &quot;Avg Length (miles)&quot;,
-#            avgrating = &quot;Avg Rating&quot;, avggain = &quot;Avg Gain (ft)&quot;,avghigh = &quot;Avg Highpoint&quot;,
-#             minhigh = &quot;Lowest high point&quot;, maxhigh = &quot;Max high point&quot;)</code></pre>
-<p><img src="tt11242020_gtavgbyregion.png" /></p>
+  data_color(
+    columns = vars(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),
+    colors = scales::col_numeric(
+      palette = c(&quot;#ffffff&quot;, &quot;#f2fbd2&quot;, &quot;#c9ecb4&quot;, &quot;#93d3ab&quot;, &quot;#35b0ab&quot;),
+      domain = NULL)) %&gt;%
+#  tab_style calls add border boxes first to column labels, then body cells
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
+    locations = list(
+      cells_column_labels(
+        columns = gt::everything()
+        ))) %&gt;%
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
+    locations = list(
+      cells_body(
+        rows = gt::everything()
+      ))) %&gt;%
+    cols_align(columns = TRUE, align = &quot;center&quot;) %&gt;%
+  cols_align(columns = &quot;location_region&quot;, align = &quot;left&quot;) %&gt;%
+  cols_width(vars(location_region) ~ px(150),
+             vars(n_region) ~ px(60),
+             starts_with(&quot;avg&quot;) ~ px(80),
+             ends_with(&quot;high&quot;) ~ px(90)
+             ) %&gt;%
+  tab_header(title = &quot;Regional Averages&quot;,
+             subtitle = md(&quot;_North Cascades have longest trails,
+                           all mountain areas have lots of gain and highest points_&quot;)) %&gt;%
+  cols_label(location_region = &quot;Region&quot;, n_region = &quot;N&quot;, avglength = &quot;Avg Length (miles)&quot;,
+            avgrating = &quot;Avg Rating&quot;, avggain = &quot;Avg Gain (ft)&quot;,avghigh = &quot;Avg high point&quot;,
+             minhigh = &quot;Lowest high point&quot;, maxhigh = &quot;Max high point&quot;)</code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#ocmdkeebvp .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ocmdkeebvp .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ocmdkeebvp .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ocmdkeebvp .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ocmdkeebvp .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ocmdkeebvp .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ocmdkeebvp .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ocmdkeebvp .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ocmdkeebvp .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ocmdkeebvp .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ocmdkeebvp .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ocmdkeebvp .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ocmdkeebvp .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#ocmdkeebvp .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ocmdkeebvp .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ocmdkeebvp .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ocmdkeebvp .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#ocmdkeebvp .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ocmdkeebvp .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#ocmdkeebvp .gt_left {
+  text-align: left;
+}
+
+#ocmdkeebvp .gt_center {
+  text-align: center;
+}
+
+#ocmdkeebvp .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ocmdkeebvp .gt_font_normal {
+  font-weight: normal;
+}
+
+#ocmdkeebvp .gt_font_bold {
+  font-weight: bold;
+}
+
+#ocmdkeebvp .gt_font_italic {
+  font-style: italic;
+}
+
+#ocmdkeebvp .gt_super {
+  font-size: 65%;
+}
+
+#ocmdkeebvp .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="ocmdkeebvp" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table" style="table-layout: fixed;; width: 0px">
+  <colgroup>
+    <col style="width:150px;"/>
+    <col style="width:60px;"/>
+    <col style="width:80px;"/>
+    <col style="width:80px;"/>
+    <col style="width:80px;"/>
+    <col style="width:80px;"/>
+    <col style="width:90px;"/>
+    <col style="width:90px;"/>
+  </colgroup>
+  <thead class="gt_header">
+    <tr>
+      <th colspan="8" class="gt_heading gt_title gt_font_normal" style>Regional Averages</th>
+    </tr>
+    <tr>
+      <th colspan="8" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style><em>North Cascades have longest trails,
+all mountain areas have lots of gain and highest points</em></th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Region</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">N</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg Length (miles)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg Rating</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg Gain (ft)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Lowest high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Max high point</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Central Cascades</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">219</td>
+      <td class="gt_row gt_center" style="background-color: #91D2AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.53</td>
+      <td class="gt_row gt_center" style="background-color: #95D4AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.04</td>
+      <td class="gt_row gt_center" style="background-color: #6BC1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,276</td>
+      <td class="gt_row gt_center" style="background-color: #63BEAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,752</td>
+      <td class="gt_row gt_center" style="background-color: #AADDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">600</td>
+      <td class="gt_row gt_center" style="background-color: #9ED8AD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Central Washington</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">79</td>
+      <td class="gt_row gt_center" style="background-color: #F4FCD9; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5.71</td>
+      <td class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.78</td>
+      <td class="gt_row gt_center" style="background-color: #F6FCDF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">823</td>
+      <td class="gt_row gt_center" style="background-color: #E0F4C4; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,260</td>
+      <td class="gt_row gt_center" style="background-color: #F2FBD2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">240</td>
+      <td class="gt_row gt_center" style="background-color: #D7F1BE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6,876</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Eastern Washington</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">142</td>
+      <td class="gt_row gt_center" style="background-color: #98D5AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.33</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.15</td>
+      <td class="gt_row gt_center" style="background-color: #BFE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,592</td>
+      <td class="gt_row gt_center" style="background-color: #7CC8AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,410</td>
+      <td class="gt_row gt_center" style="background-color: #E7F7CA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">300</td>
+      <td class="gt_row gt_center" style="background-color: #CFEEB8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7,310</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Issaquah Alps</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">76</td>
+      <td class="gt_row gt_center" style="background-color: #F9FDEB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5.03</td>
+      <td class="gt_row gt_center" style="background-color: #E7F7CA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.53</td>
+      <td class="gt_row gt_center" style="background-color: #F1FBD1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">984</td>
+      <td class="gt_row gt_center" style="background-color: #F5FCDA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,518</td>
+      <td class="gt_row gt_center" style="background-color: #F0FAD0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">250</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,004</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Mount Rainier Area</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">193</td>
+      <td class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.19</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.35</td>
+      <td class="gt_row gt_center" style="background-color: #A1D9AD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,881</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,222</td>
+      <td class="gt_row gt_center" style="background-color: #6FC3AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">800</td>
+      <td class="gt_row gt_center" style="background-color: #8FD1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">North Cascades</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">292</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">11.24</td>
+      <td class="gt_row gt_center" style="background-color: #8CCFAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.08</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,535</td>
+      <td class="gt_row gt_center" style="background-color: #42B3AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,111</td>
+      <td class="gt_row gt_center" style="background-color: #F9FDE8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">125</td>
+      <td class="gt_row gt_center" style="background-color: #A5DBAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,200</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Olympic Peninsula</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">209</td>
+      <td class="gt_row gt_center" style="background-color: #BDE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.13</td>
+      <td class="gt_row gt_center" style="background-color: #43B3AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.32</td>
+      <td class="gt_row gt_center" style="background-color: #C1E8B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,572</td>
+      <td class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,821</td>
+      <td class="gt_row gt_center" style="background-color: #FEFFFD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+      <td class="gt_row gt_center" style="background-color: #D5F0BC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6,988</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Puget Sound and Islands</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">190</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4.25</td>
+      <td class="gt_row gt_center" style="background-color: #C0E8B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.80</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">452</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">573</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+      <td class="gt_row gt_center" style="background-color: #FBFEF1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,750</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Snoqualmie Region</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">216</td>
+      <td class="gt_row gt_center" style="background-color: #ACDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.71</td>
+      <td class="gt_row gt_center" style="background-color: #7AC7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.15</td>
+      <td class="gt_row gt_center" style="background-color: #78C7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,198</td>
+      <td class="gt_row gt_center" style="background-color: #78C7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,467</td>
+      <td class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">450</td>
+      <td class="gt_row gt_center" style="background-color: #A0D9AD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,416</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">South Cascades</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">188</td>
+      <td class="gt_row gt_center" style="background-color: #B4E2B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.44</td>
+      <td class="gt_row gt_center" style="background-color: #8ED1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.07</td>
+      <td class="gt_row gt_center" style="background-color: #BAE5B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,641</td>
+      <td class="gt_row gt_center" style="background-color: #65BFAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,732</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">922</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Southwest Washington</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">120</td>
+      <td class="gt_row gt_center" style="background-color: #E4F6C8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6.58</td>
+      <td class="gt_row gt_center" style="background-color: #D1EFBA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.69</td>
+      <td class="gt_row gt_center" style="background-color: #E2F5C7; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,171</td>
+      <td class="gt_row gt_center" style="background-color: #F1FBD1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,774</td>
+      <td class="gt_row gt_center" style="background-color: #FEFFFD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+      <td class="gt_row gt_center" style="background-color: #C5EAB3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7,800</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 </div>
 <div id="now-lets-look-at-the-effect-of-trail-features-on-rating." class="section level3">
 <h3>Now let’s look at the effect of trail features on rating.</h3>
@@ -260,8 +745,592 @@ tt_watraildf %&gt;%
        title = &quot;Features and Rating by Trail Region&quot;) +
   facet_wrap(vars(location_region))</code></pre>
 <p><img src="images/tt_watr05-1.png" width="100%" /></p>
-<p>Here’s a table similar to the one for averages by region. I used the unnested features, so trails will be represented more than once. While dog-free trails do get the highest ratings, it’s likely because they’re the highest, so offer views and challenge and get good ratings.
-<img src="tt11242020_gtavgbyfeature.png" /></p>
+<p>Here’s a table similar to the one for averages by region. I used the unnested features, so trails will be represented more than once. Dog-free trails do get the highest ratings, but it’s likely because they also tend to have highest high points, so offer views, are challenging, and so get good ratings.</p>
+<pre class="r"><code>byfeature &lt;- 
+tt_watraildf %&gt;%
+  group_by(features_unnest) %&gt;%
+  summarise(n_feature = n(),
+            avgrating = mean(rating),
+            avglength = mean(length_miles),
+            avggain = mean(gain),
+            avghigh = mean(highpoint),
+            minhigh = min(highpoint),
+            maxhigh = max(highpoint)) %&gt;%
+  mutate_at(vars(avglength:avgrating), round, 2) %&gt;%
+  mutate_at(vars(avggain:avghigh), round, 0) %&gt;%
+  arrange(desc(avgrating))
+
+## create table
+byfeature %&gt;%
+  gt() %&gt;%
+  fmt_number(columns = vars(n_feature, avggain, avghigh, minhigh, maxhigh), decimals = 0, use_seps = TRUE) %&gt;%
+  # sets the columns and palette to format cell color by value range
+  data_color(
+    columns = vars(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),
+    colors = scales::col_numeric(
+      palette = c(&quot;#ffffff&quot;, &quot;#f2fbd2&quot;, &quot;#c9ecb4&quot;, &quot;#93d3ab&quot;, &quot;#35b0ab&quot;),
+      domain = NULL)) %&gt;%
+  # tab_style calls add border boxes first to column labels, then body cells
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
+    locations = list(
+      cells_column_labels(
+        columns = gt::everything()
+      ))) %&gt;%
+  tab_style(
+    style = list(
+      cell_borders(
+        sides = &quot;all&quot;, color = &quot;grey&quot;, weight = px(1))),
+    locations = list(
+      cells_body(
+        rows = gt::everything()
+      ))) %&gt;%
+  tab_header(title = &quot;Averages by Feature&quot;,
+             subtitle = md(&quot;_Dog-free trails with waterfalls &amp; high peaks earn high ratings_&quot;)) %&gt;%
+  cols_align(columns = TRUE, align = &quot;center&quot;) %&gt;%
+  cols_align(columns = &quot;features_unnest&quot;, align = &quot;left&quot;) %&gt;%
+  cols_width(vars(features_unnest) ~ px(150),
+             vars(n_feature) ~ px(60),
+             starts_with(&quot;avg&quot;) ~ px(80),
+             ends_with(&quot;high&quot;) ~ px(90)
+             ) %&gt;%
+  cols_label(features_unnest = &quot;Feature&quot;, n_feature = &quot;N&quot;, avglength = &quot;Avg Length (miles)&quot;,
+             avgrating = &quot;Avg Rating&quot;, avggain = &quot;Avg Gain (ft)&quot;,avghigh = &quot;Avg high point&quot;,
+             minhigh = &quot;Lowest high point&quot;, maxhigh = &quot;Max high point&quot;) </code></pre>
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#esiswwfaqb .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#esiswwfaqb .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 4px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#esiswwfaqb .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#esiswwfaqb .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#esiswwfaqb .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#esiswwfaqb .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#esiswwfaqb .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#esiswwfaqb .gt_group_heading {
+  padding: 8px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#esiswwfaqb .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#esiswwfaqb .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#esiswwfaqb .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#esiswwfaqb .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#esiswwfaqb .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 12px;
+}
+
+#esiswwfaqb .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#esiswwfaqb .gt_first_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#esiswwfaqb .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#esiswwfaqb .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding: 4px;
+}
+
+#esiswwfaqb .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#esiswwfaqb .gt_sourcenote {
+  font-size: 90%;
+  padding: 4px;
+}
+
+#esiswwfaqb .gt_left {
+  text-align: left;
+}
+
+#esiswwfaqb .gt_center {
+  text-align: center;
+}
+
+#esiswwfaqb .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#esiswwfaqb .gt_font_normal {
+  font-weight: normal;
+}
+
+#esiswwfaqb .gt_font_bold {
+  font-weight: bold;
+}
+
+#esiswwfaqb .gt_font_italic {
+  font-style: italic;
+}
+
+#esiswwfaqb .gt_super {
+  font-size: 65%;
+}
+
+#esiswwfaqb .gt_footnote_marks {
+  font-style: italic;
+  font-size: 65%;
+}
+</style>
+<div id="esiswwfaqb" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;"><table class="gt_table" style="table-layout: fixed;; width: 0px">
+  <colgroup>
+    <col style="width:150px;"/>
+    <col style="width:60px;"/>
+    <col style="width:80px;"/>
+    <col style="width:80px;"/>
+    <col style="width:80px;"/>
+    <col style="width:80px;"/>
+    <col style="width:90px;"/>
+    <col style="width:90px;"/>
+  </colgroup>
+  <thead class="gt_header">
+    <tr>
+      <th colspan="8" class="gt_heading gt_title gt_font_normal" style>Averages by Feature</th>
+    </tr>
+    <tr>
+      <th colspan="8" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style><em>Dog-free trails with waterfalls &amp; high peaks earn high ratings</em></th>
+    </tr>
+  </thead>
+  <thead class="gt_col_headings">
+    <tr>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Feature</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">N</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg Rating</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg Length (miles)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg Gain (ft)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Avg high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Lowest high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Max high point</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Dogs not allowed</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">255</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.52</td>
+      <td class="gt_row gt_center" style="background-color: #B5E3B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.28</td>
+      <td class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,921</td>
+      <td class="gt_row gt_center" style="background-color: #98D5AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,173</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+      <td class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Waterfalls</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">282</td>
+      <td class="gt_row gt_center" style="background-color: #50B7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.46</td>
+      <td class="gt_row gt_center" style="background-color: #ACDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.64</td>
+      <td class="gt_row gt_center" style="background-color: #ADDFAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,938</td>
+      <td class="gt_row gt_center" style="background-color: #AEDFB0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,648</td>
+      <td class="gt_row gt_center" style="background-color: #E0F5C5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">150</td>
+      <td class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Established campsites</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">396</td>
+      <td class="gt_row gt_center" style="background-color: #65BFAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.40</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12.80</td>
+      <td class="gt_row gt_center" style="background-color: #82CBAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,380</td>
+      <td class="gt_row gt_center" style="background-color: #88CEAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,487</td>
+      <td class="gt_row gt_center" style="background-color: #FDFEF8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">25</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Ridges/passes</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">496</td>
+      <td class="gt_row gt_center" style="background-color: #8FD1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.25</td>
+      <td class="gt_row gt_center" style="background-color: #55B9AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12.24</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,864</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,575</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">400</td>
+      <td class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Lakes</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">583</td>
+      <td class="gt_row gt_center" style="background-color: #9CD7AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.19</td>
+      <td class="gt_row gt_center" style="background-color: #A5DBAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.92</td>
+      <td class="gt_row gt_center" style="background-color: #A9DDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,988</td>
+      <td class="gt_row gt_center" style="background-color: #96D4AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,231</td>
+      <td class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+      <td class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Old growth</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">534</td>
+      <td class="gt_row gt_center" style="background-color: #A2DAAD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.16</td>
+      <td class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.00</td>
+      <td class="gt_row gt_center" style="background-color: #BDE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,746</td>
+      <td class="gt_row gt_center" style="background-color: #BAE5B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,364</td>
+      <td class="gt_row gt_center" style="background-color: #FDFEF8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">25</td>
+      <td class="gt_row gt_center" style="background-color: #EDF9CE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8,096</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Mountain views</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,175</td>
+      <td class="gt_row gt_center" style="background-color: #A7DCAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.13</td>
+      <td class="gt_row gt_center" style="background-color: #AADDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.72</td>
+      <td class="gt_row gt_center" style="background-color: #96D4AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,201</td>
+      <td class="gt_row gt_center" style="background-color: #80CAAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,621</td>
+      <td class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Summits</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">454</td>
+      <td class="gt_row gt_center" style="background-color: #ABDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.11</td>
+      <td class="gt_row gt_center" style="background-color: #99D6AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10.40</td>
+      <td class="gt_row gt_center" style="background-color: #37B1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,854</td>
+      <td class="gt_row gt_center" style="background-color: #54B9AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,250</td>
+      <td class="gt_row gt_center" style="background-color: #CBEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">200</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Wildflowers/Meadows</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">952</td>
+      <td class="gt_row gt_center" style="background-color: #ADDFAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.10</td>
+      <td class="gt_row gt_center" style="background-color: #B6E3B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.26</td>
+      <td class="gt_row gt_center" style="background-color: #ABDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,967</td>
+      <td class="gt_row gt_center" style="background-color: #95D4AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,243</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+      <td class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Rivers</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">547</td>
+      <td class="gt_row gt_center" style="background-color: #B7E3B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.05</td>
+      <td class="gt_row gt_center" style="background-color: #A9DDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.76</td>
+      <td class="gt_row gt_center" style="background-color: #BFE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,731</td>
+      <td class="gt_row gt_center" style="background-color: #C1E8B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,205</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Good for kids</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">694</td>
+      <td class="gt_row gt_center" style="background-color: #BEE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.01</td>
+      <td class="gt_row gt_center" style="background-color: #FCFEF4; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4.63</td>
+      <td class="gt_row gt_center" style="background-color: #FBFEEF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">569</td>
+      <td class="gt_row gt_center" style="background-color: #E7F7CA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,080</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+      <td class="gt_row gt_center" style="background-color: #E9F8CB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8,245</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Wildlife</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">747</td>
+      <td class="gt_row gt_center" style="background-color: #C0E8B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.00</td>
+      <td class="gt_row gt_center" style="background-color: #C0E8B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.84</td>
+      <td class="gt_row gt_center" style="background-color: #CDEEB7; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,541</td>
+      <td class="gt_row gt_center" style="background-color: #BFE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,241</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+      <td class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Dogs allowed on leash</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,045</td>
+      <td class="gt_row gt_center" style="background-color: #CAEDB5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.94</td>
+      <td class="gt_row gt_center" style="background-color: #E4F6C8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7.04</td>
+      <td class="gt_row gt_center" style="background-color: #D8F2BF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,379</td>
+      <td class="gt_row gt_center" style="background-color: #C2E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,183</td>
+      <td class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+      <td class="gt_row gt_center" style="background-color: #35B0AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Fall foliage</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">508</td>
+      <td class="gt_row gt_center" style="background-color: #CAEDB5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.94</td>
+      <td class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.28</td>
+      <td class="gt_row gt_center" style="background-color: #C8ECB4; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,618</td>
+      <td class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,334</td>
+      <td class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+      <td class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,249</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Coast</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">106</td>
+      <td class="gt_row gt_center" style="background-color: #D2EFBA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.89</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4.12</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">351</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">433</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6,454</td>
+    </tr>
+    <tr>
+      <td class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">none</td>
+      <td class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">68</td>
+      <td class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.38</td>
+      <td class="gt_row gt_center" style="background-color: #E0F4C5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7.26</td>
+      <td class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,758</td>
+      <td class="gt_row gt_center" style="background-color: #A6DCAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,849</td>
+      <td class="gt_row gt_center" style="background-color: #F9FDE8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">60</td>
+      <td class="gt_row gt_center" style="background-color: #D4F0BC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8,970</td>
+    </tr>
+  </tbody>
+  
+  
+</table></div>
 </div>
 <div id="and-finally-a-quick-model-to-see-what-might-affect-a-trail-rating." class="section level3">
 <h3>And finally a quick model to see what might affect a trail rating.</h3>
@@ -295,6 +1364,6 @@ summary(wtmodel1)
 #&gt; Residual standard error: 1.398 on 1919 degrees of freedom
 #&gt; Multiple R-squared:  0.0488, Adjusted R-squared:  0.04682 
 #&gt; F-statistic: 24.61 on 4 and 1919 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>Plenty more to do with the set, and some responses I’ve seen have been creative…network graphs, better models…but I was able to brush up on gt, learned how to unnest and keep obs where the list was empty. So a successful #tudytuesday</p>
+<p>There’s plenty more to do with the set, and some responses I’ve seen on Twitter have been creative…network graphs, better models…but I was able to brush up on gt, learned how to unnest and keep obs where the list was empty. So a successful #tudytuesday.</p>
 <p><em>This post was last updated on 2020-11-30</em></p>
 </div>
