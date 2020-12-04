@@ -194,4 +194,4 @@ tdf_bigset <- read.csv("https://github.com/camminady/LeTourDataSet/blob/master/R
 
 Now this is a ton of data to work with, and I won't use it all. Figured I'd include the code to get it all in case you get inspired to grab it and take a look.
 
-Ok...that's it for now...charts and tables to come soon. 
+Ok...that's it for cleaning & prepping...charts and tables in [Stage 2](https://www.gregdubrow.io/2020/12/04/tidy-tuesday-april-07-2020-le-tour-stage-2-charts/). 
