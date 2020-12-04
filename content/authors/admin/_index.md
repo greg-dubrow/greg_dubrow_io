@@ -41,6 +41,6 @@ user_groups:
 
 I'm a data analyst/data scientist with experitise in higher education systems, policy, undergraduate admissions, and development/alumni relations. I work in r for everything from data import & cleaning, to analysis, modeling & visualization. 
 
-In this space I'll mostly be posting code-thourght and results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work. All views expressed here are my own.
+In this space I'll mostly be posting code-throughs and results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work. All views expressed here are my own.
 
 Over the years I've [made some music](https://www.discogs.com/artist/1980511-Greg-Dubrow) with [Gosta Berling](https://gostaberling.bandcamp.com/), [Slowness](https://slowness.bandcamp.com/), [Big Still](https://bigstill.bandcamp.com/) and [Idle Wilds](https://www.youtube.com/watch?v=86rp45bp93g). My photography is at [Flickr](https://www.flickr.com/photos/dannebrog/).
