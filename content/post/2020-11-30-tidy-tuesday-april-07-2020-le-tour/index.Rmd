@@ -1,5 +1,5 @@
 ---
-title: Tidy Tuesday, April 07, 2020 - Le Tour! (cleaning the data)
+title: Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)
 author: Greg Dubrow
 date: '2020-11-30'
 slug: tidy-tuesday-april-07-2020-le-tour

@@ -1,0 +1,328 @@
+---
+title: Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 2, Charts!)
+author: Greg Dubrow
+date: '2020-12-04'
+slug: tidy-tuesday-april-07-2020-le-tour-stage-2-charts
+categories:
+  - post
+tags:
+  - R
+  - rstats
+  - tidytuesday
+  - tour de france
+  - ggplot
+  - dataviz data visualization
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-12-04T12:43:30-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<link href="index_files/anchor-sections/anchor-sections.css" rel="stylesheet" />
+<script src="index_files/anchor-sections/anchor-sections.js"></script>
+
+
+<div id="back-in-the-saddle-for-stage-2-of-the-tour-de-france-data-ride" class="section level3">
+<h3>Back in the saddle for Stage 2 of the Tour de France data ride</h3>
+<p><a href="https://www.gregdubrow.io/2020/11/30/tidy-tuesday-april-07-2020-le-tour/">Stage 1</a> ended up being all about wrangling and cleaning the <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-04-07">#TidyTuesday Tour de France data</a>. When I first dug into the data I wasn’t sure what I wanted to visualize. It wasn’t until I spent some time living with the data, seeing what was there and looking at the <a href="https://twitter.com/search?q=%23TidyTuesday%20tour%20de%20france&amp;src=recent_search_click&amp;f=live">#tidytuesday TdF submissions on Twitter</a> so I didn’t repeat what was done that I decided I wanted to look at results by stage, specifically the gaps between the winners of each stage and the times recorded for the next-best group and the last rider(s) across the line. <a href="https://twitter.com/CharlieGallaghr">Charlie Gallagher</a> took a <a href="https://github.com/charlie-gallagher/tidy-tuesday/tree/master/tourdefrance">similar approach</a> at the data, using overall race results for the GC riders.</p>
+<p>A quick but important aside - in the Tour, as in most (all?) UCI races, while each rider is accorded a place - 1, 2, 3, etc… - times are calculated by identifiable groups crossing the line. So let’s say you are 2nd to 15th in the 1st group (of 15 total riders) that crosses with barely any daylight between riders; you each get the same time as the winner. But only 1 rider wins the stage. In any stage, there could be only 2 or 3 identifiable time groups, or there could be many groups. Depends on the stage type and other factors - crashes, where in the race the stage took place, etc…</p>
+<p>What this means for my project here is I needed to wrangle data so that I was able to identify two time groups apart from the winner; the next best group and the last group. Each group could have more than 1 rider. Download and clean the stage results data and you’ll see what I mean.</p>
+<p>So let’s look at some code and charts. To mimimize code I’m going to skip the code that builds the charts…after the first one the basic code is the same, just some filters change. But you can find full code in <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2020/tt_2020-04-07_letour">my github repo for the project</a>.</p>
+<p>At the end of Stage 1 we had a number of data frames. I’m joining two for this analysis, one with stage winners (which has important stage characteristic data) and a set of all riders in every stage from 1903 to 2019. We’ll first load the pakcages we need…</p>
+<pre class="r"><code># load packages
+library(tidyverse) # to do tidyverse things
+library(lubridate) # to do things with dates &amp; times
+library(tidylog) # to get a log of what&#39;s happening to the data
+library(patchwork) # to stitch together plots
+
+# create notin operator to help with cleaning &amp; analysis
+`%notin%` &lt;- negate(`%in%`)</code></pre>
+<p>Then join the sets. For the purposes of this post I’ll just load an RDS I created (<em>it’s not uploaded to the repo, sorry, but you can recreate it with the <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/blob/master/2020/tt_2020-04-07_letour/tt_2020-04-07_letour.R">code</a></em>.</p>
+<pre class="r"><code># tdf_stageall &lt;- merge(tdf_stagedata, tdf_stagewin, by.x = c(&quot;race_year&quot;, &quot;stage_results_id&quot;),
+#                       by.y = c(&quot;race_year&quot;, &quot;stage_results_id&quot;), all = T)
+
+tdf_stageall &lt;- readRDS(&quot;data/tdf_stageall.rds&quot;)</code></pre>
+<p>This set has many columns that we’ll build off of to use in analysis going forward. To get the changes in gaps by stage types, we’ll build another set. Because we want to look both at changes in stage types and gaps between winners and the field, the trick here is to sort out for each stage in each race year who the winners are (easy), who has the slwest time (mostly easy) and who has the 2nd best record time.</p>
+<p>That last item it tough because of the time &amp; rank method I described above. The script below is commented to show why I did what I did. Much of the code comes from looking at the data and seeing errors, issues, etc. Not including that code here. Also, much of my ability to spot errors comes from knowledge about the race, how it’s timed, some history. Domain knowledge helps a lot when cleaning &amp; analyzing data.</p>
+<pre class="r"><code>stage_gap &lt;-
+tdf_stageall %&gt;%
+  arrange(race_year, stage_results_id, rank2) %&gt;%
+  #  delete 1995 stage 16 - neutralized due to death in stage 15, all times the same
+  mutate(out = ifelse((race_year == 1995 &amp; stage_results_id == &quot;stage-16&quot;),
+                       &quot;drop&quot;, &quot;keep&quot;)) %&gt;%
+  filter(out != &quot;drop&quot;) %&gt;%
+  # delete  missing times
+  filter(!is.na(time)) %&gt;%
+  # remove non-finishers/starters, change outside time limit rank to numeric to keep in set
+  filter(rank %notin% c(&quot;DF&quot;, &quot;DNF&quot;, &quot;DNS&quot;, &quot;DSQ&quot;, &quot;NQ&quot;)) %&gt;%
+  filter(!is.na(rank)) %&gt;%
+
+  # OTLs are ejected from the race because they finished outside a time limit. But we need them in the set.
+  mutate(rank_clean = case_when(rank == &quot;OTL&quot; ~ &quot;999&quot;,
+                           TRUE ~ rank)) %&gt;% 
+  # sortable rank field
+  mutate(rank_n = as.integer(rank_clean)) %&gt;%
+  # creates total time in minutes as numeric, round it to 2 digits
+  mutate(time_minutes = ifelse(!is.na(elapsed),
+                              day(elapsed)*1440 + hour(elapsed)*60 + minute(elapsed) + second(elapsed)/60,
+                               NA)) %&gt;%
+  mutate(time_minutes = round(time_minutes, 2)) %&gt;%
+  
+  # create field for difference from winner
+  group_by(race_year, stage_results_id) %&gt;% 
+  arrange(race_year, stage_results_id, time_minutes, rank2) %&gt;%
+
+  mutate(time_diff = time_minutes - min(time_minutes)) %&gt;%
+  mutate(time_diff_secs = time_diff*60) %&gt;%
+  mutate(time_diff = round(time_diff, 2)) %&gt;%
+  mutate(time_diff_secs = round(time_diff_secs, 0)) %&gt;%
+  mutate(time_diff_period = seconds_to_period(time_diff_secs)) %&gt;%
+  mutate(rank_mins = rank(time_minutes, ties.method = &quot;first&quot;)) %&gt;%
+  # create rank field to use to select winner, next best, last
+  mutate(compare_grp = case_when(rank_n == 1 ~ &quot;Winner&quot;,
+                                 (rank_n &gt; 1 &amp; time_diff_secs &gt; 0 &amp; rank_mins != max(rank_mins))
+                                 ~ &quot;Next best2&quot;,
+                                  rank_mins == max(rank_mins) ~ &quot;Last&quot;,
+                                 TRUE ~ &quot;Other&quot;)) %&gt;%
+  ungroup() %&gt;%
+  group_by(race_year, stage_results_id, compare_grp) %&gt;% 
+  arrange(race_year, stage_results_id, rank_mins) %&gt;%
+  mutate(compare_grp = ifelse((compare_grp == &quot;Next best2&quot; &amp; rank_mins == min(rank_mins)),
+                               &quot;Next best&quot;, compare_grp)) %&gt;%
+  mutate(compare_grp = ifelse(compare_grp == &quot;Next best2&quot;, &quot;Other&quot;, compare_grp)) %&gt;%
+  ungroup() %&gt;%
+  mutate(compare_grp = factor(compare_grp, levels = c(&quot;Winner&quot;, &quot;Next best&quot;, &quot;Last&quot;, &quot;Other&quot;))) %&gt;%
+  # create race decade field
+  mutate(race_decade = floor(race_year / 10) * 10) %&gt;%
+  mutate(race_decade = as.character(paste0(race_decade, &quot;s&quot;))) %&gt;%
+  # keep only winner, next, last
+  filter(compare_grp != &quot;Other&quot;) %&gt;%
+  select(race_year, race_decade, stage_results_id, stage_type, rider_firstlast, bib_number, Winner_Country,
+         rank, rank_clean, rank_n, time, elapsed, time_minutes, time_diff, time_diff_secs, time_diff_period, 
+         rank_mins, compare_grp) </code></pre>
+<p>Ok, finally, let’s see what this data looks like. First a chart to show averages and quartile ranges for the gaps by stage type. Create a data object with the values, then the plots. Faceting by stage type didn’t work because the y axis ranges were very different. So we’ll use <code>patchwork</code> to stitch them together in one plot. The medians are the red dots, interquartile ranges at either end of the line, and means are in black. I included both means &amp; medians because the spread for some stage types was so great.</p>
+<pre class="r"><code>gapranges &lt;- stage_gap %&gt;%
+  filter(compare_grp != &quot;Winner&quot;) %&gt;%
+  filter(stage_type %notin% c(&quot;Other&quot;, &quot;Time Trial - Team&quot;)) %&gt;%
+  group_by(stage_type, compare_grp) %&gt;%
+  summarise(num = n(), 
+            lq = quantile(time_diff_secs, 0.25),
+            medgap = median(time_diff_secs),
+            uq = quantile(time_diff_secs, 0.75),
+            lq_tp = (seconds_to_period(quantile(time_diff_secs, 0.25))),
+            medgap_tp = (seconds_to_period(median(time_diff_secs))),
+            uq_tp = (seconds_to_period(quantile(time_diff_secs, 0.75))),
+            avggap = round(mean(time_diff_secs),2),
+            avggap_tp = round(seconds_to_period(mean(time_diff_secs)), 2))
+
+gapplot1 &lt;-
+gapranges %&gt;%
+  filter(compare_grp == &quot;Next best&quot;) %&gt;%
+  ggplot(aes(stage_type, medgap, color = avggap)) +
+  geom_linerange(aes(ymin = lq, ymax = uq), size = 2, color = &quot;#0055A4&quot;) +
+  geom_point(size = 2, color = &quot;#EF4135&quot;) +
+  geom_point(aes(y = avggap), size = 2, color = &quot;black&quot;, alpha = .8) +
+  geom_text(aes(label = medgap_tp), 
+            size = 3, color = &quot;#EF4135&quot;, hjust = 1.2) +
+  geom_text(aes(y = uq, label = uq_tp), 
+            size = 3, color = &quot;#0055A4&quot;, hjust = 1.2) +
+  geom_text(aes(y = lq, label = lq_tp), 
+            size = 3, color = &quot;#0055A4&quot;, hjust = 1.2) +
+  geom_text(aes(label = avggap_tp, y = avggap_tp),
+            size = 3, color = &quot;black&quot;, alpha = .8, hjust = -.1) +
+  labs(title = &quot;Time Gap from Stage Winner to Next Best Time&quot;,
+       subtitle = &quot;Median &amp; Inter-quartile Ranges (avg in black)&quot;,
+       y = &quot;Time Gap from Winner&quot;, x = &quot;Stage Type&quot;) +
+  theme_light() +
+  theme(plot.title = element_text(color = &quot;#0055A4&quot;, size = 9),
+        plot.subtitle = element_text(face = &quot;italic&quot;, color = &quot;#EF4135&quot;,
+                                     size = 8),
+        axis.title.x = element_text(color = &quot;#0055A4&quot;),
+        axis.title.y = element_text(color = &quot;#0055A4&quot;), 
+        axis.text.x = element_text(color = &quot;#0055A4&quot;),
+        axis.text.y=element_blank())
+
+gapplot2 &lt;-
+gapranges %&gt;%
+  filter(compare_grp == &quot;Last&quot;) %&gt;%
+  ggplot(aes(stage_type, medgap, color = avggap)) +
+  geom_linerange(aes(ymin = lq, ymax = uq), size = 2, color = &quot;#0055A4&quot;) +
+  geom_point(size = 2, color = &quot;#EF4135&quot;) +
+  geom_point(aes(y = avggap), size = 2, color = &quot;black&quot;, alpha = .8) +
+  geom_text(aes(label = medgap_tp), 
+            size = 3, color = &quot;#EF4135&quot;, hjust = 1.2) +
+  geom_text(aes(y = uq, label = uq_tp), 
+            size = 3, color = &quot;#0055A4&quot;, hjust = 1.2) +
+  geom_text(aes(y = lq, label = lq_tp), 
+            size = 3, color = &quot;#0055A4&quot;, hjust = 1.1) +
+  geom_text(aes(label = avggap_tp, y = avggap_tp),
+            size = 3, color = &quot;black&quot;, alpha = .8, hjust = -.1) +
+  labs(title = &quot;Time Gap from Stage Winner to Slowest Time&quot;,
+       subtitle = &quot;Median &amp; Inter-quartile Ranges (avg in black)&quot;,
+       y = &quot;&quot;, x = &quot;Stage Type&quot;) +
+  theme_light() +
+  theme(plot.title = element_text(color = &quot;#0055A4&quot;, size = 9),
+        plot.subtitle = element_text(face = &quot;italic&quot;, color = &quot;#EF4135&quot;,
+                                     size = 8),
+        axis.title.x = element_text(color = &quot;#0055A4&quot;, size = 9),
+        axis.text.x = element_text(color = &quot;#0055A4&quot;, size = 9),
+        axis.text.y=element_blank())
+
+gapplot1 + gapplot2 +
+  plot_annotation(title = &quot;Tour de France Stages, 1903 to 2019&quot;,
+                  theme = theme(plot.title = 
+                                  element_text(color = &quot;#0055A4&quot;, size = 10)))</code></pre>
+<p><img src="index_files/figure-html/tt_letour1b-1.png" width="2250" /></p>
+<p>What do these charts tell us? Well unsurprisingly mountain stages tend to have longer gaps between winners and the rest of the field than do flat/plain/hilly stages. Time trials are usually on flat or hilly stages, so they behave more like all other flat/plain/hilly stages. Even looking at the median to smooth for outliers, half of the last men in on mountain stages came in under 36 minutes, half over 36 minutes. The last 25% of mountain-stage riders came in an hour or more after the winner.</p>
+<p>How has this changes over time? Well let’s facet out by degree decade.</p>
+<p>First thing that needs doing is to build a dataframe for analysis - it will have medians my race year and stage type. But for the chart we want to have a decade field. Turns out this was a bit complicated in order to get the chart I wanted. You can see in the code comments why I did what I did.</p>
+<pre class="r"><code>gaprangesyrdec &lt;- 
+stage_gap %&gt;%
+  filter(compare_grp != &quot;Winner&quot;) %&gt;%
+  filter(stage_type %notin% c(&quot;Other&quot;, &quot;Time Trial - Team&quot;)) %&gt;%
+  group_by(stage_type, compare_grp, race_year) %&gt;%
+  summarise(num = n(), 
+            lq = quantile(time_diff_secs, 0.25),
+            medgap = median(time_diff_secs),
+            uq = quantile(time_diff_secs, 0.75),
+            lq_tp = (seconds_to_period(quantile(time_diff_secs, 0.25))),
+            medgap_tp = (seconds_to_period(median(time_diff_secs))),
+            uq_tp = (seconds_to_period(quantile(time_diff_secs, 0.75))),
+            avggap = round(mean(time_diff_secs),2),
+            avggap_tp = round(seconds_to_period(mean(time_diff_secs)), 2)) %&gt;%
+  ungroup() %&gt;%
+  # need to hard code in rows so x axis &amp; faceting works in by decade charts
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1915, .before = 13) %&gt;%
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1916, .before = 14) %&gt;%
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1917, .before = 15) %&gt;%
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1918, .before = 16) %&gt;%
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1915, .before = 123) %&gt;%
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1916, .before = 124) %&gt;%
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1917, .before = 125) %&gt;%
+  add_row(stage_type = &quot;Flat / Plain / Hilly&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1918, .before = 126) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1915, .before = 233) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1916, .before = 234) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1917, .before = 235) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Next best&quot;,
+          race_year = 1918, .before = 236) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1915, .before = 343) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1916, .before = 344) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1917, .before = 345) %&gt;%
+  add_row(stage_type = &quot;Mountain&quot;,  compare_grp = &quot;Last&quot;,
+          race_year = 1918, .before = 346) %&gt;%
+
+    # need field for x axis when faciting by decade
+  mutate(year_n = str_sub(race_year,4,4)) %&gt;%
+  # create race decade field
+  mutate(race_decade = floor(race_year / 10) * 10) %&gt;%
+  mutate(race_decade = as.character(paste0(race_decade, &quot;s&quot;))) %&gt;%
+#  mutate(race_decade = ifelse(race_year %in%))
+  arrange(stage_type, compare_grp, race_year) %&gt;%
+  select(stage_type, compare_grp, race_year, year_n, race_decade, everything())</code></pre>
+<p>Now that we have a dataframe to work from, let’s make a chart. But to do that we have to make a few charts and then put them together with the <a href="https://patchwork.data-imaginist.com/"><code>patchwork</code></a> package.</p>
+<p>First up is changes in the mountain stages and the median gaps between winner and next best recorded time. I grouped into three decade sets. Note that because of changes in the gaps over time, the y axes are a bit different in the early decades of the race. Also note at how I was able to get hours:seconds:minutes to show up on the y axis. The x axis digits are that way because race year would repeat in each facet, so I had to create a proxy year.</p>
+<pre class="r"><code># mountain winner to next best
+plot_dec_mtnb1 &lt;-
+gaprangesyrdec %&gt;%
+  filter(compare_grp == &quot;Next best&quot;) %&gt;%
+  filter(stage_type == &quot;Mountain&quot;) %&gt;%
+  filter(race_decade %in% c(&quot;1900s&quot;, &quot;1910s&quot;, &quot;1920s&quot;, &quot;1930s&quot;)) %&gt;%
+#  filter(race_decade %in% c(&quot;1940s&quot;, &quot;1950s&quot;, &quot;1960s&quot;, &quot;1970s&quot;)) %&gt;%
+  ggplot(aes(year_n, medgap)) +
+  geom_line(group = 1, color = &quot;#EF4135&quot;) +
+  geom_point(data = subset(gaprangesyrdec, 
+                           (race_year == 1919 &amp; stage_type == &quot;Mountain&quot; &amp; 
+                              compare_grp == &quot;Next best&quot; &amp; year_n == &quot;9&quot;)), 
+             aes(x = year_n, y = medgap), color = &quot;#EF4135&quot;) +
+  scale_y_time(labels = waiver()) +
+  labs(x = &quot;Year&quot;, y = &quot;H:Min:Sec&quot;) + 
+  facet_grid( ~ race_decade) +
+  theme_light() +
+  theme(axis.title.x = element_text(color = &quot;#0055A4&quot;, size = 8),
+        axis.title.y = element_text(color = &quot;#0055A4&quot; , size = 8),
+        axis.text.x = element_text(color = &quot;#0055A4&quot;, size = 8),
+        axis.text.y = element_text(color = &quot;#0055A4&quot;, size = 7),
+        strip.background = element_rect(fill = &quot;#0055A4&quot;), strip.text.x = element_text(size = 8))
+
+plot_dec_mtnb2 &lt;-
+gaprangesyrdec %&gt;%
+  filter(compare_grp == &quot;Next best&quot;) %&gt;%
+  filter(stage_type == &quot;Mountain&quot;) %&gt;%
+  filter(race_decade %in% c(&quot;1940s&quot;, &quot;1950s&quot;, &quot;1960s&quot;, &quot;1970s&quot;)) %&gt;%
+  ggplot(aes(year_n, medgap)) +
+  geom_line(group = 1, color = &quot;#EF4135&quot;) +
+  scale_y_time(limits = c(0, 420), labels = waiver()) +
+  labs(x = &quot;Year&quot;, y = &quot;H:Min:Sec&quot;) + 
+  facet_grid( ~ race_decade) +
+  theme_light() +
+  theme(axis.title.x = element_text(color = &quot;#0055A4&quot;, size = 8),
+        axis.title.y = element_text(color = &quot;#0055A4&quot; , size = 8),
+        axis.text.x = element_text(color = &quot;#0055A4&quot;, size = 8),
+        axis.text.y = element_text(color = &quot;#0055A4&quot;, size = 7),
+        strip.background = element_rect(fill = &quot;#0055A4&quot;), strip.text.x = element_text(size = 8))
+
+plot_dec_mtnb3 &lt;-
+gaprangesyrdec %&gt;%
+  filter(compare_grp == &quot;Next best&quot;) %&gt;%
+  filter(stage_type == &quot;Mountain&quot;) %&gt;%
+  filter(race_decade %in% c(&quot;1980s&quot;, &quot;1990s&quot;, &quot;2000s&quot;, &quot;2010s&quot;)) %&gt;%
+  ggplot(aes(year_n, medgap)) +
+  geom_line(group = 1, color = &quot;#EF4135&quot;) +
+  scale_y_time(limits = c(0, 420), labels = waiver()) +
+  labs(x = &quot;Year&quot;, y = &quot;H:Min:Sec&quot;) + 
+  facet_grid( ~ race_decade) +
+  theme_light() +
+  theme(axis.title.x = element_text(color = &quot;#0055A4&quot;, size = 8),
+        axis.title.y = element_text(color = &quot;#0055A4&quot; , size = 8),
+        axis.text.x = element_text(color = &quot;#0055A4&quot;, size = 8),
+        axis.text.y = element_text(color = &quot;#0055A4&quot;, size = 7),
+        strip.background = element_rect(fill = &quot;#0055A4&quot;), strip.text.x = element_text(size = 8))
+
+plot_dec_mtnb1 / plot_dec_mtnb2 / plot_dec_mtnb3 +
+  plot_annotation(title = &quot;Gaps Between Winner &amp; Next Best Times are Narrowing&quot;,
+                  subtitle = &quot;Median gap on mountain stages, by year &amp; decade; no race during world wars&quot;,
+                  theme = 
+                    theme(plot.title = element_text(color = &quot;#0055A4&quot;, size = 10),
+                          plot.subtitle = element_text(color = &quot;#EF4135&quot;, 
+                                                       face = &quot;italic&quot;, size = 9)))</code></pre>
+<p><img src="index_files/figure-html/tt_letour2b-1.png" width="2400" /></p>
+<p>What does this chart tell us? As you look at it, keep in mind the y axis is different in the 1900s - 1930s chart because in the early years of the race the gaps were much wider.</p>
+<p>Most obviously, and not surprisingly, the gaps between winner and next best time shrank as the race professionalized and sports science got better. There are of course outliers here and there in the last few decades, but the course changes year-to-year, and some years the race organizers have made some years more difficult than other in the mountains.</p>
+<p>We also see the effect of war. The two world wars not only interrupted the race in those years, but especially in the years immediately after WWII the gaps were larger than in the late 1930s. We can imagine what the war did to the pool of riders. The sport needed time to recover, for riders to train and get back to full fitness.</p>
+<p>Ok, now let’s look at the changes in the mountaints from the winners to the time for the last rider(s). Because the code is mostly the same for this chart, I’ll set the code chunk echo to FALSE. The only change is <code>filter(compare_grp == &quot;Last&quot;)</code></p>
+<p><img src="index_files/figure-html/tt_letour2c-1.png" width="2400" />
+What do we see here? Well first, notice that the gaps in the 1900s to 1930s were huge, especially before the 1930s. By the 1930s the gaps was usually around 30-40 minutes, similar to post-WWII years. But in the early years of the race, the last man in sometimes wouldn’t arrive until 10+ hours after the winner!</p>
+<p>But since then the gaps are mostly around 30+ minutes. And again, I adjusted to include racers who finish outside of the time-stage cut off, and are thus eliminated from the race overall.</p>
+<p>Ok, last two charts in this series…this time we’ll look at the flat &amp; hilly stages. Again, I won’t show the code. Only changes are to the filters: <code>filter(compare_grp == &quot;Next best&quot;)</code> or <code>filter(compare_grp == &quot;Last&quot;)</code> and <code>filter(stage_type == &quot;Flat / Plain / Hilly&quot;)</code>. If you want to see the full code, check out <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/blob/master/2020/tt_2020-04-07_letour/tt_2020-04-07_letour.R">tt_2020-04-07_letour.R</a> in my github repo for tidy tuesday projects.</p>
+<p><img src="index_files/figure-html/tt_letour2d-1.png" width="2400" /></p>
+<p>Perhaps the most surprising thing in the Flat/Hilly stage gaps between winners &amp; next best is that the gaps were similar to mountain stages. But then from watching the race all these years I remember that the climbers finish in groups fairly near to each other, even if the mountain stages are so hard.</p>
+<p>No surprise of course that for many decades now the gaps have been around or under a minute. After the bunch sprints, the next group of riders, those not contesting the win, are right behind that pack.</p>
+<p><img src="index_files/figure-html/tt_letour2e-1.png" width="2400" /></p>
+<p>The gap from winner to last was much less than winner-to-last in mountains, which isn’t a surprise. The sprinters tend to suffer in the Alps, Pyrenees and other mountain stages. As long as they come in under the time threshold, they are likelyto be well behind on the day. But on flat stages, the only thing that keeps a rider more than a few minutes back is a spill, flat tire, or just having a bad day.</p>
+<p>Now it’s worth noting that I did not normalize for stage distance or elevation gain (for mountain stages) in terms of comparing year to year. I went with the assumption that since I was grouping multiple stages into a year, that even over time this would normalize itself. If this were a more serious analysis I’d do it.</p>
+<p>Another extention of this analysis would be a model to predict time gaps. Then I’d include stage distance &amp; gain, rider height/weight, and other factors.</p>
+<p>Some shout-outs are in order. First of course to the #tidytuesday crew. For the data here:<br />
+* <a href="https://twitter.com/rushworth_a">Alastair Rushworth</a> and his <a href="https://github.com/alastairrushworth/tdf"><code>tdf</code></a> package<br />
+* <a href="https://www.camminady.org/blog">Thomas Camminady</a> and his <a href="https://github.com/camminady/LeTourDataSet">Le Tour dataset</a></p>
+<p><em>This post was last updated on 2020-12-04</em></p>
+</div>
