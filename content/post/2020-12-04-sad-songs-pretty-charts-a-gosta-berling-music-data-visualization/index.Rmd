@@ -27,6 +27,7 @@ image:
 projects: []
 ---
 
+## Post still in draft stage...even though I have a draft: true in the YAML slug it's been published (thanks to my inadvertant push to git) & rather than tempt the blogdown/Hugo fates by deleting the file, it's up. Ignore for now, full post to come.
 
 ## Using the Spoitfy API and spotifyr package to visualize some music I've made
 
