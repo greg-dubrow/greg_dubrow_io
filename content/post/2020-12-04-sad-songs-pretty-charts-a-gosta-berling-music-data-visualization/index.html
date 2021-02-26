@@ -1,0 +1,50 @@
+---
+title: Sad Songs & Pretty Charts - a Gosta Berling Music Data Visualization
+author: Greg Dubrow
+date: '2020-12-04'
+slug: sad-songs-pretty-charts-a-gosta-berling-music-data-visualization
+categories:
+  - post
+tags:
+  - rstats
+  - R
+  - dataviz
+  - data visualization
+  - ggplot
+  - music
+  - gosta berling
+  - spotify
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-12-04T16:57:48-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
+
+
+<div id="using-the-spoitfy-api-and-spotifyr-package-to-visualize-some-music-ive-made" class="section level2">
+<h2>Using the Spoitfy API and spotifyr package to visualize some music I’ve made</h2>
+<p>For this post, I thought I’d focus on music analytics, given that music and data science/analysis are two things I’ve probably spent most of my waking hours on for a number of years now.</p>
+<p>Over the years I’ve made a lot of music in a number of different projects. For most of my time living in the Bay Area I’ve played with some friends in a band called <a href="https://gostaberling.bandcamp.com/">Gosta Berling</a>. We’ve released two EPs and a full album <em>(click on the album covers to give listen)</em></p>
+<p><a href="https://gostaberling.bandcamp.com/album/winterland"><img src="images/gb_winterland_sm.jpg" alt="Winterland" /></a> <a href="https://gostaberling.bandcamp.com/album/travel"><img src="images/gb_travel_sm.jpg" alt="Travel" /></a> <a href="https://gostaberling.bandcamp.com/album/everybodys-sweetheart"><img src="images/gb_sweetheart_sm.jpg" alt="Everybody’s Sweetheart" /></a></p>
+<p>Our sound could be called melancholy mood-pop. We like melody, but we were raised on post-punk so that minor key vibe is definitely present. The Spotify API has musical features including danceability, energy, and valence (what they call ‘happiness’), and I thought I’d try and learn Charlie Thompson’s <a href="https://github.com/charlie86/spotifyr"><code>spotifyr</code></a> package and see how we score. <code>spotifyr</code> has a bunch of functions designed to make it easier to navigate Spotify’s JSON data structure.</p>
+<p>So first thing, let’s load the packages we’ll be using:</p>
+<pre class="r"><code>library(tidyverse)
+library(tidylog)
+library(httr)
+library(stringr)
+library(lubridate)
+library(ggrepel)
+library(spotifyr)
+library(janitor)
+library(GGally)
+library(PerformanceAnalytics)
+library(corrr)</code></pre>
+</div>

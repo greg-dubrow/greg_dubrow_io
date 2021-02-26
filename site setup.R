@@ -7,7 +7,7 @@
 #
 # blogdown::build_site()
 
-#blogdown::serve_site()
+blogdown::serve_site()
 blogdown::stop_server()
 
 
@@ -19,3 +19,11 @@ blogdown::stop_server()
 # 	Set disable_codefolding: true to turn off code folding for the post.
 # Set codefolding_show: hide to hide the code blocks in the post (as in this post).
 # Set codefolding_nobutton: true to turn off the “Show/hide code” button at the top of the post (as in the present post).
+
+
+## post workflow
+1. Open website project in RStudio.Version()
+2. Click serve site in Addins
+3.
+3. create folder for post in content / post
+2.
