@@ -331,7 +331,7 @@ tuit_8715_pctchgh <- rbind(tuit_8715_pctchgh1, tuit_8715_pctchgh2) %>%
   rbind(tuit_8715_pctchgh10) 
 ```
 
-Ok, the data is in place, let's see what it tells us! I'll hide the code for the more basic charts. Again, the full code file it in [my Tidy Tuesday] repo(https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2021/tt_2021-02-02_hbcu). You'll note that this analysis is mostly line graphs. That'a because I'm mostly doing trend analysis, and I like line graphs for time series. 
+Ok, the data is in place, let's see what it tells us! I'll hide the code for the more basic charts. Again, the full code file it in [my Tidy Tuesday repo](https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2021/tt_2021-02-02_hbcu). You'll note that this analysis is mostly line graphs. That'a because I'm mostly doing trend analysis, and I like line graphs for time series. 
 
 First up we'll use the Tidy Tuesday data to look at HBCU enrollment by ethnicity (Black and non-Black) from 1990 to 2015. What do we see? Overall, periods of increase and decrease in total enrollment. But interestingly we see that non-Black enrollment kept increasing, even as Black enrollment started to drop. Of course Black student make up a vast majority of HBCU enrollment, so their trends drive overall numbers. It is worth noting though that the changes started in the 2010s, coinciding with [changes in how NCES counted ethncity](https://nces.ed.gov/ipeds/report-your-data/race-ethnicity-reporting-changes). It's beyond the scope of this quick (ha) analysis, but worth digging deeper to see the effect of changes on the ethnic mix of HBCUs.
 
