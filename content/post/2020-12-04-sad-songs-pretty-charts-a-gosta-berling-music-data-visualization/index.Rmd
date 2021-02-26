@@ -2,6 +2,7 @@
 title: Sad Songs & Pretty Charts - a Gosta Berling Music Data Visualization
 author: Greg Dubrow
 date: '2020-12-04'
+draft: true
 slug: sad-songs-pretty-charts-a-gosta-berling-music-data-visualization
 categories:
   - post
