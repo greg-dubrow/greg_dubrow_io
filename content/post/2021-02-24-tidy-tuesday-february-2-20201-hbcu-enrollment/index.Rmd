@@ -425,7 +425,7 @@ tt_hbcu_enr_eth_sex %>%
 
 The next thing I want to look at is enrollment by sector for HBCUs. In this case we think of sectors along two axes - public and private, and 2-year (community/junior colleges) vs 4-year (baccalaureate granting). What these first two sector charts show us is that most HBCU enrollment is in publics and in 4-year schools. Given the land-grant history of most HBCUs, that makes sense. 
 
-I am leaving in the code for the first chart to highlight how one can a) have two different colored lines within the same chart in a faceted visualization (the `scale_color_manual` call) and b) use the amazing [`ggtext`](https://wilkelab.org/ggtext/) package to get two different colors of text in the subtitle line, so it does the work of a legend. The "<span style = </span> " and the `element_markdown` call in the `theme` specification is how you make it happen.
+I am leaving in the code for the first chart to highlight how one can a) have two different colored lines within the same chart in a faceted visualization (the `scale_color_manual` call) and b) use the amazing [`ggtext`](https://wilkelab.org/ggtext/) package to get two different colors of text in the subtitle line, so it does the work of a legend. The `<span style = </span>` and the `element_markdown` call in the `theme` specification is how you make it happen.
 
 The third chart takes a slightly different view of the data, looking at percent of enrollment by sector within each of the ethnic categories we have in the data, Black and not-Black. What the first two charts showed is confirmed here - that Black students in HBCUs are mostly in public 4-years, and that trend has held steady since at least 1990.
 
@@ -512,7 +512,7 @@ tt_hbcu_enr_eth_sect %>%
 
 ```
 
-So we've done what we can with the Tidy Tuesday data, time to compare HBCUs to non-HBCUs using the Delta Cost Project data. We'll stay with sector analysis and look at enrollments by sector. To make it look like I wanted, I used Thomas Lin Pederson's [`patchwork` package](https://patchwork.data-imaginist.com/). I'll suppress code that creates the component charts and just show the patchwork call.
+So we've done what we can with the Tidy Tuesday data, time to compare HBCUs to non-HBCUs using the Delta Cost Project data. We'll stay with sector analysis and look at enrollments by sector. For the chart output I wanted, I used Thomas Lin Pederson's [`patchwork` package](https://patchwork.data-imaginist.com/). I'll suppress code that creates the component charts and just show the patchwork call.
 
 ```{r dataviz5, fig.width=7.5, fig.height=4.0, dpi = 300,  echo = FALSE, warning=FALSE, message = FALSE, error= FALSE}
 enr19902015hbcu <-
