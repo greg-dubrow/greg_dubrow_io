@@ -9,7 +9,7 @@
 
 blogdown::serve_site()
 blogdown::stop_server()
-
+blogdown::check_site()
 
 #### re: code folding
 # from https://www.jepusto.com/code-folding-update/
