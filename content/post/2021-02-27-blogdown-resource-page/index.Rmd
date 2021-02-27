@@ -1,0 +1,56 @@
+---
+title: Blogdown Resource Page
+author: Greg Dubrow
+date: '2020-11-26'
+slug: blogdown-resource-page
+categories:
+  - post
+tags: 
+  - R
+  - rstats
+  - blogdown
+  - rmarkdown
+  - hugo academic
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2021-02-27T14:25:37-08:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+A collection of links to various blogdown helper resources. Links here so I'm not running a million open tabs in my browser all the time.
+
+Blogdown & rmarkdown resources:
+
+  * [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook)
+
+Hugo Acadmic resources
+
+  * [Main guide](https://wowchemy.com/docs/getting-started)
+  * [Hugo Academic github repo](https://github.com/wowchemy/wowchemy-hugo-modules/tree/main/wowchemy/layouts)
+  * [Page bundles in Hugo](https://gohugo.io/content-management/page-bundles/)
+
+[Allison Hill's](https://alison.rbind.io/) is a fantastic font of knowledge:
+
+  * [Up & Running in 2021](https://alison.rbind.io/post/new-year-new-blogdown/)
+  * [A spoon full of Hugo](https://alison.rbind.io/post/2020-12-12-how-much-hugo/)
+  * [Hugo archetypes](https://alison.rbind.io/post/2019-02-19-hugo-archetypes/)
+  * [Allison's rstudio blogdown talk](https://arm.rbind.io/slides/blogdown.html#1)
+
+There are more helpful "spoonful of" links on Allison's blog.
+
+Other resources I found helpful:
+
+  * [Maëlle Salmon's nuggets of rmarkdown & Hugo wisdom](https://ropensci.org/blog/2020/04/23/rmd-learnings)
+  * [More from Maëlle about getting started with Hugo](https://masalmon.eu/2020/02/29/hugo-maintenance/)
+  * [Esteban Moro's workflow guide](http://estebanmoro.org/post/2019-02-01-setting-up-your-blog-with-rstudio-and-blogdown)
+  * [Athanasia Monika Mowinckel's worklflow guide](https://drmowinckels.io/blog/2020-05-25-changing-you-blogdown-workflow)
+
+Code folding in Hugo Academic...still haven't cracked the nut, but hopefully soon. Meanwhile, some resources...
+
+  * [James E. Pustejovsky's post](https://www.jepusto.com/code-folding-update)
