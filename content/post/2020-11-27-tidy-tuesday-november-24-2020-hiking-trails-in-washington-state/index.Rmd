@@ -11,6 +11,8 @@ tags:
   - rstats
   - ggplot
   - tidytuesday
+  - dataviz 
+  - data visualization
 subtitle: ''
 summary: 'Exploring the #tidytuesday dataset for 11-24-2020'
 authors: []

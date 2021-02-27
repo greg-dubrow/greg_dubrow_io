@@ -11,7 +11,8 @@ tags:
   - tidytuesday
   - tour de france
   - ggplot
-  - dataviz data visualization
+  - dataviz 
+  - data visualization
 subtitle: ''
 summary: ''
 authors: []

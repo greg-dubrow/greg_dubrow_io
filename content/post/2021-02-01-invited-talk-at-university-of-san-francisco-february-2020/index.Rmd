@@ -278,13 +278,13 @@ Anyway...back to the charts.
 
 I wanted to show USF undergraduate enrollment indexed over time relative to their Jesuit college peers. The final version of the chart is below, complete with annotations I added in power point. There are ways to do similar annotations on r; I used power point because I could do it quicker, with less fuzting around with annotation placement after rendering and saving the image. 
 
-We see that USF is in the upper quarter of total enrollment growth. Gonzaga & St. Louis University, two schools well-known thanks to success in the NCAA men's basketball tournament, showed significant growth in the period. Here you might say "but wait, Georgetown has had NCAA success", and I'd reply "yes, but their success started before 1987, so within this period didn't grow as much as Gonzaga & St. Louis.
+We see that USF is in the upper quarter of total enrollment growth. Gonzaga & St. Louis University, two schools well-known thanks to success in the NCAA men's basketball tournament, showed significant growth in the period. Here you might say _"but wait, Georgetown has had NCAA success"_, and I'd reply _"yes, but their success started before 1987, so within this period didn't grow as much as Gonzaga & St. Louis"._
 
 ![Jesuit College Enrollment](jesuitcoll_annotated.png)
 
-So how did I make this chart? How did we get the green line for USF, with all else in gray? Well...
+So how did I make this chart? How did we get the green line for USF, with all else in gray? 
 
-First I created a dataframe of just the Jesuit colleges, and indexed changes in enrollment to 1.
+First I created a dataframe of the Jesuit colleges, and indexed changes in enrollment to 1.
 
 ```{r jescoll1, fig.width=8, fig.height=5.0, dpi = 300, echo = TRUE, warning=FALSE, message = FALSE, error= FALSE}
 
@@ -332,7 +332,7 @@ ipeds_fallenroll_8718 %>%
 
 Why all the manual fixes to Loyola in New Orleans? Well, look at the chart again. See the dip in enrollment around 2005? What might have tanked enrollment at a New Orleans-based college in 2005? Oh right...Hurricane Katrina. To smooth out the drop, I reindexed from the 2006 enrollment point, and added to the index sum after that. For some reason I couldn't identify, the usual lag from prior year wasn't working so I just did it manually. 
 
-The plot...to get the green line, I first plotted everything *but* USF in grey, then plotted USF in green. Saved the plot, then added annotations in power point.
+As for the plot...to get the green line, I first plotted everything *but* USF in grey, then plotted USF in green. Saved the plot, then added annotations in power point.
 
 ```{r dataviz4, echo = TRUE, evaluate = FALSE, fig.show='hide'}
 

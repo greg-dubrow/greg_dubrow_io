@@ -9,6 +9,8 @@ tags:
   - R
   - rstats
   - tidytuesday
+  - dataviz 
+  - data visualization
   - tour de france
 subtitle: ''
 summary: ''
