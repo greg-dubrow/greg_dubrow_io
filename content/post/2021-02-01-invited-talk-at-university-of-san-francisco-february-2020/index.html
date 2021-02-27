@@ -3,17 +3,21 @@ title: Invited Talk at University of San Francisco, February 2020
 author: Greg Dubrow
 date: '2021-02-26'
 slug: invited-talk-at-university-of-san-francisco-february-2020
-draft: true
 categories:
   - post
 tags:
-  - data visualization
+  - R
+  - rstats
   - ggplot
-  - higher eduction
+  - dataviz 
+  - data visualization
+  - higher education
+  - jesuit colleges
+  - IPEDS
 subtitle: ''
 summary: ''
 authors: []
-lastmod: '2021-02-01T11:26:23-08:00'
+lastmod: 'r format(Sys.Date(), "%Y-%m-%d")'
 featured: no
 image:
   caption: ''
@@ -25,7 +29,7 @@ projects: []
 <script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
-<p>Back in early 2020 I was invited to give a talk at two budget forums at the <a href="https://www.usfca.edu/">University of San Francisco</a>. The general theme was looking at the landscape of enrollments in higher education, with a specific focus on liberal arts colleges, especially Jesuit colleges. Because I collected data from a variety of sources I thought it was make for a good blog post. Plus it’s the first time I’m posting about higher education, which has been my area of professional expertise for a while now.</p>
+<p>In early 2020 (back in the days of in-person gatherings) I was invited to give a talk at two budget forums at the <a href="https://www.usfca.edu/">University of San Francisco</a>. The general theme was looking at the landscape of enrollments in higher education, with a specific focus on liberal arts colleges, especially Jesuit colleges. Because I collected data from a variety of sources and did much of the work in r, I thought it would make for a good data blog post. Plus, like the <a href="https://www.gregdubrow.io/2021/02/25/tidy-tuesday-february-2-20201-hbcu-enrollment/">Tidy Tuesday HBCU enrollment post</a>, it’s about higher education, which has been my area of professional expertise for a while now.</p>
 <p>I structured the talk around these general questions:</p>
 <div id="what-are-the-major-trends-affecting-the-higher-education-landscape-in-the-us-today-particularly-traditional-liberal-arts-colleges" class="section level3">
 <h3>What are the major trends affecting the higher education landscape in the US today, particularly traditional liberal arts colleges?</h3>
@@ -43,33 +47,36 @@ projects: []
 </li>
 <li>What social/political threats are on the horizon that colleges should start addressing?</li>
 </ul>
-<p>The data, code and resulting presentation are in this <a href="https://github.com/greg-dubrow/USF-talk-February-2020">github repo</a>. What I plan to do in this post is in effect annotate some of the code to explain how I put everything together.</p>
+<p>The data, code and resulting presentation are in this <a href="https://github.com/greg-dubrow/USF-talk-February-2020">github repo</a>. What I plan to do in this post is in effect annotate some of the code to explain how I put everything together. And of course to show some charts &amp; tables.</p>
 <p>First up is pulling in a few decades of high school graduation and enrollment data and wrangling it all to show historical enrollment and projections through 2029. The full code for that is at the github repo in the file <a href="https://github.com/greg-dubrow/USF-talk-February-2020/blob/master/01_hs%20enrollment%20data.R">01_hs enrollment data.R</a>. So what did I do?</p>
 <p>First, loaded some packages:</p>
 <pre class="r"><code># readin in data, create df for plots
 library(tidyverse) # to do tidyverse things
 library(tidylog) # to get a log of what&#39;s happening to the data
+library(patchwork) # to stitch together plots
+library(ggtext) # helper functions for ggplot text
+library(ggrepel) # helper functions for ggplot
 library(rCAEDDATA) # aggregated CA HS data
 library(readr) # read in flat files
-library(janitor) # data munging/cleaning utilities</code></pre>
+library(janitor) # data munging/cleaning utilities
+#library(formatR) # help with tidying the code chunks</code></pre>
 <p>The <a href="https://github.com/daranzolin/rCAEDDATA">rCAEDDATA package</a> was put together by my former <a href="https://ir.sfsu.edu/">SFSU IR</a> colleague <a href="https://daranzolin.github.io/">David Ranzolin</a>. Though the last update was October 2017, it still contains a trove of data, including public HS graduation numbers from 1993 to 2016. That said, I didn’t actually use the package functions, just downloaded the data included with the package. For later years I manually downloaded files from the CA Department of Education’s data pages: <a href="https://www.cde.ca.gov/ds/sd/sd/filesgrad.asp">2017 here</a>, and the <a href="https://www.cde.ca.gov/ds/sd/sd/filesfycgr.asp">later years here</a>. The 2017 file has the same structure as the files in David’s package. Later years need a bit of restructuring:</p>
 <pre class="r"><code>cahsgrad18 &lt;- read.delim(&quot;data/cahsgrad18.txt&quot;, stringsAsFactors=FALSE) %&gt;%
-    clean_names() %&gt;%
+    clean_names() %&gt;% 
     filter(reporting_category == &quot;TA&quot;) %&gt;%
     filter(aggregate_level == &quot;S&quot;) %&gt;%
     filter(dass == &quot;All&quot;) %&gt;%
     filter(charter_school == &quot;All&quot;) %&gt;%
-    # filter(school_name != &quot;Nonpublic, Nonsectarian Schools&quot;) %&gt;%
-    # filter(school_name != &quot;District Office&quot;) %&gt;%
     mutate(YEAR = &quot;2018&quot;) %&gt;%
     mutate(YEAR = factor(YEAR)) %&gt;%
     mutate_at(vars(ends_with(&quot;_code&quot;)), as.character) %&gt;%
-    mutate(county_code = ifelse(nchar(county_code) == 1, str_pad(county_code, 2, &quot;left&quot;, &quot;0&quot;), county_code)) %&gt;%
+    mutate(county_code = ifelse(nchar(county_code) == 1, 
+                str_pad(county_code, 2, &quot;left&quot;, &quot;0&quot;), county_code)) %&gt;%
     mutate(CDS_CODE = paste(county_code, district_code, school_code, sep = &quot;&quot;)) %&gt;%
-    mutate(GRADS = as.integer(ifelse(regular_hs_diploma_graduates_count == &quot;*&quot;,
-                                                                     0, regular_hs_diploma_graduates_count))) %&gt;%
-    mutate(UC_GRADS = as.integer(ifelse(met_uc_csu_grad_req_s_count == &quot;*&quot;,
-                                                                         0, met_uc_csu_grad_req_s_count))) %&gt;%
+    mutate(GRADS = as.integer(ifelse(regular_hs_diploma_graduates_count == &quot;*&quot;, 
+                0, regular_hs_diploma_graduates_count))) %&gt;%
+    mutate(UC_GRADS = as.integer(ifelse(met_uc_csu_grad_req_s_count == &quot;*&quot;, 
+                0, met_uc_csu_grad_req_s_count))) %&gt;%
     select(CDS_CODE, GRADS, UC_GRADS, YEAR) %&gt;%
     group_by(YEAR) %&gt;%
     summarise(total_grads = sum(GRADS),
@@ -77,8 +84,8 @@ library(janitor) # data munging/cleaning utilities</code></pre>
                         notuccsu = total_grads - uccsu)
 </code></pre>
 <p>Next, some projected HS graduation data from the <a href="https://www.dof.ca.gov/Forecasting/Demographics/Projections/Public_K-12_Graded_Enrollment/">CA Department of Finance</a>. I did a quick transposing of the “HS Grads Table” tab in excel and used that to read into r. You can see the file I used at the github repo’s <a href="https://github.com/greg-dubrow/USF-talk-February-2020/tree/master/data">data folder</a>.</p>
-<pre><code>grproj_to2028 &lt;- readxl::read_excel(&quot;data/capublic_k12_enrollproj_to2028.xlsx&quot;,
-                                                                                         sheet = &quot;hsgrads-tr&quot;) %&gt;%
+<pre class="r"><code>grproj_to2028 &lt;- readxl::read_excel(&quot;data/capublic_k12_enrollproj_to2028.xlsx&quot;,
+                                sheet = &quot;hsgrads-tr&quot;) %&gt;%
     filter(year != &quot;2017-18&quot;) %&gt;%
     mutate(yearend = str_sub(year, 6, 7)) %&gt;%
     mutate(YEAR = paste(&quot;20&quot;, yearend, sep = &quot;&quot;)) %&gt;%
@@ -94,5 +101,156 @@ library(janitor) # data munging/cleaning utilities</code></pre>
     mutate(uccsu = ifelse(YEAR == &quot;2019&quot;, 210980, uccsu)) %&gt;%
     mutate(notuccsu = ifelse(YEAR == &quot;2019&quot;, total_grads - uccsu, notuccsu)) %&gt;%
     mutate(type = ifelse(YEAR == &quot;2019&quot;, &quot;Actual&quot;, type))</code></pre>
-<p>After cleaning just rbind the files together and voila…actual &amp; projected HS graduation data from 1993 to 2029!</p>
+<p>The projected HS grad stats didn’t have values for UC/CSU grads, so I needed to impute that as part of the merging of the actual &amp; projected files. I also calculated year-over-year percent changes for a few fields. (though did it manually not with a function like in the <a href="https://www.gregdubrow.io/2021/02/25/tidy-tuesday-february-2-20201-hbcu-enrollment/">Tidy Tuesday HBCU post</a>). The code below gets us the <code>cahsgrads_1993_2028</code> dataframe.</p>
+<pre class="r"><code>cahsgrads_1993_2028 &lt;- rbind(cahsgrad93to18_tot, grproj_to2028) %&gt;%
+    mutate(pctucgrads = uccsu / total_grads) %&gt;%
+    arrange(YEAR) %&gt;%
+    # add projected uccsu grads based on constant 2017-18 to 2018-19 increase 0.0061437
+    mutate(pctucgrads = ifelse(YEAR &gt;= &quot;2020&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2021&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2022&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2023&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2024&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2025&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2026&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2027&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2028&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(pctucgrads = ifelse(YEAR == &quot;2029&quot;, lag(pctucgrads) + 0.0061437, pctucgrads)) %&gt;%
+    mutate(uccsu = ifelse(type == &quot;Projected&quot;, round(pctucgrads * total_grads, 0), uccsu)) %&gt;%
+    mutate(notuccsu = ifelse(type == &quot;Projected&quot;, round(total_grads -uccsu, 0), notuccsu)) %&gt;%
+    mutate(gr_tot_change = (total_grads - lag(total_grads))) %&gt;%
+    mutate(gr_tot_pct_change = (total_grads/lag(total_grads)- 1)) %&gt;%
+    mutate(gr_uc_change = (uccsu - lag(uccsu))) %&gt;%
+    mutate(gr_uc_pct_change = (uccsu/lag(uccsu) - 1)) %&gt;%
+    mutate(gr_notuc_change = (notuccsu - lag(notuccsu))) %&gt;%
+    mutate(gr_notuc_pct_change = (notuccsu/lag(notuccsu) - 1)) %&gt;%
+    select(YEAR, total_grads, uccsu, notuccsu, type, pctucgrads, type, everything())
+
+cahsgrads_1993_2028 &lt;- cahsgrads_1993_2028 %&gt;%
+    mutate(pctucgrads = ifelse(year_ch &gt;= &quot;9293&quot;, uccsu / total_grads, pctucgrads))
+</code></pre>
+<p>Now that we have the data, let’s make the chart I presented to the group, showing actual &amp; projected high school grads in California, breaking out the <a href="https://www.cde.ca.gov/ci/gs/hs/hsgrtable.asp">UC/CSU eligible</a> grads. It’s fairly straightforward ggplot code, so no need to display here.</p>
+<p>What does the chart tell us? Well…</p>
+<ul>
+<li>67% increase in grads from 1993 to 2018</li>
+<li>UC/CSU eligibility 33% in 1993, 50% in 2018</li>
+<li>Grads expected to peak in 2023, then decline slightly</li>
+</ul>
+<p>But these assumptions were all pre-COVID - I gave the talks in early February of 2020. Given factors such as migration patterns within the state, people moving out of CA, parents moving their kids to private schools, etc., the actual graduation picture is sure to change.</p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz1-1.png" width="2400" /></p>
+<p>Next I presented some data on USF enrollment and compared USF to their Jesuit college peers. For that I used two sources: data from the Delta Cost Project (DCP), and since DCP stops at 2015, downloaded some files directly from IPEDS and read in the CSVs. I could also have used r tools like the <a href="https://www.urban.org/">Urban Insitute’s</a> <a href="https://github.com/UrbanInstitute/education-data-package-r"><code>educationdata</code> package</a> an API wrapper to that scrapes NCES and other websites for data. (I also referenced that package in <a href="https://www.gregdubrow.io/2021/02/25/tidy-tuesday-february-2-20201-hbcu-enrollment/">my HBCU post</a>).</p>
+<p>The import code isn’t all that challenging - read in the CSV, select the fields I needed, do a bit of basic cleaning. So no need to show it. You can see it in the github repo - go to the file <a href="https://github.com/greg-dubrow/USF-talk-February-2020/blob/master/02_ipeds%20data_enroll.R">’02_ipeds_enroll.R`</a>. Though if anything’s worth highlighting it’s the need to create an object of IPEDS unitids for Jesuit colleges so I could group them during analysis. The Jesuit colleges include names you know: Georgetown, Gonazaga, Boston College, the Loyolas (Chicago, LA, New Orleans, Baltimore), etc…</p>
+<pre class="r"><code>jesids &lt;- c(&quot;164924&quot;, &quot;181002&quot;, &quot;186432&quot;, &quot;122931&quot;, &quot;169716&quot;, &quot;159656&quot;, &quot;127918&quot;, &quot;192323&quot;, 
+                    &quot;163046&quot;, &quot;122612&quot;, &quot;236595&quot;, &quot;239105&quot;, &quot;203368&quot;, &quot;179159&quot;, &quot;215770&quot;, 
+                        &quot;215929&quot;, &quot;131496&quot;, &quot;166124&quot;, &quot;102234&quot;, &quot;117946&quot;, &quot;206622&quot;, &quot;102234&quot;, 
+                        &quot;166124&quot;, &quot;117946&quot;, &quot;206622&quot;, &quot;235316&quot;, &quot;129242&quot;)</code></pre>
+<p>First up is USF enrollment from Fall 1987 to Fall 2018 (the latest year that IPEDS had available as of February 2020). The ggplot code is mostly basic, so no need to show all of it here. What I will show is <a href="https://stackoverflow.com/a/52920047/10226848">a neat solution</a> to a crowded x axis - the <code>every_nth</code> function to count every n value, and apply it to the breaks - in this case I set it to n=3. I’d tried <code>scales::pretty_breaks()</code> but it didn’t work. I also used <code>ggrepel</code> to move the labels a bit.</p>
+<p>Not shown here, but I used <a href="https://patchwork.data-imaginist.com/"><code>patchwork</code></a> to stitch together the undergrad and grad enrollment plots.</p>
+<pre class="r"><code>every_nth = function(n) {
+  return(function(x) {x[c(TRUE, rep(FALSE, n - 1))]})
+}
+
+plot_usfenr_ug &lt;-
+    ipeds_fallenroll_8718 %&gt;%
+    filter(UNITID == &quot;122612&quot;, level == &quot;Undergraduate&quot;) %&gt;%
+    select(year, level, tot_enr) %&gt;%
+    ggplot(aes(year, tot_enr)) +
+    geom_bar(stat = &quot;identity&quot;, fill = &quot;#00543C&quot;) +
+    # geom_text(aes(label = scales::comma(round(tot_enr), accuracy = 1)), 
+    #                   color = &quot;#919194&quot;, vjust = -.75, size = 3) +
+    geom_text_repel(data = ipeds_fallenroll_8718 %&gt;%
+                                        filter(UNITID == &quot;122612&quot;, level == &quot;Undergraduate&quot;,
+                                        year %in% c(&quot;Fall 1987&quot;, &quot;Fall 1990&quot;, &quot;Fall 1990&quot;, 
+                                        &quot;Fall 1993&quot;, &quot;Fall 1996&quot;, &quot;Fall 1999&quot;,
+                                        &quot;Fall 2002&quot;, &quot;Fall 2005&quot;, &quot;Fall 2008&quot;, &quot;Fall 2011&quot;, 
+                                        &quot;Fall 2014&quot;, &quot;Fall 2017&quot;, &quot;Fall 2018&quot;)),
+                                    aes(label = scales::comma(round(tot_enr), 
+                                            accuracy = 1)), nudge_y = 400,
+                                        min.segment.length = 0,
+                                        size = 3, color = &quot;#919194&quot;) +
+    scale_x_discrete(breaks = every_nth(n = 3)) +
+    scale_y_continuous(label = scales::comma, limits = c(0, 7000),
+                                         breaks = c(0, 1750, 3500, 5250, 7000)) +
+    labs(x = &quot;&quot;, y = &quot;&quot;) +
+    theme_minimal() +
+    theme(panel.grid.major = element_blank(),   panel.grid.minor = element_blank(),
+                axis.text.y = element_text(size = 10))</code></pre>
+<p>What’s the enrollment picture at USF? Well, this chart tells us that:</p>
+<ul>
+<li>Undergraduate enrollment have increased by 60% since 1987.</li>
+<li>Graduate enrollments hovering around 3,500 for a number of years, and up to +/- 4,000 since 2016.</li>
+<li>Ratio of undergraduate::graduate enrollments steady over time, generally +/- 2% points from 60%.</li>
+</ul>
+<p>How does this relate to the high school graduation trends in CA &amp; nearby states?</p>
+<ul>
+<li>With 63% of new students coming from California, high school enrollments here will have most impact.</li>
+<li>Western Interstate Commission for Higher Education (WICHE) projects HS grads from all western states to peak in 2024 at 862,000, then decline for a few years, rebounding again around 2032. (Knocking at the College Door, <a href="https://knocking.wiche.edu" class="uri">https://knocking.wiche.edu</a>)</li>
+<li>During 1980s the Gen X population drop mitigated by increased college-going rates – what will happen this time?</li>
+</ul>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz3-1.png" width="2400" /></p>
+<p>Quick note about this plot…I was getting an annoying <em>Error in grid.Call(C_textBounds, as.graphicsAnnot(x<span class="math inline">\(label), x\)</span>x, x$y, : polygon edge not found</em> message trying to run these plots. For the presentation I was using the Calibri font, with this call in the <code>theme()</code> section: <code>text = element_text(family = "Calibri")</code>. I removed that &amp; the error went away. But this after trying everything from reinstalling Quartz, shutting down all browser windows, running `dev.off()’ in the console…got rid of the special font &amp; no error.</p>
+<p>Anyway…back to the charts.</p>
+<p>I wanted to show USF undergraduate enrollment indexed over time relative to their Jesuit college peers. The final version of the chart is below, complete with annotations I added in power point. There are ways to do similar annotations on r; I used power point because I could do it quicker, with less fuzting around with annotation placement after rendering and saving the image.</p>
+<p>We see that USF is in the upper quarter of total enrollment growth. Gonzaga &amp; St. Louis University, two schools well-known thanks to success in the NCAA men’s basketball tournament, showed significant growth in the period. Here you might say “but wait, Georgetown has had NCAA success”, and I’d reply "yes, but their success started before 1987, so within this period didn’t grow as much as Gonzaga &amp; St. Louis.</p>
+<div class="figure">
+<img src="jesuitcoll_annotated.png" alt="" />
+<p class="caption">Jesuit College Enrollment</p>
+</div>
+<p>So how did I make this chart? How did we get the green line for USF, with all else in gray? Well…</p>
+<p>First I created a dataframe of just the Jesuit colleges, and indexed changes in enrollment to 1.</p>
+<pre class="r"><code>enrollindex_jes &lt;-
+ipeds_fallenroll_8718 %&gt;%
+    filter(jescoll == 1, level == &quot;Undergraduate&quot;) %&gt;%
+  mutate(enr_pct_change2 = enr_pct_change / 100) %&gt;%
+    mutate(enr_pct_change2 = ifelse(year == &quot;Fall 1987&quot;, 1, enr_pct_change2)) %&gt;%
+    arrange(UNITID, year) %&gt;%
+    group_by(UNITID) %&gt;%
+    mutate(index_enr_inst = 1) %&gt;%
+    mutate(index_enr_inst = ifelse(year &gt;= &quot;Fall 1988&quot;, cumsum(enr_pct_change2),
+                                                                 index_enr_inst)) %&gt;%
+    ungroup() %&gt;%
+    ## fix loyola NO b/c of enroll drop after katrina
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year == &quot;Fall 2006&quot;), 
+                                                    0.833399497, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2007&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2008&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2009&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2010&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2011&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2012&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2013&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2014&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2015&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2016&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2017&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    mutate(index_enr_inst = ifelse((UNITID == &quot;159656&quot; &amp; year &gt;= &quot;Fall 2018&quot;),
+                lag(index_enr_inst) + enr_pct_change2, index_enr_inst)) %&gt;%
+    select(UNITID, inst_name, year, tot_enr, enr_change, enr_pct_change, 
+                 enr_pct_change2, index_enr_inst)</code></pre>
+<p>Why all the manual fixes to Loyola in New Orleans? Well, look at the chart again. See the dip in enrollment around 2005? What might have tanked enrollment at a New Orleans-based college in 2005? Oh right…Hurricane Katrina. To smooth out the drop, I reindexed from the 2006 enrollment point, and added to the index sum after that. For some reason I couldn’t identify, the usual lag from prior year wasn’t working so I just did it manually.</p>
+<p>The plot…to get the green line, I first plotted everything <em>but</em> USF in grey, then plotted USF in green. Saved the plot, then added annotations in power point.</p>
+<pre class="r"><code>ggplot(enrollindex_jes, aes(year, index_enr_inst, group = UNITID)) +
+    geom_line(data = subset(enrollindex_jes, UNITID != &quot;122612&quot;), color = &quot;grey&quot;) +
+    geom_line(data = subset(enrollindex_jes, UNITID == &quot;122612&quot;), 
+        color = &quot;#00543C&quot;, size = 1) +
+    scale_y_continuous(limits = c(-.5, 2),
+        breaks = c(-.5, 0, .5, 1, 1.5, 2)) +
+    labs(x = &quot;&quot;, y = &quot;&quot;) +
+    theme_minimal() +
+    theme(#text = element_text(family = &quot;Calibri&quot;),
+                panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+                axis.text.y = element_text(size = 14))</code></pre>
+<p>I had planned to use the Delta Cost/IPEDS tuition &amp; fees data for some charts in the section on affordability, but it worked out better to pull data from the College Board.</p>
+<p>Again, you can access the presentation in <a href="https://github.com/greg-dubrow/USF-talk-February-2020">the github repo</a>. If you have questions or comments about the code or the content, you can find me on LinkedIn or Twitter by clicking on the icon links at the bottom of the post or on the main page. Or send me an email of you already know how to find me that way.</p>
 </div>

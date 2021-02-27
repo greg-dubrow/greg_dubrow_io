@@ -10,9 +10,11 @@ tags:
   - rstats
   - tidytuesday
   - ggplot
-  - dataviz data visualization
+  - dataviz 
+  - data visualization
   - higher education
   - HBCU
+  - IPEDS
 subtitle: ''
 summary: ''
 authors: []
@@ -150,13 +152,13 @@ delta0015_tuitenr &lt;- delta0015all %&gt;%
   select(year, hbcu, sector_desc, everything()) %&gt;%
   ungroup() %&gt;%
   filter(year &gt; 1987)</code></pre>
-<p>Ok, the data is in place, let’s see what it tells us! I’ll hide the code for the more basic charts. Again, the full code file it in [my Tidy Tuesday] repo(<a href="https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2021/tt_2021-02-02_hbcu" class="uri">https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2021/tt_2021-02-02_hbcu</a>). You’ll note that this analysis is mostly line graphs. That’a because I’m mostly doing trend analysis, and I like line graphs for time series.</p>
+<p>Ok, the data is in place, let’s see what it tells us! I’ll hide the code for the more basic charts. Again, the full code file it in <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2021/tt_2021-02-02_hbcu">my Tidy Tuesday repo</a>. You’ll note that this analysis is mostly line graphs. That’a because I’m mostly doing trend analysis, and I like line graphs for time series.</p>
 <p>First up we’ll use the Tidy Tuesday data to look at HBCU enrollment by ethnicity (Black and non-Black) from 1990 to 2015. What do we see? Overall, periods of increase and decrease in total enrollment. But interestingly we see that non-Black enrollment kept increasing, even as Black enrollment started to drop. Of course Black student make up a vast majority of HBCU enrollment, so their trends drive overall numbers. It is worth noting though that the changes started in the 2010s, coinciding with <a href="https://nces.ed.gov/ipeds/report-your-data/race-ethnicity-reporting-changes">changes in how NCES counted ethncity</a>. It’s beyond the scope of this quick (ha) analysis, but worth digging deeper to see the effect of changes on the ethnic mix of HBCUs.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz1-1.png" width="2250" /><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz1-2.png" width="2250" /></p>
 <p>Next let’s look at enrollment by ethnicity &amp; sex. HBCU enrollment mirrors that of higher ed enrollment in general - <a href="https://nces.ed.gov/programs/digest/d19/tables/dt19_303.70.asp">since the early 1980s</a> women outnumber men. There are differences by sector (4-year, 2-year, public &amp; private) and field of study but the oveall trend has been consistent. We do see that for non-Black students at HBCUs the percentage of women is a bit less than that of Black students.</p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz2-1.png" width="2250" /><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz2-2.png" width="2250" /></p>
 <p>The next thing I want to look at is enrollment by sector for HBCUs. In this case we think of sectors along two axes - public and private, and 2-year (community/junior colleges) vs 4-year (baccalaureate granting). What these first two sector charts show us is that most HBCU enrollment is in publics and in 4-year schools. Given the land-grant history of most HBCUs, that makes sense.</p>
-<p>I am leaving in the code for the first chart to highlight how one can a) have two different colored lines within the same chart in a faceted visualization (the <code>scale_color_manual</code> call) and b) use the amazing <a href="https://wilkelab.org/ggtext/"><code>ggtext</code></a> package to get two different colors of text in the subtitle line, so it does the work of a legend. The “<span style = </span>” and the <code>element_markdown</code> call in the <code>theme</code> specification is how you make it happen.</p>
+<p>I am leaving in the code for the first chart to highlight how one can a) have two different colored lines within the same chart in a faceted visualization (the <code>scale_color_manual</code> call) and b) use the amazing <a href="https://wilkelab.org/ggtext/"><code>ggtext</code></a> package to get two different colors of text in the subtitle line, so it does the work of a legend. The <code>&lt;span style = &lt;/span&gt;</code> and the <code>element_markdown</code> call in the <code>theme</code> specification is how you make it happen.</p>
 <p>The third chart takes a slightly different view of the data, looking at percent of enrollment by sector within each of the ethnic categories we have in the data, Black and not-Black. What the first two charts showed is confirmed here - that Black students in HBCUs are mostly in public 4-years, and that trend has held steady since at least 1990.</p>
 <pre class="r"><code>tt_hbcu_enr_eth_sect %&gt;%
   filter(year &gt; 1989) %&gt;%
@@ -183,7 +185,7 @@ delta0015_tuitenr &lt;- delta0015all %&gt;%
         plot.caption = element_text(color = &quot;#999999&quot;, face = &quot;italic&quot;, size = 7))</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz3-1.png" width="2250" /></p>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz4-1.png" width="2250" /><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz4-2.png" width="2250" /></p>
-<p>So we’ve done what we can with the Tidy Tuesday data, time to compare HBCUs to non-HBCUs using the Delta Cost Project data. We’ll stay with sector analysis and look at enrollments by sector. To make it look like I wanted, I used Thomas Lin Pederson’s <a href="https://patchwork.data-imaginist.com/"><code>patchwork</code> package</a>. I’ll suppress code that creates the component charts and just show the patchwork call.</p>
+<p>So we’ve done what we can with the Tidy Tuesday data, time to compare HBCUs to non-HBCUs using the Delta Cost Project data. We’ll stay with sector analysis and look at enrollments by sector. For the chart output I wanted, I used Thomas Lin Pederson’s <a href="https://patchwork.data-imaginist.com/"><code>patchwork</code> package</a>. I’ll suppress code that creates the component charts and just show the patchwork call.</p>
 <pre class="r"><code>enr19902015all &lt;- enr19902015hbcu / enr19902015nothbcu
 enr19902015all</code></pre>
 <p><img src="{{< blogdown/postref >}}index_files/figure-html/dataviz6-1.png" width="2250" /></p>

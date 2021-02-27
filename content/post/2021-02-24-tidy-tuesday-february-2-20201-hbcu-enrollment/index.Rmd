@@ -10,9 +10,11 @@ tags:
   - rstats
   - tidytuesday
   - ggplot
-  - dataviz data visualization
+  - dataviz 
+  - data visualization
   - higher education
   - HBCU
+  - IPEDS
 subtitle: ''
 summary: ''
 authors: []

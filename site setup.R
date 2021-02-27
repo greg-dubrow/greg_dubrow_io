@@ -22,8 +22,8 @@ blogdown::check_site()
 
 
 ## post workflow
-1. Open website project in RStudio.Version()
-2. Click serve site in Addins
-3.
-3. create folder for post in content / post
-2.
+# 1. Open website project in RStudio.Version()
+# 2. Click serve site in Addins
+# 3.
+# 3. create folder for post in content / post
+# 2.
