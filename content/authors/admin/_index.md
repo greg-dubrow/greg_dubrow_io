@@ -1,5 +1,5 @@
 ---
-bio: My research interests include college access & success, data science/analysis, data visauzlization.
+bio: My research interests include college access & success, data science/analysis, data visualization.
 education:
   courses:
   - course: MS & PhD, Higher Education
