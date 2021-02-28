@@ -76,7 +76,7 @@ This call sets your access token for the data session
 access_token <- get_spotify_access_token()
 ```
 
-If you run into redirect issues, see [this stackoverflow thread] (https://stackoverflow.com/questions/32956443/invalid-redirect-uri-on-spotify-auth), specifically [this comment](https://stackoverflow.com/a/51967789/102268480)
+If you run into redirect issues, see [this stackoverflow thread](https://stackoverflow.com/questions/32956443/invalid-redirect-uri-on-spotify-auth), specifically [this comment](https://stackoverflow.com/a/51967789/102268480)
 
 First thing is to search the artist data for audio features. I'm pulling in everything into a dataframe. Now initially I had a filter for `artist = 'Gosta Berling'`. But that was also pulling in data from a Swedish prog-metal band [*Gösta Berling's Saga*](http://www.progarchives.com/artist.asp?id=3083). So I needed to filter on our artist ID and pull in albums and singles (for some reason our EPs were listed as singles, but whatever)
 ```{r gbaudio1, eval = FALSE}
