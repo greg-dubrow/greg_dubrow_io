@@ -233,7 +233,7 @@ gosta_audio %>%
 
 Next I wondered if there's a relationship between song tempo (beats per minute) & happiness. Our average BPM is 131, which isn't too far the the mid-range of songs on Spotify. The histogram below comes from the [Spotify API page](https://developer.spotify.com/assets/audio/tempo.png) ![](https://developer.spotify.com/assets/audio/tempo.png)
 
-So let's see the resulting scatterplot...(leaving out the code since it's essentially the same as the 1st plot)
+So let's see the resulting scatterplot...(leaving out the code since it's essentially the same as the 1st plot).
 ```{r dataviz2, fig.width=8.0, fig.height=4.0, dpi = 300, echo = FALSE, warning=FALSE, message = FALSE, error= FALSE}
 gosta_audio %>%
   ggplot(aes(tempo, valence, color = album)) +
@@ -248,7 +248,7 @@ gosta_audio %>%
 ```
 It's not until we get to about the 130 BPM range is it that our songs start to get to even a .25 valence (happiness) score, and from there the relationship between tempo & happiness really kicks in.
 
-Finally, tempo and energy...(leaving out the code again)
+Finally, tempo and energy...(leaving out the code again).
 ```{r dataviz3, fig.width=8.0, fig.height=4.0, dpi = 300, echo = FALSE, warning=FALSE, message = FALSE, error= FALSE}
 gosta_audio %>%
   ggplot(aes(tempo, energy, color = album)) +
