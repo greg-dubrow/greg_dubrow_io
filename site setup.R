@@ -11,6 +11,9 @@ blogdown::serve_site()
 blogdown::stop_server()
 blogdown::check_site()
 
+blogdown::find_hugo('all')
+blogdown::check_netlify()
+
 #### re: code folding
 # from https://www.jepusto.com/code-folding-update/
 # The above parameters are defaults for your entire site.

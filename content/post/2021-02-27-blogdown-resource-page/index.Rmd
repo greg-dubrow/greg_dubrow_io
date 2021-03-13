@@ -14,7 +14,7 @@ tags:
 subtitle: ''
 summary: ''
 authors: []
-lastmod: '2021-02-27T14:25:37-08:00'
+lastmod: 'r format(Sys.Date(), "%Y-%m-%d")'
 featured: no
 image:
   caption: ''
@@ -50,7 +50,11 @@ Other resources I found helpful:
   * [More from Maëlle about getting started with Hugo](https://masalmon.eu/2020/02/29/hugo-maintenance/)
   * [Esteban Moro's workflow guide](http://estebanmoro.org/post/2019-02-01-setting-up-your-blog-with-rstudio-and-blogdown)
   * [Athanasia Monika Mowinckel's worklflow guide](https://drmowinckels.io/blog/2020-05-25-changing-you-blogdown-workflow)
+  * [Jumping Rivers post on default knitr options](https://www.jumpingrivers.com/blog/knitr-default-options-settings-hooks)
 
 Code folding in Hugo Academic...still haven't cracked the nut, but hopefully soon. Meanwhile, some resources...
 
   * [James E. Pustejovsky's post](https://www.jepusto.com/code-folding-update)
+
+
+_This post was last updated on `r format(Sys.Date(), "%Y-%m-%d")`_
