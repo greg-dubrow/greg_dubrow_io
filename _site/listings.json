@@ -3,7 +3,8 @@
     "listing": "/index.html",
     "items": [
       "/posts/migrating-from-hugo-to-quarto/index.html",
-      "/posts/blog-migration-and-resurrection/index.html"
+      "/posts/blog-migration-and-resurrection/index.html",
+      "/posts/tidy-tuesday-maryland-bridges/index.html"
     ]
   }
 ]
