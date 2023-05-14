@@ -1,8 +1,9 @@
 ---
-title: "About"
+title: ""
+engine: knitr
 image: profile.jpg
 about:
-  template: solana
+  template: jolla
   links:
     - icon: github
       text: Github
@@ -15,12 +16,21 @@ about:
       href: https://twitter.com/greg_dubrow
 ---
 
-I'm a data analyst/data scientist living in København Denmark, with experitise in higher education systems, policy, undergraduate admissions and student success.
+```{css, echo = FALSE}
+.justify {
+  text-align: left
+}
+```
 
-I work in r for everything from data import & cleaning, to analysis, modeling & visualization. I have also used SAS and excel. I have working knowledge of SQL and a passing familiarity with Tableau.
+::: {.justify}
+I'm a data analyst/data scientist living in København Denmark, with experitise in higher education systems, policy, undergraduate admissions & enrollment management, and student success.
 
-I was born in Denmark and grew up in the US. After many years in San Francisco I lived in Lyon France from May to December 2022 , working as an ESL instructor after earning a CELTA.
+I work in r for everything from data import & cleaning, to analysis, modeling & visualization. I have also used SAS and excel and have working knowledge of SQL and a passing familiarity with Tableau.
 
-In this space I'll mostly be posting code-throughs and results from my personal data projects; music, football (the soccer kind), #tidytuesday data projects and other work. All views expressed here are my own.
+I was born in Denmark and grew up in the US. After many years in San Francisco I lived in Lyon France from May to December 2022 , working as an ESL instructor after earning a [CELTA](https://www.cambridgeenglish.org/teaching-english/teaching-qualifications/celta/) via the [ELT Hub](https://www.theelthub.com/).
+
+In this space I'll mostly be posting code-throughs and results from my personal data projects; music, football (the soccer kind), education,  [#tidytuesday](https://github.com/rfordatascience/tidytuesday) data projects and other work. All views expressed here are my own.
 
 Over the years I've [made some music](https://www.discogs.com/artist/1980511-Greg-Dubrow) with [Gosta Berling](https://gostaberling.bandcamp.com/), [Slowness](https://slowness.bandcamp.com/), [Big Still](https://bigstill.bandcamp.com/) and [Idle Wilds](https://www.youtube.com/watch?v=86rp45bp93g). My photography is at [Flickr](https://www.flickr.com/photos/dannebrog/).
+
+:::

@@ -3,15 +3,33 @@ project:
 
 website:
   title: "gregers kjerulf dubrow"
+  description: "personal website for grgers kjerulf dubrow"
+  site-url: https://www.gregdubrow.io
+  repo-url: https://github.com/greg-dubrow/greg_dubrow_io
+  twitter-card:
+    creator: "@greg_dubrow"
+  open-graph: true
+  google-analytics: "UA-157557326-1"
+  cookie-consent:
+    type: express
   navbar:
+    pinned: true
     right:
-      - about.qmd
+      - text: "About me"
+        file: about.qmd
       - icon: github
         href: https://github.com/greg-dubrow
       - icon: linkedin
         href: https://linkedin.com/in/dubrowg/
       - icon: twitter
         href: https://twitter.com/greg_dubrow
+  page-footer:
+    left:
+      - href: https://www.quarto.org
+        text: Built with Quarto
+    right:
+      - href: license.qmd
+        text: License
 format:
   html:
     theme: cosmo

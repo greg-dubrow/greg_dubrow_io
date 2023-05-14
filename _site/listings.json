@@ -1,6 +1,9 @@
 [
   {
     "listing": "/index.html",
-    "items": []
+    "items": [
+      "/posts/migrating-from-hugo-to-quarto/index.html",
+      "/posts/blog-migration-and-resurrection/index.html"
+    ]
   }
 ]
