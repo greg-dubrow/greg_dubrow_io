@@ -1,0 +1,14 @@
+---
+title: "gregers kjerulf dubrow"
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: true
+  filter-ui: false
+page-layout: article
+title-block-banner: true
+---
+
+Hi! I'm in the midst of migrating from blogdown/hugo to Quarto, so things are a bit barren until I've tested the publishing workflow and made sure things work well.
