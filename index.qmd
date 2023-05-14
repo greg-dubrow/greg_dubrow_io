@@ -11,4 +11,4 @@ page-layout: article
 title-block-banner: true
 ---
 
-Hi! I'm in the midst of migrating from blogdown/hugo to Quarto, so things are a bit barren until I've tested the publishing workflow and made sure things work well.
+Hi! I'm in the midst of migrating from blogdown/hugo to Quarto, so things are a bit barren until I've converted all the old posts from rmd to qmd, tested the publishing workflow, and made sure things work well.
