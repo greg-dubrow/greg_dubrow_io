@@ -8,7 +8,7 @@ image: "confluence.jpeg"
 
 [![The Saône & The Rhône converge in Lyon](confluence.jpeg)](https://www.flickr.com/photos/dannebrog/52822536105/)
 
-As I mentioned in the Migration and Resurrection post, some issues with my old Hugo build and Netlify playing nicely with Hugo & Wowchemy led to me deciding to rebuild things in [Quarto](https://quarto.org/). I was thinking about it anyway, as Quarto seems robust and even more user-friendly (to me) than `blogdown` & `rmarkdown`, which I still love. I just love Quarto more.
+As I mentioned in the [Migration and Resurrection post](https://www.gregdubrow.io/posts/blog-migration-and-resurrection/), some issues with my old Hugo build and Netlify playing nicely with Hugo & Wowchemy led to me deciding to rebuild things in [Quarto](https://quarto.org/). I was thinking about it anyway, as Quarto seems robust and even more user-friendly (to me) than `blogdown` & `rmarkdown`, which I still love. I just love Quarto more.
 
 The basic idea of the blog remains the same - present the code & analysis for topics that interest me. While switching from SAS to r, I learned so much from reading tons of data blogs and watching how-to videos that I wanted to give back to the rstats community by showing and explaining my work. It also helps me as my own reference for code and approach to visualization when I forget how I did a pivot-long or cleaned and set-up data to work well with the visualization I wanted to do.
 
@@ -16,9 +16,9 @@ I decided to set some ground rules for the old posts:
 
 -   Minimal text edits...only for typos and occasional clunky language.
 
--   But no editing the code. The projects I posted showed where I was in using r at the time. Though to be honest, if anything I've regressed a bit as I haven't used r that much since I left my last data job. Besides, the rmarkdown -> quarto migration already entailed enough editing in the YAML and code chunk headers.
+-   But no editing the code. The projects I posted showed where I was in using r at the time. Though to be honest, if anything I've regressed a bit as I haven't used r that much since I left my last data job. Besides, the rmarkdown -\> quarto migration already entailed enough editing in the YAML and code chunk headers.
 
--   The only exception to the code edit rule was adding code-fold options to some code chunks. It wasn't easily doable in blogdown & Hugo when I first launched the site but it's a native functionality to Quarto, so hoorah!
+-   The only exception to the code edit rule was changing the chunk options to the #| syntax and adding code-fold options to some code chunks. It wasn't easily doable in blogdown & Hugo when I first launched the site but it's a native functionality to Quarto, so hoorah!
 
 -   Repost the projects with date-stamps from the original posting. I want this to still accurately document my own data analysis/data science progression, even with that long gap between posts.
 
