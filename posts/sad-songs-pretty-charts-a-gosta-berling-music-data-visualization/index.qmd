@@ -1,7 +1,7 @@
 ---
 title: "Sad Songs & Pretty Charts - a Gosta Berling Music Data Visualization"
 author: "gregers kjerulf dubrow"
-date: '2020-11-27'
+date: '2021-02-28'
 categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization,
 music, spotify, gosta berling]
 image: "gb_winterland_sm.jpg"
