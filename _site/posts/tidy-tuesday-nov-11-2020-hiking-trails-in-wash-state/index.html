@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.475">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="gregers kjerulf dubrow">
+<meta name="dcterms.date" content="2020-11-27">
+
+<title>gregers kjerulf dubrow - Tidy Tuesday, November 24, 2020 - Hiking Trails in WA State</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-157557326-1', 'auto');
+
+ga('send', {
+  hitType: 'pageview',
+  'anonymizeIp': true,
+});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  });
+});
+</script> 
+  
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="gregers kjerulf dubrow - Tidy Tuesday, November 24, 2020 - Hiking Trails in WA State">
+<meta property="og:description" content="Every week I’m so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from #TidyTuesday, the weekly data project that evolved out of the R4DS…">
+<meta property="og:image" content="https://www.gregdubrow.io/posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/cascade.jpg">
+<meta property="og:site-name" content="gregers kjerulf dubrow">
+<meta name="twitter:title" content="gregers kjerulf dubrow - Tidy Tuesday, November 24, 2020 - Hiking Trails in WA State">
+<meta name="twitter:description" content="Every week I’m so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from #TidyTuesday, the weekly data project that evolved out of the R4DS…">
+<meta name="twitter:image" content="https://www.gregdubrow.io/posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/cascade.jpg">
+<meta name="twitter:creator" content="@greg_dubrow">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">gregers kjerulf dubrow</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">About me</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/greg-dubrow"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/dubrowg/"><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/greg_dubrow"><i class="bi bi-twitter" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Tidy Tuesday, November 24, 2020 - Hiking Trails in WA State</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">post</div>
+                <div class="quarto-category">tidytuesday</div>
+                <div class="quarto-category">rstats</div>
+                <div class="quarto-category">ggplot</div>
+                <div class="quarto-category">dataviz</div>
+                <div class="quarto-category">data visualization</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>gregers kjerulf dubrow </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 27, 2020</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><a href="https://www.flickr.com/photos/dannebrog/113595484/"><img src="cascade.jpg" class="img-fluid figure-img"></a></p>
+<p></p><figcaption class="figure-caption">Trail-head lake in the Cascade Mountains.</figcaption><p></p>
+</figure>
+</div>
+<section id="diving-deep-into-the-tidy-tuesday-pool" class="level3">
+<h3 class="anchored" data-anchor-id="diving-deep-into-the-tidy-tuesday-pool">Diving deep into the Tidy Tuesday pool…</h3>
+<p>Every week I’m so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday</a>, the weekly data project that evolved out of the <a href="https://twitter.com/R4DScommunity">R4DS Learning Community</a>. And every week I say to myself, “I should really give it a go, grab the data and post some results”. Then life intervenes, work gets crazy, and before I know it…</p>
+<p>Well, around Thanksgiving, with some slack time and some inspiration, I finally got around to it. A resulting benefit was it got me motivated to finally get around to getting this blog set up. My <a href="https://github.com/greg-dubrow/">github repo</a> has a folder for any <a href="https://github.com/greg-dubrow/tidy-tuesday-projects">tidytuesday projects</a> I get around to.</p>
+<p>Here’s the code and resulting charts &amp; tables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytuesdayR) <span class="co"># to load tidytuesday data</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co"># stitch plots together</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># lets make tables</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RColorBrewer) <span class="co"># colors!</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales) <span class="co"># format chart output</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="first-lets-read-in-the-file-using-the-tidytuesdayr-package.-well-also-look-at-the-raw-data" class="level3">
+<h3 class="anchored" data-anchor-id="first-lets-read-in-the-file-using-the-tidytuesdayr-package.-well-also-look-at-the-raw-data">First let’s read in the file using the tidytuesdayR package. We’ll also look at the raw data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tt_watrail <span class="ot">&lt;-</span> <span class="fu">tt_load</span>(<span class="st">"2020-11-24"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Downloading file 1 of 1: `hike_data.rds`</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tt_watrail<span class="sc">$</span>hike_data)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1,958</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 8</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ name        &lt;chr&gt; "Lake Hills Greenbelt", "Snow Lake", "Skookum Flats", "Ten…</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ location    &lt;chr&gt; "Puget Sound and Islands -- Seattle-Tacoma Area", "Snoqual…</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ length      &lt;chr&gt; "2.3 miles, roundtrip", "7.2 miles, roundtrip", "7.8 miles…</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ gain        &lt;chr&gt; "50", "1800", "300", "1585", "500", "500", "425", "450", "…</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ highpoint   &lt;chr&gt; "330.0", "4400.0", "2550.0", "2370.0", "1000.0", "2200.0",…</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rating      &lt;chr&gt; "3.67", "4.16", "3.68", "3.92", "4.14", "3.14", "5.00", "2…</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ features    &lt;list&gt; &lt;"Dogs allowed on leash", "Wildlife", "Good for kids", "L…</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ description &lt;chr&gt; "Hike through a pastoral area first settled and farmed in …</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="there-are-a-few-things-we-want-to-do-with-the-data-for-the-working-dataframe" class="level3">
+<h3 class="anchored" data-anchor-id="there-are-a-few-things-we-want-to-do-with-the-data-for-the-working-dataframe">There are a few things we want to do with the data for the working dataframe:</h3>
+<ul>
+<li>create columns for miles, direction, type from length</li>
+<li>create specific location columns frolm location</li>
+<li>change rating, gain and highpoint to numeric</li>
+<li>create a rating group</li>
+<li>change features to character vector, also unnest; makes the resulting df long. we’ll use distinct when we only need 1 obs per trail</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tt_watraildf <span class="ot">&lt;-</span> tt_watrail<span class="sc">$</span>hike_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">length_miles =</span> <span class="fu">parse_number</span>(length)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(gain<span class="sc">:</span>rating, as.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">rating_grp =</span> <span class="fu">case_when</span>(rating <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"0"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                                rating <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> rating <span class="sc">&lt;</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"1"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                                rating <span class="sc">&gt;=</span><span class="dv">2</span> <span class="sc">&amp;</span> rating <span class="sc">&lt;</span> <span class="dv">3</span> <span class="sc">~</span> <span class="st">"2"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                rating <span class="sc">&gt;=</span><span class="dv">3</span> <span class="sc">&amp;</span> rating <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">"3"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                rating <span class="sc">&gt;=</span><span class="dv">4</span> <span class="sc">&amp;</span> rating <span class="sc">&lt;</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"4"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                rating <span class="sc">==</span> <span class="dv">5</span> <span class="sc">~</span> <span class="st">"5"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">trail_type =</span> <span class="fu">case_when</span>(<span class="fu">grepl</span>(<span class="st">"roundtrip"</span>, length) <span class="sc">~</span> <span class="st">"Round trip"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">grepl</span>(<span class="st">"one-way"</span>, length) <span class="sc">~</span> <span class="st">"One Way"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">grepl</span>(<span class="st">"of trails"</span>, length) <span class="sc">~</span> <span class="st">"Trails"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">location_split =</span> location) <span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(location_split, <span class="fu">c</span>(<span class="st">"location_region"</span>,<span class="st">"location_specific"</span>), <span class="at">sep =</span> <span class="st">' -- '</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">features =</span> <span class="fu">lapply</span>(features, sort, <span class="at">na.last =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_v =</span> <span class="fu">sapply</span>(features,<span class="at">FUN =</span> <span class="cf">function</span>(x) <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(x))) <span class="cn">NA</span> <span class="cf">else</span> <span class="fu">paste</span>(x,<span class="at">collapse =</span> <span class="st">", "</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_v =</span> <span class="fu">str_trim</span>(feature_v)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">features_unnest =</span> features) <span class="sc">%&gt;%</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(<span class="at">cols =</span> <span class="fu">c</span>(features_unnest), <span class="at">keep_empty =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_v =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(feature_v), <span class="st">"none"</span>, feature_v)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">features_unnest =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(features_unnest), <span class="st">"none"</span>, features_unnest)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_init =</span> <span class="fu">case_when</span>(features_unnest <span class="sc">==</span> <span class="st">"Dogs allowed on leash"</span> <span class="sc">~</span> <span class="st">"DA"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Dogs not allowed"</span> <span class="sc">~</span> <span class="st">"DN"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Wildlife"</span> <span class="sc">~</span> <span class="st">"Wl"</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Good for kids"</span> <span class="sc">~</span> <span class="st">"GK"</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Lakes"</span> <span class="sc">~</span> <span class="st">"Lk"</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Fall foliage"</span> <span class="sc">~</span> <span class="st">"FF"</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Ridges/passes"</span> <span class="sc">~</span> <span class="st">"RP"</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Established campsites"</span> <span class="sc">~</span> <span class="st">"EC"</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Mountain views"</span> <span class="sc">~</span> <span class="st">"MV"</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Old growth"</span> <span class="sc">~</span> <span class="st">"OG"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Waterfalls"</span> <span class="sc">~</span> <span class="st">"Wf"</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Wildflowers/Meadows"</span> <span class="sc">~</span> <span class="st">"WM"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Rivers"</span> <span class="sc">~</span> <span class="st">"Ri"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Coast"</span> <span class="sc">~</span> <span class="st">"Co"</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                                  features_unnest <span class="sc">==</span> <span class="st">"Summits"</span> <span class="sc">~</span> <span class="st">"Su"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_init =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(feature_init), <span class="st">"none"</span>, feature_init)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_type =</span> <span class="fu">if_else</span>(feature_init <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"DA"</span>,<span class="st">"DN"</span>,<span class="st">"GK"</span>), <span class="st">"Companion"</span>, <span class="st">"Feature"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_type =</span> <span class="fu">ifelse</span>(feature_init <span class="sc">==</span> <span class="st">"none"</span>, <span class="st">"none"</span>, feature_type)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_n =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_n =</span> <span class="fu">ifelse</span>(feature_init <span class="sc">==</span> <span class="st">"none"</span>, <span class="dv">0</span>, feature_n)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(name, location_region, location_specific, trail_type, length_miles, </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>         gain, highpoint, rating, rating_grp, features, feature_v, features_unnest, </span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>         feature_init, feature_type, feature_n, description, location, length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="to-get-a-sense-of-what-the-data-look-like-ill-run-some-historgrams-and-scatterplots-to-see-how-things-cluster-if-there-are-outliers-or-anything-else-especially-noticable." class="level3">
+<h3 class="anchored" data-anchor-id="to-get-a-sense-of-what-the-data-look-like-ill-run-some-historgrams-and-scatterplots-to-see-how-things-cluster-if-there-are-outliers-or-anything-else-especially-noticable.">To get a sense of what the data look like, I’ll run some historgrams and scatterplots to see how things cluster, if there are outliers or anything else especially noticable.</h3>
+<p>Using log10 for the length scale to even out the spread. The <a href="https://patchwork.data-imaginist.com/"><code>patchwork</code> package</a> stitches the plots together in a neat panel.</p>
+<div class="cell" data-fig.dpi="300">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hist_length <span class="ot">&lt;-</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(length_miles)) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Length (miles), log10"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>hist_gain <span class="ot">&lt;-</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(gain)) <span class="sc">+</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>()</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>hist_high <span class="ot">&lt;-</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(highpoint)) <span class="sc">+</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>hist_rate <span class="ot">&lt;-</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating)) <span class="sc">+</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) </span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>(hist_length <span class="sc">|</span> hist_gain) <span class="sc">/</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  (hist_high <span class="sc">|</span> hist_rate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="images/tt_watr01-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<p>For the scatterplots, I plotted length by gain, faceting by ratings groups and then by region. We do have to be careful with ratings, as they are user-generated and some trails have very few votes. Log10 used again for length.</p>
+<div class="cell" data-fig.dpi="300">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(length_miles, gain)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Length (miles) log10"</span>, <span class="at">y =</span> <span class="st">"Total Gain"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Length v Gain, by Rating Group"</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(rating_grp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="images/tt_watr02-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(length_miles, gain)) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Length (miles) log 10"</span>, <span class="at">y =</span> <span class="st">"Total Gain"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Length v Gain, by Region"</span>) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(location_region))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="images/tt_watr02-2.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<p>The outliers in terms of gain &amp; length clustered in a few regions, so I wanted to see which they were. Not a surprise they clustered in the Cascades &amp; Rainier.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(gain <span class="sc">&gt;</span> <span class="dv">15000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(length_miles <span class="sc">&gt;</span> <span class="dv">90</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(location_region, name, length_miles, gain) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(name) </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 5 × 4</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   location_region      name                                   length_miles  gain</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;                &lt;chr&gt;                                         &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 Southwest Washington Pacific Crest Trail (PCT) Section H -…         148. 27996</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 South Cascades       Pacific Crest Trail (PCT) Section I -…          99  17771</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 Central Cascades     Pacific Crest Trail (PCT) Section K -…         117  26351</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 North Cascades       Pacific Northwest Trail - Pasayten Tr…         119  21071</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 Mount Rainier Area   Wonderland Trail                                93  22000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="now-that-we-see-how-the-length-gain-highpoint-ratings-spread-out-i-want-build-a-table-to-see-the-averages-by-region." class="level3">
+<h3 class="anchored" data-anchor-id="now-that-we-see-how-the-length-gain-highpoint-ratings-spread-out-i-want-build-a-table-to-see-the-averages-by-region.">Now that we see how the length, gain, highpoint &amp; ratings spread out, I want build a table to see the averages by region.</h3>
+<p>I’ve been wanting to take a deeper dive into <a href="https://gt.rstudio.com/">gt</a> &amp; <a href="https://glin.github.io/reactable/">reactable</a>. I’ve got some basic gt calls down, but for this excercise I wanted to learn how to conditionally format columns based on value. So inspired by <a href="https://themockup.blog/posts/2020-05-16-gt-a-grammer-of-tables">Thomas Mock’s gt primer</a>, a basic table with heatmap-like formatting for some columns. See his explainer for details on the code, and for more features than I’m including.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create by region averages df</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>byregion <span class="ot">&lt;-</span>  tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(location_region) <span class="sc">%&gt;%</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_region =</span> <span class="fu">n</span>(),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">avglength =</span> <span class="fu">mean</span>(length_miles),</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">avgrating =</span> <span class="fu">mean</span>(rating),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">avggain =</span> <span class="fu">mean</span>(gain),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">avghigh =</span> <span class="fu">mean</span>(highpoint),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">minhigh =</span> <span class="fu">min</span>(highpoint),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">maxhigh =</span> <span class="fu">max</span>(highpoint)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(avglength<span class="sc">:</span>avgrating), round, <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(avggain<span class="sc">:</span>avghigh), round, <span class="dv">0</span>) </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>byregion <span class="sc">%&gt;%</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">vars</span>(avggain, avghigh, minhigh, maxhigh), <span class="at">decimals =</span> <span class="dv">0</span>, <span class="at">use_seps =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># sets the columns and palette to format cell color by value range</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">vars</span>(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> scales<span class="sc">::</span><span class="fu">col_numeric</span>(</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#ffffff"</span>, <span class="st">"#f2fbd2"</span>, <span class="st">"#c9ecb4"</span>, <span class="st">"#93d3ab"</span>, <span class="st">"#35b0ab"</span>),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">domain =</span> <span class="cn">NULL</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  tab_style calls add border boxes first to column labels, then body cells</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cell_borders</span>(</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">sides =</span> <span class="st">"all"</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">weight =</span> <span class="fu">px</span>(<span class="dv">1</span>))),</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">list</span>(</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cells_column_labels</span>(</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> gt<span class="sc">::</span><span class="fu">everything</span>()</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        ))) <span class="sc">%&gt;%</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cell_borders</span>(</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">sides =</span> <span class="st">"all"</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">weight =</span> <span class="fu">px</span>(<span class="dv">1</span>))),</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">list</span>(</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cells_body</span>(</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">rows =</span> gt<span class="sc">::</span><span class="fu">everything</span>()</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>      ))) <span class="sc">%&gt;%</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_align</span>(<span class="at">columns =</span> <span class="cn">TRUE</span>, <span class="at">align =</span> <span class="st">"center"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(<span class="at">columns =</span> <span class="st">"location_region"</span>, <span class="at">align =</span> <span class="st">"left"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_width</span>(<span class="fu">vars</span>(location_region) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">150</span>),</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>             <span class="fu">vars</span>(n_region) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">60</span>),</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>             <span class="fu">starts_with</span>(<span class="st">"avg"</span>) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">80</span>),</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>             <span class="fu">ends_with</span>(<span class="st">"high"</span>) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">90</span>)</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Regional Averages"</span>,</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"_North Cascades have longest trails,</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a><span class="st">                           all mountain areas have lots of gain and highest points_"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">location_region =</span> <span class="st">"Region"</span>, <span class="at">n_region =</span> <span class="st">"N"</span>, <span class="at">avglength =</span> <span class="st">"Avg Length (miles)"</span>,</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>            <span class="at">avgrating =</span> <span class="st">"Avg Rating"</span>, <span class="at">avggain =</span> <span class="st">"Avg Gain (ft)"</span>,<span class="at">avghigh =</span> <span class="st">"Avg high point"</span>,</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>             <span class="at">minhigh =</span> <span class="st">"Lowest high point"</span>, <span class="at">maxhigh =</span> <span class="st">"Max high point"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="tnjtcodjae" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tnjtcodjae table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tnjtcodjae thead, #tnjtcodjae tbody, #tnjtcodjae tfoot, #tnjtcodjae tr, #tnjtcodjae td, #tnjtcodjae th {
+  border-style: none;
+}
+
+#tnjtcodjae p {
+  margin: 0;
+  padding: 0;
+}
+
+#tnjtcodjae .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tnjtcodjae .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tnjtcodjae .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tnjtcodjae .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tnjtcodjae .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tnjtcodjae .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tnjtcodjae .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tnjtcodjae .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tnjtcodjae .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tnjtcodjae .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tnjtcodjae .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tnjtcodjae .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tnjtcodjae .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tnjtcodjae .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tnjtcodjae .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnjtcodjae .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tnjtcodjae .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tnjtcodjae .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tnjtcodjae .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnjtcodjae .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tnjtcodjae .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnjtcodjae .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tnjtcodjae .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnjtcodjae .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tnjtcodjae .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tnjtcodjae .gt_left {
+  text-align: left;
+}
+
+#tnjtcodjae .gt_center {
+  text-align: center;
+}
+
+#tnjtcodjae .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tnjtcodjae .gt_font_normal {
+  font-weight: normal;
+}
+
+#tnjtcodjae .gt_font_bold {
+  font-weight: bold;
+}
+
+#tnjtcodjae .gt_font_italic {
+  font-style: italic;
+}
+
+#tnjtcodjae .gt_super {
+  font-size: 65%;
+}
+
+#tnjtcodjae .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tnjtcodjae .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tnjtcodjae .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tnjtcodjae .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tnjtcodjae .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tnjtcodjae .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tnjtcodjae .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" style="table-layout: fixed;; width: 0px" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <colgroup>
+    <col style="width:150px;">
+    <col style="width:60px;">
+    <col style="width:80px;">
+    <col style="width:80px;">
+    <col style="width:80px;">
+    <col style="width:80px;">
+    <col style="width:90px;">
+    <col style="width:90px;">
+  </colgroup>
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="8" class="gt_heading gt_title gt_font_normal" style="">Regional Averages</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="8" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style=""><em>North Cascades have longest trails,
+all mountain areas have lots of gain and highest points</em></td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Region">Region</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="N">N</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg Length (miles)">Avg Length (miles)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg Rating">Avg Rating</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg Gain (ft)">Avg Gain (ft)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg high point">Avg high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Lowest high point">Lowest high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Max high point">Max high point</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Central Cascades</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">219</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #91D2AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.53</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #95D4AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.04</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #6BC1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,276</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #63BEAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,752</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #AADDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">600</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #9ED8AD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Central Washington</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">79</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #F4FCD9; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5.71</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.78</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #F6FCDF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">823</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #E0F4C4; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,260</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #F2FBD2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">240</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #D7F1BE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6,876</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Eastern Washington</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">142</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #98D5AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.33</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.15</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #BFE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,592</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #7CC8AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,410</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #E7F7CA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">300</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #CFEEB8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7,310</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Issaquah Alps</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">76</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #F9FDEB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5.03</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #E7F7CA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.53</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #F1FBD1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">984</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #F5FCDA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,518</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #F0FAD0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">250</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,004</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Mount Rainier Area</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">193</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.19</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.35</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #A1D9AD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,881</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,222</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #6FC3AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">800</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #8FD1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">North Cascades</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">292</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">11.24</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #8CCFAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.08</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,535</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #42B3AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,111</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #F9FDE8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">125</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #A5DBAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,200</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Olympic Peninsula</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">209</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #BDE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.13</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #43B3AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.32</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #C1E8B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,572</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,821</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FEFFFD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #D5F0BC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6,988</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Puget Sound and Islands</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">190</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4.25</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #C0E8B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.80</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">452</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">573</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #FBFEF1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,750</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Snoqualmie Region</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">216</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #ACDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.71</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #7AC7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.15</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #78C7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,198</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #78C7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,467</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">450</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #A0D9AD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,416</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">South Cascades</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">188</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #B4E2B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.44</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #8ED1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.07</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #BAE5B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,641</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #65BFAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,732</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">922</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td></tr>
+    <tr><td headers="location_region" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Southwest Washington</td>
+<td headers="n_region" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">120</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #E4F6C8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6.58</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #D1EFBA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.69</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #E2F5C7; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,171</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #F1FBD1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,774</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FEFFFD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #C5EAB3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7,800</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="now-lets-look-at-the-effect-of-trail-features-on-rating." class="level3">
+<h3 class="anchored" data-anchor-id="now-lets-look-at-the-effect-of-trail-features-on-rating.">Now let’s look at the effect of trail features on rating.</h3>
+<p>First we’ll look at average rating by feature, then fit a model. First, a scatter-plot of number of features listed for a trail with user rating. Looks like at a certain point, it’s diminshing returns on trail features in terms of effect on rating.</p>
+<div class="cell" data-fig.dpi="300">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(feature_n, rating)) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"# of features on a trail"</span>, <span class="at">y =</span> <span class="st">"User rating"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Features and Rating by Trail Region"</span>) <span class="sc">+</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(location_region))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="images/tt_watr05-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<p>Here’s a table similar to the one for averages by region. I used the unnested features, so trails will be represented more than once. Dog-free trails do get the highest ratings, but it’s likely because they also tend to have highest high points, so offer views, are challenging, and so get good ratings.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>byfeature <span class="ot">&lt;-</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(features_unnest) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">n_feature =</span> <span class="fu">n</span>(),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">avgrating =</span> <span class="fu">mean</span>(rating),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">avglength =</span> <span class="fu">mean</span>(length_miles),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">avggain =</span> <span class="fu">mean</span>(gain),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">avghigh =</span> <span class="fu">mean</span>(highpoint),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">minhigh =</span> <span class="fu">min</span>(highpoint),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">maxhigh =</span> <span class="fu">max</span>(highpoint)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(avglength<span class="sc">:</span>avgrating), round, <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_at</span>(<span class="fu">vars</span>(avggain<span class="sc">:</span>avghigh), round, <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(avgrating))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="do">## create table</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>byfeature <span class="sc">%&gt;%</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">vars</span>(n_feature, avggain, avghigh, minhigh, maxhigh), <span class="at">decimals =</span> <span class="dv">0</span>, <span class="at">use_seps =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># sets the columns and palette to format cell color by value range</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">vars</span>(avglength, avgrating, avggain, avghigh, minhigh, maxhigh),</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> scales<span class="sc">::</span><span class="fu">col_numeric</span>(</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#ffffff"</span>, <span class="st">"#f2fbd2"</span>, <span class="st">"#c9ecb4"</span>, <span class="st">"#93d3ab"</span>, <span class="st">"#35b0ab"</span>),</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">domain =</span> <span class="cn">NULL</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># tab_style calls add border boxes first to column labels, then body cells</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cell_borders</span>(</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">sides =</span> <span class="st">"all"</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">weight =</span> <span class="fu">px</span>(<span class="dv">1</span>))),</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">list</span>(</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cells_column_labels</span>(</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> gt<span class="sc">::</span><span class="fu">everything</span>()</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>      ))) <span class="sc">%&gt;%</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_style</span>(</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cell_borders</span>(</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">sides =</span> <span class="st">"all"</span>, <span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">weight =</span> <span class="fu">px</span>(<span class="dv">1</span>))),</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">list</span>(</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cells_body</span>(</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">rows =</span> gt<span class="sc">::</span><span class="fu">everything</span>()</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>      ))) <span class="sc">%&gt;%</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Averages by Feature"</span>,</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="fu">md</span>(<span class="st">"_Dog-free trails with waterfalls &amp; high peaks earn high ratings_"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(<span class="at">columns =</span> <span class="cn">TRUE</span>, <span class="at">align =</span> <span class="st">"center"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(<span class="at">columns =</span> <span class="st">"features_unnest"</span>, <span class="at">align =</span> <span class="st">"left"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_width</span>(<span class="fu">vars</span>(features_unnest) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">150</span>),</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>             <span class="fu">vars</span>(n_feature) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">60</span>),</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>             <span class="fu">starts_with</span>(<span class="st">"avg"</span>) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">80</span>),</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>             <span class="fu">ends_with</span>(<span class="st">"high"</span>) <span class="sc">~</span> <span class="fu">px</span>(<span class="dv">90</span>)</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>             ) <span class="sc">%&gt;%</span></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(<span class="at">features_unnest =</span> <span class="st">"Feature"</span>, <span class="at">n_feature =</span> <span class="st">"N"</span>, <span class="at">avglength =</span> <span class="st">"Avg Length (miles)"</span>,</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>             <span class="at">avgrating =</span> <span class="st">"Avg Rating"</span>, <span class="at">avggain =</span> <span class="st">"Avg Gain (ft)"</span>,<span class="at">avghigh =</span> <span class="st">"Avg high point"</span>,</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>             <span class="at">minhigh =</span> <span class="st">"Lowest high point"</span>, <span class="at">maxhigh =</span> <span class="st">"Max high point"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div id="wyooyelpjj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wyooyelpjj table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#wyooyelpjj thead, #wyooyelpjj tbody, #wyooyelpjj tfoot, #wyooyelpjj tr, #wyooyelpjj td, #wyooyelpjj th {
+  border-style: none;
+}
+
+#wyooyelpjj p {
+  margin: 0;
+  padding: 0;
+}
+
+#wyooyelpjj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#wyooyelpjj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#wyooyelpjj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#wyooyelpjj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#wyooyelpjj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#wyooyelpjj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#wyooyelpjj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#wyooyelpjj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#wyooyelpjj .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#wyooyelpjj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#wyooyelpjj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#wyooyelpjj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#wyooyelpjj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#wyooyelpjj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#wyooyelpjj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wyooyelpjj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#wyooyelpjj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#wyooyelpjj .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#wyooyelpjj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wyooyelpjj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#wyooyelpjj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wyooyelpjj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#wyooyelpjj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wyooyelpjj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#wyooyelpjj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#wyooyelpjj .gt_left {
+  text-align: left;
+}
+
+#wyooyelpjj .gt_center {
+  text-align: center;
+}
+
+#wyooyelpjj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#wyooyelpjj .gt_font_normal {
+  font-weight: normal;
+}
+
+#wyooyelpjj .gt_font_bold {
+  font-weight: bold;
+}
+
+#wyooyelpjj .gt_font_italic {
+  font-style: italic;
+}
+
+#wyooyelpjj .gt_super {
+  font-size: 65%;
+}
+
+#wyooyelpjj .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#wyooyelpjj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#wyooyelpjj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#wyooyelpjj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#wyooyelpjj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#wyooyelpjj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#wyooyelpjj .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="gt_table" style="table-layout: fixed;; width: 0px" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <colgroup>
+    <col style="width:150px;">
+    <col style="width:60px;">
+    <col style="width:80px;">
+    <col style="width:80px;">
+    <col style="width:80px;">
+    <col style="width:80px;">
+    <col style="width:90px;">
+    <col style="width:90px;">
+  </colgroup>
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="8" class="gt_heading gt_title gt_font_normal" style="">Averages by Feature</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="8" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style=""><em>Dog-free trails with waterfalls &amp; high peaks earn high ratings</em></td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Feature">Feature</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="N">N</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg Rating">Avg Rating</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg Length (miles)">Avg Length (miles)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg Gain (ft)">Avg Gain (ft)</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Avg high point">Avg high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Lowest high point">Lowest high point</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;" scope="col" id="Max high point">Max high point</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Dogs not allowed</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">255</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.52</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #B5E3B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.28</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,921</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #98D5AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,173</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Waterfalls</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">282</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #50B7AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.46</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #ACDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.64</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #ADDFAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,938</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #AEDFB0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,648</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #E0F5C5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">150</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Established campsites</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">396</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #65BFAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.40</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12.80</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #82CBAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,380</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #88CEAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,487</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FDFEF8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">25</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Ridges/passes</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">496</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #8FD1AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.25</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #55B9AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12.24</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,864</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,575</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">400</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Lakes</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">583</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #9CD7AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.19</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #A5DBAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.92</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #A9DDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,988</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #96D4AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,231</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Old growth</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">534</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #A2DAAD; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.16</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.00</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #BDE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,746</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #BAE5B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,364</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FDFEF8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">25</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #EDF9CE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8,096</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Mountain views</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,175</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #A7DCAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.13</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #AADDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.72</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #96D4AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,201</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #80CAAB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,621</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Summits</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">454</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #ABDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.11</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #99D6AC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10.40</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #37B1AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,854</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #54B9AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">5,250</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #CBEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">200</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Wildflowers/Meadows</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">952</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #ADDFAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.10</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #B6E3B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.26</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #ABDEAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,967</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #95D4AB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4,243</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #C4E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,511</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Rivers</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">547</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #B7E3B1; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.05</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #A9DDAF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9.76</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #BFE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,731</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #C1E8B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,205</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Good for kids</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">694</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #BEE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.01</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #FCFEF4; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4.63</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #FBFEEF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">569</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #E7F7CA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2,080</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #E9F8CB; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8,245</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Wildlife</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">747</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #C0E8B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3.00</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #C0E8B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.84</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #CDEEB7; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,541</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #BFE7B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,241</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #AFE0B0; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10,080</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Dogs allowed on leash</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,045</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #CAEDB5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.94</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #E4F6C8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7.04</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #D8F2BF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,379</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #C2E9B3; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,183</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #35B0AB; color: #FFFFFF; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">12,276</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Fall foliage</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">508</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #CAEDB5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.94</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8.28</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #C8ECB4; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,618</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,334</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FEFFFA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">20</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #CCEDB6; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">9,249</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">Coast</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">106</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #D2EFBA; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.89</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">4.12</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">351</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">433</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">10</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">6,454</td></tr>
+    <tr><td headers="features_unnest" class="gt_row gt_left" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">none</td>
+<td headers="n_feature" class="gt_row gt_center" style="border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">68</td>
+<td headers="avgrating" class="gt_row gt_center" style="background-color: #FFFFFF; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">2.38</td>
+<td headers="avglength" class="gt_row gt_center" style="background-color: #E0F4C5; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">7.26</td>
+<td headers="avggain" class="gt_row gt_center" style="background-color: #BCE6B2; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">1,758</td>
+<td headers="avghigh" class="gt_row gt_center" style="background-color: #A6DCAE; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">3,849</td>
+<td headers="minhigh" class="gt_row gt_center" style="background-color: #F9FDE8; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">60</td>
+<td headers="maxhigh" class="gt_row gt_center" style="background-color: #D4F0BC; color: #000000; border-left-width: 1px; border-left-style: solid; border-left-color: grey; border-right-width: 1px; border-right-style: solid; border-right-color: grey; border-top-width: 1px; border-top-style: solid; border-top-color: grey; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: grey;">8,970</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="and-finally-a-quick-model-to-see-what-might-affect-a-trail-rating." class="level3">
+<h3 class="anchored" data-anchor-id="and-finally-a-quick-model-to-see-what-might-affect-a-trail-rating.">And finally a quick model to see what might affect a trail rating.</h3>
+<p>It’s a simple linear model using length, gain, highpoint, &amp; number of features to predict rating. The elevation of the highest point and number of features are both significant. I’d need to do more digging to see what the power of the estimate is on the rating. It’s also slightly counter-intuitive given that we saw in the charts that length, elevation and gain seem to positively affect rating. But then the model only accounts for 4% of varaince, so it’s not telling us much.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># creat df with distinct observations for each trail </span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>tt_watraildf_dist <span class="ot">&lt;-</span> tt_watraildf <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(name, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>wtmodel1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(rating <span class="sc">~</span> length_miles <span class="sc">+</span> gain <span class="sc">+</span> highpoint <span class="sc">+</span> feature_n, <span class="at">data =</span> tt_watraildf_dist)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(wtmodel1)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; lm(formula = rating ~ length_miles + gain + highpoint + feature_n, </span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data = tt_watraildf_dist)</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     Min      1Q  Median      3Q     Max </span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; -3.6984 -0.3776  0.3716  0.9284  2.4565 </span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (Intercept)   2.205e+00  8.942e-02  24.663  &lt; 2e-16 ***</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; length_miles -6.565e-03  5.678e-03  -1.156    0.248    </span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gain         -3.590e-05  3.100e-05  -1.158    0.247    </span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; highpoint     8.318e-05  1.742e-05   4.775 1.93e-06 ***</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; feature_n     1.272e-01  1.484e-02   8.576  &lt; 2e-16 ***</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 1.398 on 1919 degrees of freedom</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.0488, Adjusted R-squared:  0.04682 </span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; F-statistic: 24.61 on 4 and 1919 DF,  p-value: &lt; 2.2e-16</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>There’s plenty more to do with the set, and some responses I’ve seen on Twitter have been creative…network graphs, better models…but I was able to brush up on gt, learned how to unnest and keep obs where the list was empty. So a successful #tudytuesday.</p>
+<p><em>This post was last updated on 2023-05-18</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.quarto.org">Built with Quarto</a>
+  </li>  
+</ul>
+    </div>   
+      <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../license.html">License</a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>
