@@ -3,10 +3,8 @@ title: "Invited Talk at University of San Francisco, February 2020"
 author: "gregers kjerulf dubrow"
 date: '2021-02-26'
 categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization, higher education]
-image: "usanfranlogo.jpg"
+image: "usanfranlogo.png"
 ---
-
-[![](usanfranlogo.jpg){fig-align="left"}]
 
 In early 2020 (back in the days of in-person gatherings) I was invited to give a talk at two budget forums at the [University of San Francisco](https://www.usfca.edu/). The general theme was looking at the landscape of enrollments in higher education, with a specific focus on liberal arts colleges, especially Jesuit colleges. Because I collected data from a variety of sources and did much of the work in r, I thought it would make for a good data blog post. Plus, like the [Tidy Tuesday HBCU enrollment post](https://www.gregdubrow.io/2021/02/25/tidy-tuesday-february-2-20201-hbcu-enrollment/), it's about higher education, which has been my area of professional expertise for a while now.
 
