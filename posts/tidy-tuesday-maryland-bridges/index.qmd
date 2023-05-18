@@ -2,12 +2,11 @@
 title: "Tidy Tuesday, November 27, 2018 - Maryland Bridges"
 author: "gregers kjerulf dubrow"
 date: '2020-11-29'
-categories: [post, tidy-tuesday, rstats]
+categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization]
 image: "fskbr.jpg"
 ---
 
-[![The Francis Scott Key Bridge in Baltimore](fskbr.jpg){fig-align="left"} ](https://en.wikipedia.org/wiki/Francis_Scott_Key_Bridge_%28Baltimore%29#/media/File:Francis_Scott_Key_Bridge_Eastern_View.jpg)
-
+[![The Francis Scott Key Bridge in Baltimore](fskbr.jpg){fig-align="left"}](https://en.wikipedia.org/wiki/Francis_Scott_Key_Bridge_%28Baltimore%29#/media/File:Francis_Scott_Key_Bridge_Eastern_View.jpg)
 
 This dataset was posted to the [#TidyTuesday repo](https://github.com/rfordatascience/tidytuesday) back in [November 2018](https://github.com/rfordatascience/tidytuesday/tree/master/data/2018/2018-11-27). I worked on it a bit then, but didn't properly finish it until March of 2020. With the blog finally set up figured I might as well post it as an entry.
 
