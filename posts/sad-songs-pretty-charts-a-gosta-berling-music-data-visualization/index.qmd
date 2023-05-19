@@ -13,14 +13,13 @@ For this post, I thought I'd focus on music analytics, given that music and data
 
 Over the years I've [made a lot of music](https://www.discogs.com/artist/1980511-Greg-Dubrow) in a number of different projects. For most of my time living in the Bay Area I've played with some friends in a band called [Gosta Berling](https://gostaberling.bandcamp.com/). We've released two EPs and a full album *(click on the album covers to give listen)*
 
-[![Winterland](gb_winterland_sm.jpg)](https://gostaberling.bandcamp.com/album/winterland) [![Travel](gb_travel_sm.jpg)](https://gostaberling.bandcamp.com/album/travel) [![Everybody's Sweetheart](gb_sweetheart_sm.jpg)](https://gostaberling.bandcamp.com/album/everybodys-sweetheart)
+[![Winterland](gb_winterland_sm.jpg)](https://gostaberling.bandcamp.com/album/winterland) [![Travel](gb_travel_sm.jpg)](https://gostaberling.bandcamp.com/album/travel) [![Everybody\'s Sweetheart](gb_sweetheart_sm.jpg)](https://gostaberling.bandcamp.com/album/everybodys-sweetheart)
 
 Our sound could be called melancholy mood-pop. We like melody, but we were raised on brooding post-punk so a minor key vibe is definitely present. The Spotify API has musical features including danceability, energy, and valence (what they call 'happiness'). I used Charlie Thompson's [`spotifyr`](https://github.com/charlie86/spotifyr) package to see how we score. `spotifyr` has a bunch of functions designed to make it easier to navigate Spotify's JSON data structure.
 
-One quick thing...I'm using Spotify data so in effect validating Spotify. While I appreciate the availability of the data for projects like this, Spotify needs to do much better by way of paying artists. We don't have tons of streams, but as you can see from this account report...
-![spotifyrev](gb_spotify_revenue.png)
+One quick thing...I'm using Spotify data so in effect validating Spotify. While I appreciate the availability of the data for projects like this, Spotify needs to do much better by way of paying artists. We don't have tons of streams, but as you can see from this account report... ![spotifyrev](gb_spotify_revenue.png)
 
-...artists get f$ck-all per stream. So sure, use Spotify, it's a great tool for discovering new music. And while artists pressure them to pay more per stream, you can help by purchasing music from artists you like. The pandemic has killed touring income, so sales are all that many artists have to support themselves. Help them out, *buy* the music you like. Especially if they're on [Bandcamp](https://bandcamp.com) and you buy 1st Fridays, when Bandcamp waives their revenue share, meaning the artist gets every penny. Did I mention you can [buy our music on Bandcamp](https://gostaberling.bandcamp.com)? :)
+...artists get f\$ck-all per stream. So sure, use Spotify, it's a great tool for discovering new music. And while artists pressure them to pay more per stream, you can help by purchasing music from artists you like. The pandemic has killed touring income, so sales are all that many artists have to support themselves. Help them out, *buy* the music you like. Especially if they're on [Bandcamp](https://bandcamp.com) and you buy 1st Fridays, when Bandcamp waives their revenue share, meaning the artist gets every penny. Did I mention you can [buy our music on Bandcamp](https://gostaberling.bandcamp.com)? :)
 
 Anyway, soapbox off...first thing, let's load the packages we'll be using:
 
@@ -66,6 +65,7 @@ Sys.setenv(SPOTIFY_CLIENT_SECRET = 'xxxxxxxxxxxxxxxxxxxxx')
 ```
 
 This call sets your access token for the data session
+
 ```{r token}
 #| echo: false
 
@@ -85,9 +85,9 @@ gosta_audio1 <- get_artist_audio_features(artist = "4Vb2yqJJthJTAZxKz4Aryn", inc
 
 Oh...why more than one band with Gosta Berling in their name? Well, [*The Saga of Gösta Berling*](https://www.imdb.com/title/tt0014109/) was Greta Garbo's first feature-length film, and based on an old Swedish novel [*Gösta Berling's Saga*](https://www.penguinrandomhouse.com/books/303726/the-saga-of-gosta-berling-by-selma-lagerlof/) about a drunkard outcast priest seeking redemption. When, like our band, you're a bunch of movie nerds, and a couple of you are especially obsessed with silent films & old Hollywood, you name your band Gosta Berling. And so does a Swedish band...anyway...more about the data.
 
-The code here gets a dataframe for each record. I also needed to add album titles.
-Next steps were to merge the album dataframes together, extract the song IDs and pass them to the `get_track_features()` function as a list.
-```{r gbaudio2} 
+The code here gets a dataframe for each record. I also needed to add album titles. Next steps were to merge the album dataframes together, extract the song IDs and pass them to the `get_track_features()` function as a list.
+
+```{r gbaudio2}
 #| echo: true
 #| eval: false
 
@@ -111,8 +111,7 @@ gosta_audio2 <-
 authorization = get_spotify_access_token())
 ```
 
-This gets a dataframe with most of what I want...just a few tweaks needed.
-First, since they weren't pulled from the `get_track_audio_features()` call, I used the track id, name, and album track number from the `gbtracks` dataframe. Also, because the song key returned as only the numeric value, I created the letter name and mode (major or minor), and ordered the columns.
+This gets a dataframe with most of what I want...just a few tweaks needed. First, since they weren't pulled from the `get_track_audio_features()` call, I used the track id, name, and album track number from the `gbtracks` dataframe. Also, because the song key returned as only the numeric value, I created the letter name and mode (major or minor), and ordered the columns.
 
 ```{r gbaudio3}
 #| echo: true
@@ -138,7 +137,6 @@ gosta_audio <- left_join(gosta_audio2, gbtrack2) %>%
 
 ```
 
-
 ```{r dataload1}
 #| warning: false 
 #| message: false 
@@ -162,13 +160,14 @@ gosta_audio %>%
 
 Ok, we've got a nice tidy dataframe, let's do some analysis & visualization!
 
-[Spotify's developer pages](https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/) have good explanations of the data. Some notes from spotify here about elements: 
+[Spotify's developer pages](https://developer.spotify.com/documentation/web-api/reference/tracks/get-audio-features/) have good explanations of the data. Some notes from spotify here about elements:
 
-- Most of the audio features are 0-1, 1 being highest. e.g. higher speechiness = higher ratio of words::music. Valence is "happiness", where higher = happier.
-- Loundess in dB, tempo is BPM. 
+-   Most of the audio features are 0-1, 1 being highest. e.g. higher speechiness = higher ratio of words::music. Valence is "happiness", where higher = happier.
+-   Loundess in dB, tempo is BPM.
 
 So let's look at a quick summary of the audio features for our songs.
-```{r datasummary} 
+
+```{r datasummary}
 #| warning: false 
 #| message: false 
 #| error: false
@@ -180,6 +179,7 @@ gosta_audio %>%
 ```
 
 First I wanted to look at basic correlations for the values. There are a number of ways to run and visualize correlations in r...a few examples follow. First thing I needed to do was a subset of the `gosta_audio` df for easier calls with the various correlation packages.
+
 ```{r gbcorr1}
 #| warning: false 
 #| message: false 
@@ -204,8 +204,8 @@ cor(gbcorr)
 gbcorrs1 <- as.data.frame(cor(gbcorr))
 ```
 
-Or you could let some packages do the viz work for you.
-First, the `GGally` package, which returns a nice matrix visualization that shows which fields are most postively and negatively correlated.
+Or you could let some packages do the viz work for you. First, the `GGally` package, which returns a nice matrix visualization that shows which fields are most postively and negatively correlated.
+
 ```{r gbcorr3}
 #| fig.width: 8.0
 #| fig.height: 4.0
@@ -217,9 +217,10 @@ First, the `GGally` package, which returns a nice matrix visualization that show
 ggcorr(gbcorr, label = TRUE)
 ```
 
-We see here some strong postive associations with energy::loundess returning a .9 coefficient, and liveness::speechiness and energy::valence each returning at .7 coefficient. The energy::acousticness and loudness::acousticness combinations each return a -.7 coefficient, showing a negative relationship between those music features. 
+We see here some strong postive associations with energy::loundess returning a .9 coefficient, and liveness::speechiness and energy::valence each returning at .7 coefficient. The energy::acousticness and loudness::acousticness combinations each return a -.7 coefficient, showing a negative relationship between those music features.
 
 With the corrr package I tried a couple of approaches. First a basic matrix that prints to the console, and doesn't look much different than base r.
+
 ```{r gbcorr4}
 #| fig.width: 7.5
 #| fig.height: 4.0
@@ -234,6 +235,7 @@ gbcorr %>%
 ```
 
 Next, I used their rplot call and then rendered a network graph using the network_plot() call.
+
 ```{r gbcorr5}
 #| fig.width: 8.0
 #| fig.height: 4.0
@@ -250,7 +252,8 @@ correlate(gbcorr) %>%
   network_plot(min_cor=0.5)
 ```
 
-And finally the [`performance analytics'](https://github.com/braverock/PerformanceAnalytics) package, which was the first of the packages to include significance levels in the default output.
+And finally the [\`performance analytics'](https://github.com/braverock/PerformanceAnalytics) package, which was the first of the packages to include significance levels in the default output.
+
 ```{r gbcorr6}
 #| echo: false
 #| warning: false
@@ -260,7 +263,7 @@ chart.Correlation(gbcorr, histogram = FALSE, method = c("pearson", "kendall", "s
 
 ```
 
-Given the correlations, I was interested in exploring the relationships a bit more. So I ran a few scatterplots, with song titles as data labels, and dots colored by album name (using primary color from the cover) to see also if any of the albums clustered at all along either axis. The `ggrepel` package is used to move the labels off of the dots. 
+Given the correlations, I was interested in exploring the relationships a bit more. So I ran a few scatterplots, with song titles as data labels, and dots colored by album name (using primary color from the cover) to see also if any of the albums clustered at all along either axis. The `ggrepel` package is used to move the labels off of the dots.
 
 There is a bit of a relationship between the Energy score and Valence - so our more energetic songs are our happiest songs. Another interesting way to explore this would be to do some sentiment analysis on the lyics and see if there's a relationship between energy, valence and using words considered to be more positive in nature. That's a project on my to-do list.
 
@@ -289,6 +292,7 @@ gosta_audio %>%
 Next I wondered if there's a relationship between song tempo (beats per minute) & happiness. Our average BPM is 131, which isn't too far the the mid-range of songs on Spotify. The histogram below used to be on the [Spotify API page](https://developer.spotify.com/) but they don't seem to have it up anywhere anymore, so found it via the [Wayback Machine](https://web.archive.org/web/20201231212623/https://developer.spotify.com/assets/audio/tempo.png)![](https://web.archive.org/web/20201231212623/https://developer.spotify.com/assets/audio/tempo.png)
 
 So let's see the resulting scatterplot...
+
 ```{r dataviz2}
 #| fig.width: 8.0
 #| fig.height: 4.0
@@ -311,9 +315,11 @@ gosta_audio %>%
   labs(x = "tempo (bpm)", y = "valence (happiness)") +
   theme(legend.position = "bottom", legend.title = element_blank())
 ```
+
 It's not until we get to about the 130 BPM range is it that our songs start to get to even a .25 valence (happiness) score, and from there the relationship between tempo & happiness really kicks in.
 
 Finally, tempo and energy...
+
 ```{r dataviz3}
 #| fig.width: 8.0
 #| fig.height: 4.0
@@ -337,8 +343,10 @@ gosta_audio %>%
   theme(legend.position = "bottom", legend.title = element_blank())
 ```
 
-So yes, most of our songs are in the bottom half of the happy scale. And there does seem to be a bit of a relationship between tempo, energy and happiness and of course a relationship between tempo and energy. Going forward, I'd love to explore our song lyrics via text analysis, especially sentiment analysis to see if the songs Spotify classified as our most sad (low valence) had lyrics that were less positive. 
+So yes, most of our songs are in the bottom half of the happy scale. And there does seem to be a bit of a relationship between tempo, energy and happiness and of course a relationship between tempo and energy. Going forward, I'd love to explore our song lyrics via text analysis, especially sentiment analysis to see if the songs Spotify classified as our most sad (low valence) had lyrics that were less positive.
 
-So if you like slightly melancholy mood-pop that's in the 130 +/- BPM range (think The National, Radiohead), I think you'll like us. 
+So if you like slightly melancholy mood-pop that's in the 130 +/- BPM range (think The National, Radiohead), I think you'll like us.
 
 Thanks for reading. And again, [give us a listen](https://gostaberling.bandcamp.com), and maybe buy some music if you like. :)
+
+*This post was last updated on `r format(Sys.Date(), "%Y-%m-%d")`*
