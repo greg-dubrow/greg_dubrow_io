@@ -199,6 +199,6 @@ Poking around the Kaggle site referenced above I found [these datasets](https://
 
 Now this is a ton of data to work with, and I won't use it all. Figured I'd include the code to get it all in case you get inspired to grab it and take a look.
 
-Ok...that's it for cleaning & prepping...charts and tables in [Stage 2](https://www.gregdubrow.io/tidy-tuesday-apr-07-2020-LeTour-stage2/).
+Ok...that's it for cleaning & prepping...charts and tables in [Stage 2](https://www.gregdubrow.io/posts/tidy-tuesday-apr-07-2020-letour-stage2/).
 
 *This post was last updated on `r format(Sys.Date(), "%Y-%m-%d")`*
