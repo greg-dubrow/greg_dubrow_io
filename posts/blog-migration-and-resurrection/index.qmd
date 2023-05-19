@@ -28,6 +28,6 @@ came up so we accelerated the ultimate end goal of moving here - back to where I
 
 I'll write about the migration process in a bit more detail in another post, but the *tl/dr* as to why is because in trying to do a simple update to my old main picture (me in a mask, early in lockdown) the build was failing in Netlify. So rather than try and diagnose the Hugo/Wowchemy issues (which turned out to be the Ubuntu deploy image...an easy reset), I saw that Posit's new [Quarto](https://quarto.org/) platform is very robust and a bit easier to publish with, so I decided to just rebuild the entire site.
 
-To read about the migration details, go here. All of the old posts are up, time-stamped with the original posting dates. And hopefully soon, new posts as I work through a fairly long list of project ideas and try to get back to working on [#tidytuesday](https://github.com/rfordatascience/tidytuesday) datasets.
+To read about the migration details, go [here](https://www.gregdubrow.io/posts/migrating-from-hugo-to-quarto/). All of the old posts are up, time-stamped with the original posting dates. And hopefully soon, new posts as I work through a fairly long list of project ideas and try to get back to working on [#tidytuesday](https://github.com/rfordatascience/tidytuesday) datasets.
 
 *This post was last updated on `r format(Sys.Date(), "%Y-%m-%d")`*
