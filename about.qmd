@@ -14,6 +14,9 @@ about:
     - icon: twitter
       text: Twitter
       href: https://twitter.com/greg_dubrow
+    - icon: mastodon
+      text: Fosstodon
+      href: https://fosstodon.org/@Greg_Dubrow
 ---
 
 ```{css, echo = FALSE}
@@ -34,5 +37,4 @@ In this space I'll mostly be posting code-throughs and results from my personal 
 Over the years I've [made some music](https://www.discogs.com/artist/1980511-Greg-Dubrow) with [Gosta Berling](https://gostaberling.bandcamp.com/), [Slowness](https://slowness.bandcamp.com/), [Big Still](https://bigstill.bandcamp.com/), [The Trolleyvox](https://www.discogs.com/release/11135216-The-Trolleyvox-Leap-Of-Folly) and [Idle Wilds](https://www.youtube.com/watch?v=86rp45bp93g). My photography is at [Flickr](https://www.flickr.com/photos/dannebrog/).
 
 *Unless otherwise cited, all photographs used in posts are mine, with a [CC BY-NC-ND 4.0 license](https://creativecommons.org/licenses/by-nc-nd/4.0/)*
-
 :::
