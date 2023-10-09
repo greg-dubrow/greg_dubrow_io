@@ -9,7 +9,7 @@ website:
   twitter-card:
     creator: "@greg_dubrow"
   open-graph: true
-  google-analytics: "UA-157557326-1"
+  google-analytics: "G-09CSH6M61C"
   cookie-consent:
     type: express
   navbar:
