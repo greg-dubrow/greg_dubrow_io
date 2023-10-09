@@ -243,7 +243,7 @@ cookieconsent.run({
 <p>So anyway, what does a data nerd do? Write a quick script to randomize the choice. It’s fairly simple, and I have a couple of ground rules:</p>
 <ul>
 <li><p>What comes up must be played. If that means <a href="https://en.wikipedia.org/wiki/Land_Speed_Record_(album)">Hüsker Dü <em>Land Speed Record</em></a> at 8:30am, so be it. If that means <a href="https://en.wikipedia.org/wiki/Sky_Blue_Sky">Wilco’s <em>Sky Blue Sky</em></a> in the afternoon when I need a pick-me-up, so be it.</p></li>
-<li><p>Once played, I can’t be played again via the randomizer. This of course doesn’t preclude playing it when I want to hear it.</p></li>
+<li><p>Once played, it can’t be played again via the randomizer. This of course doesn’t preclude playing it when I want to hear it.</p></li>
 </ul>
 <p>So how does it work? Well, let’s see the code…it’s not genius-level but it does the trick.</p>
 <p>First we load the packages….</p>
@@ -282,7 +282,7 @@ cookieconsent.run({
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>()</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#glimpse(musicplayed)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Then we merge with the library, filter out what’s been played, and get something new to listen to. In this case I’m filtering to just get full LPs or EPs (no singles) and on vinyl or CD (I have some rando flixidiscs).</p>
+<p>Then we merge with the library, filter out what’s been played, and get something new to listen to. In this case I’m filtering to just get full LPs or EPs (no singles) and on vinyl or CD (I have some rando flexidiscs).</p>
 <p>After which I create a new df to output and append to the played list and overwrite the played list.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># merge with played file,</span></span>
