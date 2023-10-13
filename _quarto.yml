@@ -5,11 +5,11 @@ website:
   title: "gregers kjerulf dubrow"
   description: "personal website for grgers kjerulf dubrow"
   site-url: https://www.gregdubrow.io
+  google-analytics: "G-09CSH6M61C"
   repo-url: https://github.com/greg-dubrow/greg_dubrow_io
   twitter-card:
     creator: "@greg_dubrow"
   open-graph: true
-  google-analytics: "G-09CSH6M61C"
   cookie-consent:
     type: express
   navbar:
