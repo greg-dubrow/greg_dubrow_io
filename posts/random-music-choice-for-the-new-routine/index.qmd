@@ -8,7 +8,7 @@ image: "musiccollection.jpeg"
 
 Yes, I have a lot of music.
 
-![](musiccollection.jpeg){fig-align="left" fig-alt="my vinyl and cds."} 
+![](musiccollection.jpeg){fig-align="left" fig-alt="my vinyl and cds."}
 
 To know exactly how much, a few years ago I painstakingly catalogued everything into a spreadsheet, and every time I get something new I add to the list. As of October 2023 I have over 2160 records and CDs...more than 900 vinyl albums (LP & EP), more than 1000 CD albums (LP & EP), 100+ 7" singles plus music in other formats.
 
@@ -18,7 +18,7 @@ We know about the paradox of choice, right? Why you can't choose something to wa
 
 Yeah, same here.
 
-This is a problem I want to solve even more now that I'll be home more often, as my contract at CIEE has ended and I'm spending time re-skilling and upskilling my data knowledge...getting reacquainted with r, learning some Python and Tableau, and hopefully posting more regularly here, all while looking for my next job *(hint-hint, if you need a data analyst/data scientist or know someone who does, let me know)*. 
+This is a problem I want to solve even more now that I'll be home more often, as my contract at CIEE has ended and I'm spending time re-skilling and upskilling my data knowledge...getting reacquainted with r, learning some Python and Tableau, and hopefully posting more regularly here, all while looking for my next job *(hint-hint, if you need a data analyst/data scientist or know someone who does, let me know)*.
 
 I need things to listen to and sometimes I want to randomize the choice so I don't spend 10 minutes dithering about it and choosing one of the same 20 records I listen to by default.
 
@@ -74,7 +74,7 @@ musicplayed <- readxl::read_excel("~/Documents/musicplayed.xlsx") %>%
 
 Then we merge with the library, filter out what's been played, and get something new to listen to. In this case I'm filtering to just get full LPs or EPs (no singles) and on vinyl or CD (I have some rando flexidiscs).
 
-After which I create a new df to output and append to the played list and overwrite the played list. 
+After which I create a new df to output and append to the played list and overwrite the played list.
 
 ```{r getit}
 #| eval: false
@@ -104,12 +104,12 @@ played2 <- playwhat %>%
 writexl::write_xlsx(played2, "~/Documents/musicplayed.xlsx")
 ```
 
-By some cosmic coincidence, I ran the program this morning to get something to listen to while writing this post, and what came up was *Searching for Ray* by Copenhagen band [El Ray](https://elray.bandcamp.com/). And I bought this album back in 2018 at [Rte 66](https://www.vinylworld.org/record-shop/route66-kobenhavn/), an amazing store here in Copenhagen. 
+By some cosmic coincidence, I ran the program this morning to get something to listen to while writing this post, and what came up was *Searching for Ray* by Copenhagen band [El Ray](https://elray.bandcamp.com/). And I bought this album back in 2018 at [Rte 66](https://www.vinylworld.org/record-shop/route66-kobenhavn/), an amazing store here in Copenhagen.
 
-It turned out to be the perfect music to listen to while getting this post together (and debugging some weird glitch where `quarto` couldn't locate `r`)...I listened to it twice. 
+It turned out to be the perfect music to listen to while getting this post together (and debugging some weird glitch where `quarto` couldn't locate `r`)...I listened to it twice.
 
-![](elray_searchingforray.jpeg){fig-align="left" fig-alt="my vinyl and cds."} 
+![](elray_searchingforray.jpeg){fig-align="left" fig-alt="my vinyl and cds."}
 
-They play fun surf-rock...check them out. 
+They play fun surf-rock...check them out.
 
 So that's it, the data nerd's way to get around the paradox of choice and work through the tons of music I have on hand.
