@@ -5,13 +5,15 @@ website:
   title: "gregers kjerulf dubrow"
   description: "personal website for grgers kjerulf dubrow"
   site-url: https://www.gregdubrow.io
-  google-analytics: "G-09CSH6M61C"
+  google-analytics:
+    tracking-id: "G-09CSH6M61C"
+    anonymize-ip: false
   repo-url: https://github.com/greg-dubrow/greg_dubrow_io
   twitter-card:
     creator: "@greg_dubrow"
   open-graph: true
   cookie-consent:
-    type: express
+    type: implied
   navbar:
     pinned: true
     right:
