@@ -6,7 +6,7 @@ categories: [post, news, rstats, eda]
 image: "dalias_happy.jpeg"
 ---
 
-![](dalias_happy.jpeg){fig-align="left" fig-alt="happy cat on a sofa."}
+![Our cat Dalias (aka Potato), in a happy moment](dalias_happy.jpeg){fig-align="left" fig-alt="happy cat on a sofa."}
 
 What makes us happy?
 
