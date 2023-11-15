@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/exploring-happiness-eda/index.html",
       "/posts/random-music-choice-for-the-new-routine/index.html",
       "/posts/migrating-from-hugo-to-quarto/index.html",
       "/posts/blog-migration-and-resurrection/index.html",
