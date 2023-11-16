@@ -11,12 +11,17 @@ about:
     - icon: linkedin
       text: LinkedIn
       href: https://linkedin.com/in/dubrowg/
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/greg_dubrow
+    - icon: bluesky
+      text: Bluesky
+      href: https://bsky.app/profile/gregerskjerulf.bsky.social
     - icon: mastodon
       text: Fosstodon
       href: https://fosstodon.org/@Greg_Dubrow
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/greg_dubrow
+editor: 
+  mode: source
 ---
 
 ```{css, echo = FALSE}
@@ -26,9 +31,13 @@ about:
 ```
 
 ::: justify
-I'm a data analyst/data scientist living in København Denmark, with expertise in higher education systems, policy, undergraduate admissions & enrollment management, and student success.
+I'm a data analyst/data scientist living in København Denmark. I am open to work, be it full-time, contract, or freelance r/statistics and general editing consultation for projects like graduate theses & dissertations or other research projects.
 
-I work in r for everything from data import & cleaning, to analysis, modeling & visualization. I have also used SAS and excel and have working knowledge of SQL and a passing familiarity with Tableau. I can get the gist of Python code, but have not directly worked in the language.
+Though my main subject area expertise is in higher education policy, undergraduate admissions & enrollment management, and student success, the work I have done translates very well to people analytics (employee learning and retention) and business problems like customer churn and retention.
+
+I work in `r` for everything from data import & cleaning, to analysis, modeling & visualization. I have also used `SAS` and `excel` and have basic working knowledge of `SQL` & `Python` and a passing familiarity with `Tableau`.
+
+My favorite part of data work is visualisation and making nice charts & tables. I'm also quite happy to do the data grunt work that is important but less glamorous - cleaning and munging data to get it ready for analysis and machine learning modeling.
 
 I was born in Denmark and grew up in the US. After many years in San Francisco I lived in Lyon France from May to December 2022 , working as an ESL instructor after earning a [CELTA](https://www.cambridgeenglish.org/teaching-english/teaching-qualifications/celta/) via the [ELT Hub](https://www.theelthub.com/).
 

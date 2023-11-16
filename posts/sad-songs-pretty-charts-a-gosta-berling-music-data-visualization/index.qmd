@@ -5,6 +5,8 @@ date: '2021-02-28'
 categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization,
 music, spotify, gosta berling]
 image: "gb_winterland_front.jpg"
+editor: 
+  mode: source
 ---
 
 ## Using the Spotify API and `spotifyr` package to visualize some music I've made
@@ -13,7 +15,7 @@ For this post, I thought I'd focus on music analytics, given that music and data
 
 Over the years I've [made a lot of music](https://www.discogs.com/artist/1980511-Greg-Dubrow) in a number of different projects. For most of my time living in the Bay Area I've played with some friends in a band called [Gosta Berling](https://gostaberling.bandcamp.com/). We've released two EPs and a full album *(click on the album covers to give listen)*
 
-[![Winterland](gb_winterland_sm.jpg)](https://gostaberling.bandcamp.com/album/winterland) [![Travel](gb_travel_sm.jpg)](https://gostaberling.bandcamp.com/album/travel) [![Everybody\'s Sweetheart](gb_sweetheart_sm.jpg)](https://gostaberling.bandcamp.com/album/everybodys-sweetheart)
+[![Winterland](gb_winterland_sm.jpg)](https://gostaberling.bandcamp.com/album/winterland) [![Travel](gb_travel_sm.jpg)](https://gostaberling.bandcamp.com/album/travel) [![Everybody's Sweetheart](gb_sweetheart_sm.jpg)](https://gostaberling.bandcamp.com/album/everybodys-sweetheart)
 
 Our sound could be called melancholy mood-pop. We like melody, but we were raised on brooding post-punk so a minor key vibe is definitely present. The Spotify API has musical features including danceability, energy, and valence (what they call 'happiness'). I used Charlie Thompson's [`spotifyr`](https://github.com/charlie86/spotifyr) package to see how we score. `spotifyr` has a bunch of functions designed to make it easier to navigate Spotify's JSON data structure.
 

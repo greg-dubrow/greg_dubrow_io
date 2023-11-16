@@ -4,6 +4,8 @@ author: "gregers kjerulf dubrow"
 date: '2023-11-15'
 categories: [post, news, rstats, eda]
 image: "dalias_happy.jpeg"
+editor: 
+  mode: source
 ---
 
 ![Our cat Dalias (aka Potato), in a happy moment](dalias_happy.jpeg){fig-align="left" fig-alt="happy cat on a sofa."}
@@ -121,8 +123,7 @@ Regardless, we now have a dataset, so let's explore it.
 whr23_fig2_1 <- readRDS(file = "~/Data/r/World Happiness Report/data/whr23_fig2_1.rds")
 ```
 
-[The `DataExplorer` package]{.underline} <br> 
-Let's start with `DataExplorer`. The [`create_report()`](https://boxuancui.github.io/DataExplorer/reference/create_report.html) function runs the full set of native reports and outputs to a directory of your choosing with a filename of your choosing. But for a review I want to go through a few of the individual report elements.
+[The `DataExplorer` package]{.underline} <br> Let's start with `DataExplorer`. The [`create_report()`](https://boxuancui.github.io/DataExplorer/reference/create_report.html) function runs the full set of native reports and outputs to a directory of your choosing with a filename of your choosing. But for a review I want to go through a few of the individual report elements.
 
 [`introduce()`](https://boxuancui.github.io/DataExplorer/reference/introduce.html) outputs a table showing rows, columns and other information. If you want to see this information in chart form, [`plot_intro()`](https://boxuancui.github.io/DataExplorer/reference/plot_intro.html) and [`plot_missing()`](https://boxuancui.github.io/DataExplorer/reference/plot_missing.html) do that.
 

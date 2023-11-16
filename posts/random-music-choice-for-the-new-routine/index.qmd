@@ -4,6 +4,8 @@ author: "gregers kjerulf dubrow"
 date: '2023-10-09'
 categories: [post, news, rstats, music]
 image: "musiccollection.jpeg"
+editor: 
+  mode: source
 ---
 
 Yes, I have a lot of music.
