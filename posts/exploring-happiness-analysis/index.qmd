@@ -1,0 +1,242 @@
+---
+title: "Exploring Happiness - Part 2...Analysis"
+author: "gregers kjerulf dubrow"
+date: '2023-11-17'
+categories: [post, news, rstats, eda]
+image: "dalias_happy.jpeg"
+editor: 
+  mode: source
+---
+
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "images/",
+  out.width = "100%") 
+```
+
+## *I accidentally pushed this to github way too early and it published, and now for some reason despite trying to delete I can't make it disappear from the blog. I'll finish the post soon, so until I can either delete or finish, consider this a work in progress*
+
+In [Part 1](https://www.gregdubrow.io/posts/exploring-happiness-eda/) I did some exploratory data analysis on the [World Happiness Report](https://worldhappiness.report) data for Chapter 2 of the 2023 edition.
+
+That post got me thinking a bit about being more deliberate about my own initial workflow. Some people have project templates, but I mostly just need a starter script template. So I added some lines to my template script to really ingrain the habit of using those packages for the EDA phase. It's below...feel free to borrow and of course modify to work
+
+```{r dataload4, message=FALSE, ECHO=TRUE, include=TRUE, eval=FALSE}
+#| code-fold: true
+#| code-summary: "code for my r script template"
+### template for r analysis work. save as w/ appropriate name to project directory
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+
+# EDA tools
+library(DataExplorer)
+library(explore)
+library(skimr)
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+# sets theme as default for all plots
+theme_set(theme_light)
+
+## ggplot helpers - load if necessary
+library(patchwork) # to stitch together plots
+library(ggtext) # helper functions for ggplot text
+library(ggrepel) # helper functions for ggplot text
+
+
+### load data
+
+
+### clean data, redo as necesary after running basic EDA
+
+
+
+### EDA with DataExplorer, explore, skimr
+
+## DataExplorer summary of completes, missings
+eda1 <- introduce(DATA)
+view(eda1)
+
+## explorer summary
+whr23_fig2_1 %>%
+	describe_tbl()
+
+## skimr summary
+DATA %>%
+	select() %>%
+	skim()
+
+## go back and clean if issues seen here ##
+
+## dataexplorer plots
+plot_bar(DATA)
+plot_histogram(DATA, nrow = 5L)
+
+## dataexplorer correlations
+DATA %>%
+	select(or deselect as needed) %>%
+	filter(!is.na(if needed)) %>%
+	plot_correlation(maxcat = 5L, type = "continuous", geom_text_args = list("size" = 4))
+
+## dataexplorer scatterplots
+plot_scatterplot(
+	DATA %>% select(), by = "choose target for y axis", nrow = 3L)
+
+## explorer shiny app
+explore(DATA %>%
+					select())
+
+### continue with deeper analysis here or start new r script
+```
+
+But let's get back to examining what makes people happy. By way of a quick recap:
+
+-   The WHR comes from an annual world-wide survey administered by [Gallup](https://www.gallup.com/178667/gallup-world-poll-work.aspx) and is published by the [Sustainable Development Solutions Network](https://www.unsdsn.org/).
+-   Data for Chapter 2 are made available every year, and include a 3-year rolling average of the ladder happiness score aggregated by country, other questions from the poll, and logged GDP for the country.
+
+The EDA in part 1 showed:
+
+-   There are not many missing values in the data.
+-   All of the component variables except generosity have strong positive correlations with the happiness score.
+-   Perception of corruption has, as expected, a negative association with happiness.
+
+Leading me to want to explore relationship between the ladder score and components by country and region.
+
+But first...I spaced on adding one varaible to the dataset, the GINI index, which measures *"the extent to which the distribution of income (or, in some cases, consumption expenditure) among individuals or households within an economy deviates from a perfectly equal distribution....a Gini index of 0 represents perfect equality, while an index of 100 implies perfect inequality."* (from the [World Bank GINI data page](https://data.worldbank.org/indicator/SI.POV.GINI), click the `Details` tab)
+
+It was referenced in the statistical appendix but was not included in the dataset made avaialble. The Chapter 2 authors used two GINI values:
+
+-   a GINI of household income as reported to the Gallup survey and imputed via a STATA function, and
+-   the World Bank's GINI value, taken as the mean of GINI values from 2000 to 2022 to account for the spotty nature of by-country GINI values.
+
+We can't do the Gallup & STATA generated GINI because we can't get the data and I don't have STATA. So we'll get the World Bank values, and add that into the data already created. Then some quick EDA and the analysis we came here to do.
+
+We'll start by loading the packages we'll use here, as well as the WHR data we already created.
+
+```{r pkgload}
+#| message: false 
+#| echo: true
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+
+# functions I use often enough to load them regularly...should probably write a personal package
+source("~/Data/r/basic functions.R")
+
+# load data 
+whr23_fig2_1a <- readRDS(
+	file = "~/Data/r/World Happiness Report/data/whr23_fig2_1.rds")
+
+```
+
+To get the GINI values I went to the World Bank's GINI page and downloaded the latest spreadsheet. There are a couple of helpful `r` packages to get World Bank data; Vincent Arel-Bundock's(http://arelbundock.com) [WDI](https://github.com/vincentarelbundock/WDI) and the [Geospatial Science and Human Security at Oak Ridge National Lab's](https://www.ornl.gov/gshsd) [`wbstats`](https://gshs-ornl.github.io/wbstats/) but for now we'll just use the spreadsheet.
+
+I'll create a GINI average as per the WHR authors and I'll also extract the latest GINI value from the set. Not sure which is ultimately the nest to use. The data need a bit of cleaning to work for our purposes.
+
+```{r giniload, echo=TRUE, error=FALSE, message=FALSE}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "code for loading GINI values"
+
+ginis <- readxl::read_excel("~/Data/r/World Happiness Report/data/API_SI.POV.GINI_DS2_en_excel_v2_5994963.xlsx",
+														sheet = "Data") %>%
+	# clean the country names
+	rename(country_name = `Country Name`, country_code = `Country Code`) %>%
+	# select values from 2000 to 2022
+	select(country_name, country_code, `2000`:`2022`) %>%
+	# get rid of some rows we don't need
+	filter(!grepl('dividend', country_name)) %>%
+	filter(!grepl('income', country_name)) %>%
+	# work rowwise to get avg and latest from 2000 to 2022
+	rowwise() %>%
+	mutate(gini_avg = mean(c_across(c(-country_name:-country_code)), na.rm = TRUE)) %>%
+	# move average to front to get latest
+	select(country_name, country_code, gini_avg, everything()) %>%
+	## does a coalesce to get last non-NA but reverse for all cols but name and code
+	mutate(gini_latest = do.call(coalesce, rev(across(-country_name:-gini_avg)))) %>%
+	ungroup() %>%
+	# clean up some country names to match with WHR data
+	mutate(country_name =
+				 	case_when(country_name == "Czechia" ~ "Czech Republic",
+				 						country_name == "Congo, Dem. Rep." ~ "Congo (Kinshasa)",
+				 						country_name == "Congo, Rep." ~ "Congo (Brazzaville)",
+				 						country_name == "Cote d'Ivoire" ~ "Ivory Coast",
+				 						country_name == "Egypt, Arab Rep." ~ "Egypt",
+				 						country_name == "Eswatini" ~ "Swaziland",
+				 						country_name == "Gambia, The" ~ "Gambia",
+				 						country_name == "Hong Kong SAR, China" ~ "Hong Kong S.A.R. of China",
+				 						country_name == "Iran, Islamic Rep." ~ "Iran",
+				 						country_name == "Korea, Rep." ~ "South Korea",
+				 						country_name == "Kyrgyz Republic" ~ "Kyrgyzstan",
+				 						country_name == "Lao PDR" ~ "Laos",
+				 						country_name == "Russian Federation" ~ "Russia",
+				 						country_name == "Slovak Republic" ~ "Slovakia",
+				 						country_name == "Turkiye" ~ "Turkey",
+				 						country_name == "Venezuela, RB" ~ "Venezuela",
+				 						country_name == "Viet Nam" ~ "Vietnam",
+				 						country_name == "West Bank and Gaza" ~ "Palestinian Territories",
+				 						country_name == "Yemen, Rep." ~ "Yemen",
+				 						TRUE ~ country_name)) %>%
+	select(country_name, country_code, gini_avg, gini_latest)
+```
+
+Now let's add it to the data we already have...
+
+```{r giniload2, echo=TRUE, error=FALSE, message=FALSE}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| code-fold: true
+#| code-summary: "code for joining GINI to WHR data"
+
+whr23_fig2_1 <- whr23_fig2_1a %>%
+	merge(ginis, all = TRUE) %>%
+	as_tibble() %>%
+	select(country_name, country_code, region, whr_year:lowerwhisker, logged_gdp_per_capita,
+				 gini_avg, gini_latest, everything()) %>%
+	## fill in Taiwan, no longer in this set but still available 
+	### at https://pip.worldbank.org/country-profiles/TWN
+	mutate(gini_avg = ifelse(
+		country_name == "Taiwan Province of China", 32.09833333, gini_avg)) %>%
+	mutate(gini_latest = ifelse(
+		country_name == "Taiwan Province of China", 31.48, gini_latest)) %>%
+	filter(!is.na(ladder_score))
+```
+
+*N.B...yes, I use `merge()` and not `left/right/full_join()`...I learned SAS before SQL and old habits die hard (shrug emoji).*
+
+*N.B.2...Taiwan data is no longer avaialble in most WB sets, either in the spreadsheet or via the API the packages access. It is still at the WB's [Poverty & Inequality Platform](https://pip.worldbank.org/country-profiles/TWN) so I downloaded what I could and hard-coded. Why? Because I'm a little OCD when it comes to trying to minimize missing data.*
+
+Anyway...now we have to do some quick EDA on the GINI values in relation to the data we have. First the missing data...
+
+```{r eda1, echo=TRUE, error=FALSE, message=FALSE}
+#| fig.width: 8.0
+#| fig.height: 4.0
+#| fig-dpi: 300
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+
+# EDA tools
+library(DataExplorer) 
+library(explore)
+library(skimr)
+
+# a quick skim 
+whr23_fig2_1 %>%
+	select(gini_avg, gini_latest) %>%
+	skimr::skim()
+```
+
+Excellent, only 7 missing.
