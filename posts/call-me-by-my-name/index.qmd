@@ -3,9 +3,12 @@ title: "Call Me By My Name"
 author: "gregers kjerulf dubrow"
 date: '2023-12-13'
 categories: [post, news, rstats, babynames]
+image: birthcertificate.jpeg
 editor: 
   mode: source
 ---
+
+![](birthcertificate.jpeg){width="50%"}
 
 The actor Ryan O'Neal died on December 8, 2023. If you're of a certain age and a film fan you might know him best from a pretty good run in the 1970s of very diverse films from [Love Story](https://www.imdb.com/title/tt0066011/?ref_=nm_flmg_t_46_act), to the [Peter Bogdonavich](https://www.imdb.com/name/nm0000953/?ref_=tt_ov_dr) gems [What's Up Doc](https://www.imdb.com/title/tt0069495/?ref_=nm_flmg_t_43_act) and [Paper Moon](https://www.imdb.com/title/tt0070510/?ref_=nm_flmg_t_41_act), and then working with [Stanley Kubrick](https://www.imdb.com/name/nm0000040/?ref_=tt_ov_dr) in [Barry Lyndon](https://www.imdb.com/title/tt0072684/?ref_=nm_knf_t_3) and [Richard Attenborough](https://www.imdb.com/name/nm0000277/?ref_=tt_ov_dr) in [A Bridge Too Far](https://www.imdb.com/title/tt0075784/?ref_=nm_flmg_c_38_act). Not to mention the under-rated [The Driver](https://www.imdb.com/title/tt0077474/?ref_=nm_flmg_t_37_act). If you're of a certain age but more into celebrity gossip you might know him best from dating Farrah Fawcett and being John McEnroe's father-in-law.
 
