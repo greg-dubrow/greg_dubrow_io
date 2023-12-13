@@ -4,6 +4,8 @@ author: "gregers kjerulf dubrow"
 date: '2021-02-25'
 categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization, higher education]
 image: "hbcu-collage.jpg"
+editor: 
+  mode: source
 ---
 
 [![](hbcu-collage.jpg){fig-align="left"}](https://blogs.gwu.edu/ccasgrad/2021/06/10/the-hbcu-legacy/)
@@ -28,7 +30,7 @@ For Tidy Tuesday though that slows things down -- it's mostly meant to be a quic
 
 The Tidy Tuesday data has some of what I need - it comes from [Data.World](https://data.world/nces/hbcu-fall-enrollment-1976-2015) via [IPEDS](https://nces.ed.gov/ipeds/) (essentially the US Department of Education's higher ed data library) . I'm supplementing it with data from the [Delta Cost Project](https://deltacostproject.org/delta-cost-project-database), which aggrgated years worth of data from IPEDS.
 
-So let's dive into the data. 
+So let's dive into the data.
 
 ```{r setup}
 #| include: false
@@ -41,7 +43,7 @@ knitr::opts_chunk$set(
 
 First we load the packages we'll be using...
 
-```{r pkgload} 
+```{r pkgload}
 #| message: false 
 #| echo: true
 # load packages
@@ -109,7 +111,7 @@ tt_hbcu_all <- as_tibble(tt_hbcu_load$hbcu_all) %>%
          total_private, four_year_pri = x4_year_private, two_year_pri = x2_year_private)  
 ```
 
-Let's join `tt_hbcu_black` with `tt_hbcu_all` and create the non-Black ethnicity group. There is probably a better way to do the subtractions programmatically with a function but my r skills aren't there yet. The final dataframes I'll use for plots are  `tt_hbcu_enr_eth_sex` & `tt_hbcu_enr_eth_sect`. Because of the way the source data was arrayed I could do ethnicty by gender and ethnicity by sector but not all three vectors. So, two sets...
+Let's join `tt_hbcu_black` with `tt_hbcu_all` and create the non-Black ethnicity group. There is probably a better way to do the subtractions programmatically with a function but my r skills aren't there yet. The final dataframes I'll use for plots are `tt_hbcu_enr_eth_sex` & `tt_hbcu_enr_eth_sect`. Because of the way the source data was arrayed I could do ethnicty by gender and ethnicity by sector but not all three vectors. So, two sets...
 
 ```{r dataload3}
 #| message: false
@@ -180,9 +182,9 @@ tt_hbcu_enr_eth_sect = rbind(tt_hbcu_all, tt_hbcu_black) %>%
 
 ```
 
-Ok, the Tidy Tuesday data is sorted, so let's use the [`haven` package](https://haven.tidyverse.org/) load in the Delta Cost Project (DCP) data they provided as [SAS](https://www.sas.com/) files. 
+Ok, the Tidy Tuesday data is sorted, so let's use the [`haven` package](https://haven.tidyverse.org/) load in the Delta Cost Project (DCP) data they provided as [SAS](https://www.sas.com/) files.
 
-They've split their data into two files, one from 1987 to 1999 and one from 2000 to 2015. There's a ton of data in the set, but all I want for this analysis is enrollments and tuition - I'll pull those fields from each set, then rbind together into a dataframe called `tuitenr_8715_agg` for year-over-year by-sector analysis. Unfortunately while DCP has enrollment by ethnicity, they only do it for total enrollment - grad and undergrad combined - so I can't do some of the HBCU vs non-HBCU comparisons. There are other sources which I'll describe at the end of the post. 
+They've split their data into two files, one from 1987 to 1999 and one from 2000 to 2015. There's a ton of data in the set, but all I want for this analysis is enrollments and tuition - I'll pull those fields from each set, then rbind together into a dataframe called `tuitenr_8715_agg` for year-over-year by-sector analysis. Unfortunately while DCP has enrollment by ethnicity, they only do it for total enrollment - grad and undergrad combined - so I can't do some of the HBCU vs non-HBCU comparisons. There are other sources which I'll describe at the end of the post.
 
 Ok, loading the 2000 to 2015 data...
 
@@ -266,9 +268,9 @@ tuitenr_8715_agg <-
 
 ```
 
-Because I'll be doing some year-over-year percent change analysis, I'll create a separate dataframe from `tuitenr_8715_agg` (the DCP data) so I can compare HBCU to non-HBCU changes by year. 
+Because I'll be doing some year-over-year percent change analysis, I'll create a separate dataframe from `tuitenr_8715_agg` (the DCP data) so I can compare HBCU to non-HBCU changes by year.
 
-Remember the `pctchange` function I created when I loaded the packages? Here it's put to good use. I'll only show code for one of the frames - I created frames for each sector, HBCU and non-HBCU. The final data set will rbind 10 frames into `tuit_8715_pctchgh`. BTW, this is another example of when I wish I were a bit better at purrr/mapping and functions so I could have done it with less code. 
+Remember the `pctchange` function I created when I loaded the packages? Here it's put to good use. I'll only show code for one of the frames - I created frames for each sector, HBCU and non-HBCU. The final data set will rbind 10 frames into `tuit_8715_pctchgh`. BTW, this is another example of when I wish I were a bit better at purrr/mapping and functions so I could have done it with less code.
 
 Since the data provided starts in 1987, I'll filter that year out of the dataframes.
 
@@ -289,7 +291,6 @@ tuit_8715_pctchgh1 <- tuitenr_8715_agg %>%
   filter(year > 1987)
 
 ```
-
 
 ```{r pctchng2}
 #| message: false
@@ -392,7 +393,7 @@ tuit_8715_pctchgh <- rbind(tuit_8715_pctchgh1, tuit_8715_pctchgh2) %>%
   rbind(tuit_8715_pctchgh10) 
 ```
 
-Ok, the data is in place, let's see what it tells us! I'll fold the code for the more basic charts, click on the arrow to see it.  You'll note that this analysis is mostly line graphs. That'a because I'm mostly doing trend analysis, and I like line graphs for time series. 
+Ok, the data is in place, let's see what it tells us! I'll fold the code for the more basic charts, click on the arrow to see it. You'll note that this analysis is mostly line graphs. That'a because I'm mostly doing trend analysis, and I like line graphs for time series.
 
 First up we'll use the Tidy Tuesday data to look at HBCU enrollment by ethnicity (Black and non-Black) from 1990 to 2015. What do we see? Overall, periods of increase and decrease in total enrollment. But interestingly we see that non-Black enrollment kept increasing, even as Black enrollment started to drop. Of course Black students make up a vast majority of HBCU enrollment, so their trends drive overall numbers. It is worth noting though that the changes started in the 2010s, coinciding with [changes in how NCES counted ethncity](https://nces.ed.gov/ipeds/report-your-data/race-ethnicity-reporting-changes). It's beyond the scope of this quick (ha) analysis, but worth digging deeper to see the effect of changes on the ethnic mix of HBCUs.
 
@@ -446,7 +447,7 @@ tt_hbcu_enr_eth_sex %>%
         plot.caption = element_text(color = "#999999", face = "italic", size = 7))
 ```
 
-Next let's look at enrollment by ethnicity & sex. HBCU enrollment mirrors that of higher ed enrollment in general - [since the early 1980s](https://nces.ed.gov/programs/digest/d19/tables/dt19_303.70.asp) women outnumber men. There are differences by sector (4-year, 2-year, public & private) and field of study but the oveall trend has been consistent. We do see that for non-Black students at HBCUs the percentage of women is a bit less than that of Black students. 
+Next let's look at enrollment by ethnicity & sex. HBCU enrollment mirrors that of higher ed enrollment in general - [since the early 1980s](https://nces.ed.gov/programs/digest/d19/tables/dt19_303.70.asp) women outnumber men. There are differences by sector (4-year, 2-year, public & private) and field of study but the oveall trend has been consistent. We do see that for non-Black students at HBCUs the percentage of women is a bit less than that of Black students.
 
 ```{r dataviz2}
 #| fig.width: 7.5
@@ -500,7 +501,7 @@ tt_hbcu_enr_eth_sex %>%
         plot.caption = element_text(color = "#999999", face = "italic", size = 7))
 ```
 
-The next thing I want to look at is enrollment by sector for HBCUs. In this case we think of sectors along two axes - public and private, and 2-year (community/junior colleges) vs 4-year (baccalaureate granting). What these first two sector charts show us is that most HBCU enrollment is in publics and in 4-year schools. Given the land-grant history of most HBCUs, that makes sense. 
+The next thing I want to look at is enrollment by sector for HBCUs. In this case we think of sectors along two axes - public and private, and 2-year (community/junior colleges) vs 4-year (baccalaureate granting). What these first two sector charts show us is that most HBCU enrollment is in publics and in 4-year schools. Given the land-grant history of most HBCUs, that makes sense.
 
 I am leaving in the code for the first chart to highlight how one can a) have two different colored lines within the same chart in a faceted visualization (the `scale_color_manual` call) and b) use the amazing [`ggtext`](https://wilkelab.org/ggtext/) package to get two different colors of text in the subtitle line, so it does the work of a legend. The `<span style = </span>` and the `element_markdown` call in the `theme` specification is how you make it happen.
 
@@ -669,9 +670,9 @@ enr19902015all
 
 For a change of pace let's see a slope graph of percent change in tuition by sector from 1990 to 2015. I found a helpful code-thru of a [similar-ish slope graph here](https://ibecav.github.io/slopegraph/) and used that as my guide. I used patchwork for this too, and because in this instance I used patchwork for title and other adornments, I'll show code for all steps.
 
-Two observations stand out - first, HBCUs are less expensive by sector than non-HBCUs. But for both HBCUs and non-HBCUs, the price gap between private 4-year schools and the other sectors widened during this time period. 
+Two observations stand out - first, HBCUs are less expensive by sector than non-HBCUs. But for both HBCUs and non-HBCUs, the price gap between private 4-year schools and the other sectors widened during this time period.
 
-But these are sticker prices and don't include institutional aid, or "tuition discount". If a college offers you a $3000 institutional grant (not a federal or state grant or loan), the money is essentially foregone revenue for the school, or a discount to the stated tuition price. 
+But these are sticker prices and don't include institutional aid, or "tuition discount". If a college offers you a \$3000 institutional grant (not a federal or state grant or loan), the money is essentially foregone revenue for the school, or a discount to the stated tuition price.
 
 ```{r dataviz7}
 #| fig.width: 7.5
@@ -768,11 +769,11 @@ tuitsec <- tuitsect_hbcu / tuitsect_nonhbcu  + plot_annotation(
 tuitsec
 ```
 
-Finally, let's check out some year-over-year percent changes in enrollment & tuition, using the line graphs I love so much. Code is basic ggplot, so not worth showing here. If there's anything of interest it was in adding a `geom_hline` call to add the light gray reference line at 0%. 
+Finally, let's check out some year-over-year percent changes in enrollment & tuition, using the line graphs I love so much. Code is basic ggplot, so not worth showing here. If there's anything of interest it was in adding a `geom_hline` call to add the light gray reference line at 0%.
 
-As we'd seen in eariler charts, enrollment at HBCUs ping-ponged up and down. There was a bit less volatility in non-HBCUS, and in general enrollments didn't decrease from 2000 onward. 
+As we'd seen in eariler charts, enrollment at HBCUs ping-ponged up and down. There was a bit less volatility in non-HBCUS, and in general enrollments didn't decrease from 2000 onward.
 
-At both HBCUs and non-HBCUs, public & private 4-years raised tuition & fees every year. The publics had a couple of instances of sharper increases, likely in response to recession-hit state budgets. The 2-year schools, especially 2-year HBCUs, had wider up & down swings in tuition. 
+At both HBCUs and non-HBCUs, public & private 4-years raised tuition & fees every year. The publics had a couple of instances of sharper increases, likely in response to recession-hit state budgets. The 2-year schools, especially 2-year HBCUs, had wider up & down swings in tuition.
 
 ```{r dataviz9}
 #| fig.width: 7.5
@@ -832,11 +833,11 @@ This was designed to be broad-scope, more-or-less exploratory analysis. Just loo
 
 And what other questions one could answer with the data I used here? Well for one, the tuition discount rates by sectors and HBCU/not HBCU would be an interesting thing to look at. Did HBCUs need to more aggressively discount tution to meet enrollment targets? The Delta Cost Project set includes a tuition discount variable. There's a regression analysis in there somewhere, as well as other predictive analysis.
 
-I'd also want to look at which ethnic groups made up the growth in non-Black enrollments starting in 2010. Or was it that the changes to how ethnicity was recorded meant that students who used to be classified as Black become Hispanic or multi-ethnic. I know from my time in undergrad admissions at UC Berkeley that this accounted for a decline in the federal count of African-American students. However, when we compared the numbers with the UC definitions, we didn't see a decline. 
+I'd also want to look at which ethnic groups made up the growth in non-Black enrollments starting in 2010. Or was it that the changes to how ethnicity was recorded meant that students who used to be classified as Black become Hispanic or multi-ethnic. I know from my time in undergrad admissions at UC Berkeley that this accounted for a decline in the federal count of African-American students. However, when we compared the numbers with the UC definitions, we didn't see a decline.
 
-To get those numbers I could download IPEDS data directly from NCES or use r tools like the [Urban Insitute's](https://www.urban.org/) [`educationdata` package](https://github.com/UrbanInstitute/education-data-package-r ) which is an API wrapper to that scrapes NCES and other websites for data.
+To get those numbers I could download IPEDS data directly from NCES or use r tools like the [Urban Insitute's](https://www.urban.org/) [`educationdata` package](https://github.com/UrbanInstitute/education-data-package-r) which is an API wrapper to that scrapes NCES and other websites for data.
 
-There is a ton of higher education data out there, and it's never been easier to get at scale than now. Trust me, as someone who has done individual downloads, ordered CD-ROMs, even used the late-great [WebCASPAR](https://twitter.com/greg_dubrow/status/1146097408754909184), if you have an education policy or outcomes related question, there is publicly available data for analysis. 
+There is a ton of higher education data out there, and it's never been easier to get at scale than now. Trust me, as someone who has done individual downloads, ordered CD-ROMs, even used the late-great [WebCASPAR](https://twitter.com/greg_dubrow/status/1146097408754909184), if you have an education policy or outcomes related question, there is publicly available data for analysis.
 
 *Cover image for post from [GWU CCAS Graduate Blog](https://blogs.gwu.edu/ccasgrad/2021/06/10/the-hbcu-legacy/)*
 

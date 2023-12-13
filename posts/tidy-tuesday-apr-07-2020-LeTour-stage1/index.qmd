@@ -4,6 +4,8 @@ author: "gregers kjerulf dubrow"
 date: '2020-11-30'
 categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization, sports, cycling, tour de france]
 image: "Kraftwerk_Tour_De_France_Soundtracks_album_cover.png"
+editor: 
+  mode: source
 ---
 
 ![](Kraftwerk_Tour_De_France_Soundtracks_album_cover.png) \| ![](bike_twinpeaks.jpg){width="49%"}

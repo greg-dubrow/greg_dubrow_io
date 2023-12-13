@@ -4,6 +4,8 @@ author: "gregers kjerulf dubrow"
 date: '2021-02-26'
 categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization, higher education]
 image: "usanfranlogo.png"
+editor: 
+  mode: source
 ---
 
 In early 2020 (back in the days of in-person gatherings) I was invited to give a talk at two budget forums at the [University of San Francisco](https://www.usfca.edu/). The general theme was looking at the landscape of enrollments in higher education, with a specific focus on liberal arts colleges, especially Jesuit colleges. Because I collected data from a variety of sources and did much of the work in r, I thought it would make for a good data blog post. Plus, like the [Tidy Tuesday HBCU enrollment post](https://www.gregdubrow.io/2021/02/25/tidy-tuesday-february-2-20201-hbcu-enrollment/), it's about higher education, which has been my area of professional expertise for a while now.
@@ -12,22 +14,23 @@ I structured the talk around these general questions:
 
 ### What are the major trends affecting the higher education landscape in the US today, particularly traditional liberal arts colleges?
 
-  * Changing demographics impacting enrollments
-  * Affordability  
-  * What social/political threats are on the horizon that colleges should start addressing?
+-   Changing demographics impacting enrollments
+-   Affordability\
+-   What social/political threats are on the horizon that colleges should start addressing?
 
 The talk was divided into four segments:
 
-  * The high school graduation picture in California (USF gets most of its students from CA)
-  * Historical enrollment at USF, and compared to other Jesuit colleges
-  * College Costs and Affordability  
-  * What social/political threats are on the horizon that colleges should start addressing?
+-   The high school graduation picture in California (USF gets most of its students from CA)
+-   Historical enrollment at USF, and compared to other Jesuit colleges
+-   College Costs and Affordability\
+-   What social/political threats are on the horizon that colleges should start addressing?
 
 The data, code and resulting presentation are in this [github repo](https://github.com/greg-dubrow/USF-talk-February-2020). What I plan to do in this post is in effect annotate some of the code to explain how I put everything together. And of course to show some charts & tables.
 
 First up is pulling in a few decades of high school graduation and enrollment data and wrangling it all to show historical enrollment and projections through 2029. The full code for that is at the github repo in the file [01_hs enrollment data.R](https://github.com/greg-dubrow/USF-talk-February-2020/blob/master/01_hs%20enrollment%20data.R). So what did I do?
 
 First, loaded some packages:
+
 ```{r setup}
 #| include: false
 knitr::opts_chunk$set(
@@ -53,7 +56,7 @@ library(janitor) # data munging/cleaning utilities
 
 The [rCAEDDATA package](https://github.com/daranzolin/rCAEDDATA) was put together by my former [SFSU IR](https://ir.sfsu.edu/) colleague [David Ranzolin](https://daranzolin.github.io/). Though the last update was October 2017, it still contains a trove of data, including public HS graduation numbers from 1993 to 2016. That said, I didn't actually use the package functions, just downloaded the data included with the package. For later years I manually downloaded files from the CA Department of Education's data pages: [2017 here](https://www.cde.ca.gov/ds/sd/sd/filesgrad.asp), and the [later years here](https://www.cde.ca.gov/ds/sd/sd/filesfycgr.asp). The 2017 file has the same structure as the files in David's package. Later years need a bit of restructuring:
 
-```{r hsgrad1} 
+```{r hsgrad1}
 #| message: false
 #| echo: true
 #| collapse: true
@@ -83,6 +86,7 @@ cahsgrad18 <- read.delim("data/cahsgrad18.txt", stringsAsFactors=FALSE) %>%
 ```
 
 Next, some projected HS graduation data from the [CA Department of Finance](https://www.dof.ca.gov/Forecasting/Demographics/Projections/Public_K-12_Graded_Enrollment/). I did a quick transposing of the "HS Grads Table" tab in excel and used that to read into r. You can see the file I used at the github repo's [data folder](https://github.com/greg-dubrow/USF-talk-February-2020/tree/master/data).
+
 ```{r hsgrad2}
 #| message: false
 #| echo: true
@@ -109,6 +113,7 @@ grproj_to2028 <- readxl::read_excel("data/capublic_k12_enrollproj_to2028.xlsx",
 ```
 
 The projected HS grad stats didn't have values for UC/CSU grads, so I needed to impute that as part of the merging of the actual & projected files. I also calculated year-over-year percent changes for a few fields. (though I did it manually not with a function like in the [Tidy Tuesday HBCU post](https://www.gregdubrow.io/posts/tidy-tuesday-feb-02-2021-hbcu/)). The code below gets us the `cahsgrads_1993_2028` dataframe.
+
 ```{r hsgrad3}
 #| message: false
 #| echo: true
@@ -153,13 +158,13 @@ ipeds_fallenroll_8718 <- readRDS(file = "~/Data/USF-talk-February-2020/data/iped
 
 ```
 
-Now that we have the data, let's make the chart I presented to the group, showing actual & projected high school grads in California, breaking out the [UC/CSU eligible](https://www.cde.ca.gov/ci/gs/hs/hsgrtable.asp) grads.  
+Now that we have the data, let's make the chart I presented to the group, showing actual & projected high school grads in California, breaking out the [UC/CSU eligible](https://www.cde.ca.gov/ci/gs/hs/hsgrtable.asp) grads.
 
 What does the chart tell us? Well...
 
-  * 67% increase in grads from 1993 to 2018
-  * UC/CSU eligibility 33% in 1993, 50% in 2018
-  * Grads expected to peak in 2023, then decline slightly
+-   67% increase in grads from 1993 to 2018
+-   UC/CSU eligibility 33% in 1993, 50% in 2018
+-   Grads expected to peak in 2023, then decline slightly
 
 But these assumptions were all pre-COVID - I gave the talks in early February of 2020. Given factors such as migration patterns within the state, people moving out of CA, parents moving their kids to private schools, etc., the actual graduation picture is sure to change.
 
@@ -196,9 +201,9 @@ cahsgrads_1993_2028 %>%
 				axis.text.x = element_text(size = 7))
 ```
 
-Next I presented some data on USF enrollment and compared USF to their Jesuit college peers. For that I used two sources: data from the Delta Cost Project (DCP), and since DCP stops at 2015, downloaded some files directly from IPEDS and read in the CSVs. I could also have used r tools like the [Urban Insitute's](https://www.urban.org/) [`educationdata` package](https://github.com/UrbanInstitute/education-data-package-r ) an API wrapper to that scrapes NCES and other websites for data. (I also referenced that package in [my HBCU post](https://www.gregdubrow.io/posts/tidy-tuesday-feb-02-2021-hbcu/)).
+Next I presented some data on USF enrollment and compared USF to their Jesuit college peers. For that I used two sources: data from the Delta Cost Project (DCP), and since DCP stops at 2015, downloaded some files directly from IPEDS and read in the CSVs. I could also have used r tools like the [Urban Insitute's](https://www.urban.org/) [`educationdata` package](https://github.com/UrbanInstitute/education-data-package-r) an API wrapper to that scrapes NCES and other websites for data. (I also referenced that package in [my HBCU post](https://www.gregdubrow.io/posts/tidy-tuesday-feb-02-2021-hbcu/)).
 
-The import code isn't all that challenging - read in the CSV, select the fields I needed, do a bit of basic cleaning. So no need to show it. You can see it in the github repo - go to the file ['02_ipeds_enroll.R`](https://github.com/greg-dubrow/USF-talk-February-2020/blob/master/02_ipeds%20data_enroll.R). Though if anything's worth highlighting it's the need to create an object of IPEDS unitids for Jesuit colleges so I could group them during analysis. The Jesuit colleges include names you know: Georgetown, Gonazaga, Boston College, the Loyolas (Chicago, LA, New Orleans, Baltimore), etc...
+The import code isn't all that challenging - read in the CSV, select the fields I needed, do a bit of basic cleaning. So no need to show it. You can see it in the github repo - go to the file ['02_ipeds_enroll.R\`](https://github.com/greg-dubrow/USF-talk-February-2020/blob/master/02_ipeds%20data_enroll.R). Though if anything's worth highlighting it's the need to create an object of IPEDS unitids for Jesuit colleges so I could group them during analysis. The Jesuit colleges include names you know: Georgetown, Gonazaga, Boston College, the Loyolas (Chicago, LA, New Orleans, Baltimore), etc...
 
 ```{r ipedsids}
 #| message: false
@@ -216,15 +221,15 @@ First up is USF enrollment from Fall 1987 to Fall 2018 (the latest year that IPE
 
 What's the enrollment picture at USF? Well, this chart tells us that:
 
-  * Undergraduate enrollment have increased by 60% since 1987.
-  * Graduate enrollments hovering around 3,500 for a number of years, and up to +/- 4,000 since 2016.
-  * Ratio of undergraduate::graduate enrollments steady over time, generally +/- 2% points from 60%.
+-   Undergraduate enrollment have increased by 60% since 1987.
+-   Graduate enrollments hovering around 3,500 for a number of years, and up to +/- 4,000 since 2016.
+-   Ratio of undergraduate::graduate enrollments steady over time, generally +/- 2% points from 60%.
 
 How does this relate to the high school graduation trends in CA & nearby states?
 
-  * With 63% of new students coming from California, high school enrollments here will have most impact. 
-  * Western Interstate Commission for Higher Education (WICHE) projects HS grads from all western states to peak in 2024 at 862,000, then decline for a few years, rebounding again around 2032. (Knocking at the College Door, https://knocking.wiche.edu)
-  * During 1980s the Gen X population drop mitigated by increased college-going rates – what will happen this time? 
+-   With 63% of new students coming from California, high school enrollments here will have most impact.
+-   Western Interstate Commission for Higher Education (WICHE) projects HS grads from all western states to peak in 2024 at 862,000, then decline for a few years, rebounding again around 2032. (Knocking at the College Door, https://knocking.wiche.edu)
+-   During 1980s the Gen X population drop mitigated by increased college-going rates -- what will happen this time?
 
 ```{r dataviz2}
 #| fig.width: 8.0
@@ -301,17 +306,17 @@ plot_usfenr_all <- plot_usfenr_ug + plot_usfenr_gr +
 plot_usfenr_all
 ```
 
-Quick note about this plot...I was getting an annoying _Error in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : polygon edge not found_ message trying to run these plots. For the presentation I was using the Calibri font, with this call in the `theme()` section: `text = element_text(family = "Calibri")`. I removed that & the error went away. But this after trying everything from reinstalling Quartz, shutting down all browser windows, running `dev.off()' in the console...got rid of the special font & no error.
+Quick note about this plot...I was getting an annoying *Error in grid.Call(C_textBounds, as.graphicsAnnot(x*$label), x$x, x\$y, : polygon edge not found message trying to run these plots. For the presentation I was using the Calibri font, with this call in the `theme()` section: `text = element_text(family = "Calibri")`. I removed that & the error went away. But this after trying everything from reinstalling Quartz, shutting down all browser windows, running \`dev.off()' in the console...got rid of the special font & no error.
 
 Anyway...back to the charts.
 
-I wanted to show USF undergraduate enrollment indexed over time relative to their Jesuit college peers. The final version of the chart is below, complete with annotations I added in power point. There are ways to do similar annotations on r; I used power point because I could do it quicker, with less fuzting around with annotation placement after rendering and saving the image. 
+I wanted to show USF undergraduate enrollment indexed over time relative to their Jesuit college peers. The final version of the chart is below, complete with annotations I added in power point. There are ways to do similar annotations on r; I used power point because I could do it quicker, with less fuzting around with annotation placement after rendering and saving the image.
 
-We see that USF is in the upper quarter of total enrollment growth. Gonzaga & St. Louis University, two schools well-known thanks to success in the NCAA men's basketball tournament, showed significant growth in the period. Here you might say _"but wait, Georgetown has had NCAA success"_, and I'd reply _"yes, but their success started before 1987, so within this period didn't grow as much as Gonzaga & St. Louis"._
+We see that USF is in the upper quarter of total enrollment growth. Gonzaga & St. Louis University, two schools well-known thanks to success in the NCAA men's basketball tournament, showed significant growth in the period. Here you might say *"but wait, Georgetown has had NCAA success"*, and I'd reply *"yes, but their success started before 1987, so within this period didn't grow as much as Gonzaga & St. Louis".*
 
 ![Jesuit College Enrollment](jesuitcoll_annotated.png)
 
-So how did I make this chart? How did we get the green line for USF, with all else in gray? 
+So how did I make this chart? How did we get the green line for USF, with all else in gray?
 
 First I created a dataframe of the Jesuit colleges, and indexed changes in enrollment to 1.
 
@@ -366,7 +371,7 @@ ipeds_fallenroll_8718 %>%
 				 enr_pct_change2, index_enr_inst)
 ```
 
-Why all the manual fixes to Loyola in New Orleans? Well, look at the chart again. See the dip in enrollment around 2005? What might have tanked enrollment at a New Orleans-based college in 2005? Oh right...Hurricane Katrina. To smooth out the drop, I reindexed from the 2006 enrollment point, and added to the index sum after that. For some reason I couldn't identify, the usual lag from prior year wasn't working so I just did it manually. 
+Why all the manual fixes to Loyola in New Orleans? Well, look at the chart again. See the dip in enrollment around 2005? What might have tanked enrollment at a New Orleans-based college in 2005? Oh right...Hurricane Katrina. To smooth out the drop, I reindexed from the 2006 enrollment point, and added to the index sum after that. For some reason I couldn't identify, the usual lag from prior year wasn't working so I just did it manually.
 
 As for the plot...to get the green line, I first plotted everything *but* USF in grey, then plotted USF in green. Saved the plot, then added annotations in power point.
 

@@ -25,6 +25,8 @@ website:
         href: https://linkedin.com/in/dubrowg/
       - icon: twitter
         href: https://twitter.com/greg_dubrow
+      - icon: rss
+        href: index.xml
   page-footer:
     left:
       - href: https://www.quarto.org
@@ -37,6 +39,4 @@ format:
     theme: cosmo
     css: styles.css
     code-overflow: wrap
-
 editor: visual
-
