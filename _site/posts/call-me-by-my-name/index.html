@@ -241,7 +241,7 @@ cookieconsent.run({
 <p>You can go to the US Social Security Administration’s (SSA) <a href="https://www.ssa.gov/oact/babynames/">baby names page</a> and check for yourself what are the popular names in any given year, or track the popularity of names over time. You can also download data and do your own analysis. Or you can use the <a href="https://hadley.github.io/babynames/"><code>babynames</code> package</a> created by <a href="https://hadley.nz/">Hadley Wickham</a> of Posit (formerly RStudio). Which is what we’ll do here to look at a few names of interest.</p>
 <p>The SSA data is, <a href="https://www.ssa.gov/oact/babynames/births.html">as they note</a>, based on applications for Social Security numbers (SSN). The dataset includes only SSN applciations for people born in the US and excludes any name counts below 5 in any given year.</p>
 <p>So let’s check out how bay names have trended in the US.</p>
-<p>To start with let’s load packages to import and clean the data. These are the three packages I use for almost every analysis in <code>r</code>, plus the <code>babynames</code> package.</p>
+<p>To start we’ll load packages to import and clean the data. These are the three packages I use for almost every analysis in <code>r</code>, plus the <code>babynames</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
@@ -250,7 +250,7 @@ cookieconsent.run({
 </div>
 <p>The package comes with a few datasets. We will use the <code>babynames</code> set, which has year of birth, sex, name, number, and proportion of people of that sex with that name.</p>
 <p>Unlike most of my posts, I won’t be doing any data transformation or fancy visuals…I just want to see how a few names have trended over the years. First, let’s replicate Ryan G’s chart, and look at the name “Ryan”. We’ll start at 1940 since we already know from Ryan G’s chart when it took off.</p>
-<p>Before we continue, a couple of caveats up front…</p>
+<p>Before we continue, a couple of caveats…</p>
 <ul>
 <li>There was a baby boom from the late 1940s onward, so even with the dip after 1965 there have been many more births and more people getting SSNs than pre WWII. Many older workers born well before Social Security was a thing never applied for numbers so weren’t in the system. So…</li>
 <li>A more nuanced analysis would be proportion of births with the names. But this isn’t meant to be nuanced or statisitically significant, just a quick look at how name popularity has changed over time in the US.</li>
@@ -299,7 +299,7 @@ cookieconsent.run({
 <p><img src="images/ryan2-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-<p>Fewer than 200 up until the late 1950s, then modest increases after O’Neal starred in Peyton PLace from 1964 to 1969.</p>
+<p>Fewer than 200 up until the late 1950s, then modest increases after O’Neal starred in the night-time sopa opera <a href="https://www.imdb.com/title/tt0057779/?ref_=nm_flmg_c_50_act">Peyton Place</a> from 1964 to 1969.</p>
 <p>But wait, we’re only looking at boys named Ryan. Do you know any women named Ryan? You might…</p>
 <div class="cell">
 <details>
@@ -333,7 +333,7 @@ cookieconsent.run({
 <p><img src="images/tatum-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-<p>…and sure neough it did. Not to the same extent as Ryan, but a definite pop from 1973 on. After Paper Moon she was in <a href="https://www.imdb.com/title/tt0074174/?ref_=nm_knf_t_2">The Bad News Bears</a>, <a href="https://www.imdb.com/title/tt0077743/?ref_=nm_flmg_t_34_act">International Velvet</a> and <a href="https://www.imdb.com/title/tt0081060/?ref_=nm_knf_t_4">Little Darlings</a>. So like her dad had a run of fame through the early 1980s. But why the jump in the name’s popularity in the late 1990s and through the 2000s? Her very public relationship and marriage to tennis pro John McEnroe? She didn’t do much film or TV work until the early-mid 2000s. So that, combined with a nostaliga bump? Some other famous Tatum I’m overlooking?</p>
+<p>…and sure neough it did. Not to the same extent as Ryan, but a definite pop from 1973 on. After Paper Moon she was in <a href="https://www.imdb.com/title/tt0074174/?ref_=nm_knf_t_2">The Bad News Bears</a>, <a href="https://www.imdb.com/title/tt0077743/?ref_=nm_flmg_t_34_act">International Velvet</a> and <a href="https://www.imdb.com/title/tt0081060/?ref_=nm_knf_t_4">Little Darlings</a>. So like her dad had a run of fame through the early 1980s. But why the jump in the name’s popularity in the late 1990s and through the 2000s? Her very public relationship and marriage to tennis pro John McEnroe? She didn’t do much film or TV work until the early-mid 2000s. So that resurgence, combined with a nostaliga bump? Some other famous Tatum I’m overlooking?</p>
 <p>All this name trending chatter reminded me of my own firmly held belief which is that it’s very statistically likely a Gen X man or woman in the US will have dated at least one Jennifer in their lives. I’ve dated more than one. It’s almost unavoidable. Why? Well let’s look at birth numbers…</p>
 <div class="cell">
 <details>
@@ -354,9 +354,9 @@ cookieconsent.run({
 <p><img src="images/jennifer-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
 </div>
-<p>Jennifer had been on the rise from the 1940s oneward, slow and steady. But boomed around 1970. And hey, the female lead in Love Story was named Jenny. Coincidence? Or was Love Story more of a cultural juggernaut than we give it credit 50+ years on? I’d say sorry, but…</p>
+<p>Jennifer had been on the rise from the 1940s onward, slow and steady. But boomed around 1970. And hey, the female lead in Love Story was named Jenny. Coincidence? Or was Love Story more of a cultural juggernaut than we give it credit 50+ years on? I’d say sorry, but…</p>
 <p>Lately the name has fallen out of favor. And it’s striking how normally distributed the curve is, given the timeframe.</p>
-<p>And finally, in the interest of marital harmony, and because I showed these charts to my wife Ingrid when I made them just for fun and can’t leave them out of the post, here’s the name Ingrid over time.</p>
+<p>And finally, in the interest of marital harmony, and because I showed these charts to my wife Ingrid when I made them just for fun, and then she asked what about her name…well I can’t leave her chart out of the post, right? So here’s the name Ingrid over time.</p>
 <div class="cell">
 <details>
 <summary>Show code for Ingrids</summary>

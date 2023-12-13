@@ -24,7 +24,7 @@ The SSA data is, [as they note](https://www.ssa.gov/oact/babynames/births.html),
 
 So let's check out how bay names have trended in the US.
 
-To start with let's load packages to import and clean the data. These are the three packages I use for almost every analysis in `r`, plus the `babynames` package.
+To start we'll load packages to import and clean the data. These are the three packages I use for almost every analysis in `r`, plus the `babynames` package.
 
 ```{r setup}
 #| include: false
@@ -49,7 +49,7 @@ The package comes with a few datasets. We will use the `babynames` set, which ha
 
 Unlike most of my posts, I won't be doing any data transformation or fancy visuals...I just want to see how a few names have trended over the years. First, let's replicate Ryan G's chart, and look at the name "Ryan". We'll start at 1940 since we already know from Ryan G's chart when it took off.
 
-Before we continue, a couple of caveats up front...
+Before we continue, a couple of caveats...
 
 -   There was a baby boom from the late 1940s onward, so even with the dip after 1965 there have been many more births and more people getting SSNs than pre WWII. Many older workers born well before Social Security was a thing never applied for numbers so weren't in the system. So...
 -   A more nuanced analysis would be proportion of births with the names. But this isn't meant to be nuanced or statisitically significant, just a quick look at how name popularity has changed over time in the US.
@@ -111,7 +111,7 @@ namesdf %>%
 	labs(title = "Fewer than 200 Ryans prior to late 1950s", x= "", y = "")
 ```
 
-Fewer than 200 up until the late 1950s, then modest increases after O'Neal starred in Peyton PLace from 1964 to 1969.
+Fewer than 200 up until the late 1950s, then modest increases after O'Neal starred in the night-time sopa opera [Peyton Place](https://www.imdb.com/title/tt0057779/?ref_=nm_flmg_c_50_act) from 1964 to 1969.
 
 But wait, we're only looking at boys named Ryan. Do you know any women named Ryan? You might...
 
@@ -158,7 +158,7 @@ namesdf %>%
 	labs(title = "More Tatums in the 1970s, lots more in the 2000s", x= "", y = "")
 ```
 
-...and sure neough it did. Not to the same extent as Ryan, but a definite pop from 1973 on. After Paper Moon she was in [The Bad News Bears](https://www.imdb.com/title/tt0074174/?ref_=nm_knf_t_2), [International Velvet](https://www.imdb.com/title/tt0077743/?ref_=nm_flmg_t_34_act) and [Little Darlings](https://www.imdb.com/title/tt0081060/?ref_=nm_knf_t_4). So like her dad had a run of fame through the early 1980s. But why the jump in the name's popularity in the late 1990s and through the 2000s? Her very public relationship and marriage to tennis pro John McEnroe? She didn't do much film or TV work until the early-mid 2000s. So that, combined with a nostaliga bump? Some other famous Tatum I'm overlooking?
+...and sure neough it did. Not to the same extent as Ryan, but a definite pop from 1973 on. After Paper Moon she was in [The Bad News Bears](https://www.imdb.com/title/tt0074174/?ref_=nm_knf_t_2), [International Velvet](https://www.imdb.com/title/tt0077743/?ref_=nm_flmg_t_34_act) and [Little Darlings](https://www.imdb.com/title/tt0081060/?ref_=nm_knf_t_4). So like her dad had a run of fame through the early 1980s. But why the jump in the name's popularity in the late 1990s and through the 2000s? Her very public relationship and marriage to tennis pro John McEnroe? She didn't do much film or TV work until the early-mid 2000s. So that resurgence, combined with a nostaliga bump? Some other famous Tatum I'm overlooking?
 
 All this name trending chatter reminded me of my own firmly held belief which is that it's very statistically likely a Gen X man or woman in the US will have dated at least one Jennifer in their lives. I've dated more than one. It's almost unavoidable. Why? Well let's look at birth numbers...
 
@@ -186,11 +186,11 @@ namesdf %>%
 	labs(title = "The Love Story effect on Jennifers", x= "", y = "")
 ```
 
-Jennifer had been on the rise from the 1940s oneward, slow and steady. But boomed around 1970. And hey, the female lead in Love Story was named Jenny. Coincidence? Or was Love Story more of a cultural juggernaut than we give it credit 50+ years on? I'd say sorry, but...
+Jennifer had been on the rise from the 1940s onward, slow and steady. But boomed around 1970. And hey, the female lead in Love Story was named Jenny. Coincidence? Or was Love Story more of a cultural juggernaut than we give it credit 50+ years on? I'd say sorry, but...
 
 Lately the name has fallen out of favor. And it's striking how normally distributed the curve is, given the timeframe.
 
-And finally, in the interest of marital harmony, and because I showed these charts to my wife Ingrid when I made them just for fun and can't leave them out of the post, here's the name Ingrid over time.
+And finally, in the interest of marital harmony, and because I showed these charts to my wife Ingrid when I made them just for fun, and then she asked what about her name...well I can't leave her chart out of the post, right? So here's the name Ingrid over time.
 
 ```{r ingrid, echo=TRUE, error=FALSE, message=FALSE}
 #| fig.width: 8.0
