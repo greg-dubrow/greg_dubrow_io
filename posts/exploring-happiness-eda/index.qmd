@@ -161,7 +161,7 @@ Ok, so how about the distribution of our variables? [`plot_bar()`](https://boxua
 plot_bar(whr23_fig2_1)
 ```
 
-For the discrete variable bar charts, for this dataset there isn't much to look at. But for a dataset with demographic varaibles, geographic places, etc. this would be very helpful.
+For the discrete variable bar charts, for this dataset there isn't much to look at. But for a dataset with demographic variables, geographic places, etc. this would be very helpful.
 
 ```{r eda2a, echo=TRUE, error=FALSE, message=FALSE}
 #| fig.width: 8.0

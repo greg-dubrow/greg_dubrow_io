@@ -324,72 +324,86 @@ cookieconsent.run({
 <p>We can’t do the Gallup &amp; STATA generated GINI because we can’t get the data and I don’t have STATA. So we’ll get the World Bank values, and add that into the data already created. Then some quick EDA and the analysis we came here to do.</p>
 <p>We’ll start by loading the packages we’ll use here, as well as the WHR data we already created.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># functions I use often enough to load them regularly...should probably write a personal package</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># load data </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1a <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="st">"~/Data/r/World Happiness Report/data/whr23_fig2_1.rds"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>code for loading packages and WHR data</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># functions I use often enough to load them regularly...should probably write a personal package</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># load data </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1a <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">file =</span> <span class="st">"~/Data/r/World Happiness Report/data/whr23_fig2_1.rds"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ladder_score)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">region_whr =</span> region)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<p>To get the GINI values I went to the World Bank’s GINI page and downloaded the latest spreadsheet. There are a couple of helpful <code>r</code> packages to get World Bank data; Vincent Arel-Bundock’s(http://arelbundock.com) <a href="https://github.com/vincentarelbundock/WDI">WDI</a> and the <a href="https://www.ornl.gov/gshsd">Geospatial Science and Human Security at Oak Ridge National Lab’s</a> <a href="https://gshs-ornl.github.io/wbstats/"><code>wbstats</code></a> but for now we’ll just use the spreadsheet.</p>
-<p>I’ll create a GINI average as per the WHR authors and I’ll also extract the latest GINI value from the set. Not sure which is ultimately the nest to use. The data need a bit of cleaning to work for our purposes.</p>
+<p>To get the GINI values you can go to the World Bank’s GINI page and downloaded the latest spreadsheet, or…</p>
+<p>…even better you could use one of the helpful <code>r</code> packages to get World Bank data; Vincent Arel-Bundock’s(http://arelbundock.com) <a href="https://github.com/vincentarelbundock/WDI">WDI</a> and the <a href="https://www.ornl.gov/gshsd">Geospatial Science and Human Security at Oak Ridge National Lab’s</a> <a href="https://gshs-ornl.github.io/wbstats/"><code>wbstats</code></a>. We’ll use the <code>WDI</code> package here.</p>
+<p>I’ll create a GINI average as per the WHR authors and I’ll also extract the latest GINI value from the set. I’m not sure right now which is ultimately the best to use, but that’s what a bit more EDA is for.</p>
 <div class="cell">
 <details>
 <summary>code for loading GINI values</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ginis <span class="ot">&lt;-</span> readxl<span class="sc">::</span><span class="fu">read_excel</span>(<span class="st">"~/Data/r/World Happiness Report/data/API_SI.POV.GINI_DS2_en_excel_v2_5994963.xlsx"</span>,</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                                        <span class="at">sheet =</span> <span class="st">"Data"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean the country names</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">country_name =</span> <span class="st">`</span><span class="at">Country Name</span><span class="st">`</span>, <span class="at">country_code =</span> <span class="st">`</span><span class="at">Country Code</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># select values from 2000 to 2022</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(country_name, country_code, <span class="st">`</span><span class="at">2000</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2022</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># get rid of some rows we don't need</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'dividend'</span>, country_name)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">'income'</span>, country_name)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># work rowwise to get avg and latest from 2000 to 2022</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rowwise</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gini_avg =</span> <span class="fu">mean</span>(<span class="fu">c_across</span>(<span class="fu">c</span>(<span class="sc">-</span>country_name<span class="sc">:-</span>country_code)), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># move average to front to get latest</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(country_name, country_code, gini_avg, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="do">## does a coalesce to get last non-NA but reverse for all cols but name and code</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gini_latest =</span> <span class="fu">do.call</span>(coalesce, <span class="fu">rev</span>(<span class="fu">across</span>(<span class="sc">-</span>country_name<span class="sc">:-</span>gini_avg)))) <span class="sc">%&gt;%</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean up some country names to match with WHR data</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">country_name =</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">case_when</span>(country_name <span class="sc">==</span> <span class="st">"Czechia"</span> <span class="sc">~</span> <span class="st">"Czech Republic"</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Congo, Dem. Rep."</span> <span class="sc">~</span> <span class="st">"Congo (Kinshasa)"</span>,</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Congo, Rep."</span> <span class="sc">~</span> <span class="st">"Congo (Brazzaville)"</span>,</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Cote d'Ivoire"</span> <span class="sc">~</span> <span class="st">"Ivory Coast"</span>,</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Egypt, Arab Rep."</span> <span class="sc">~</span> <span class="st">"Egypt"</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Eswatini"</span> <span class="sc">~</span> <span class="st">"Swaziland"</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Gambia, The"</span> <span class="sc">~</span> <span class="st">"Gambia"</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Hong Kong SAR, China"</span> <span class="sc">~</span> <span class="st">"Hong Kong S.A.R. of China"</span>,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Iran, Islamic Rep."</span> <span class="sc">~</span> <span class="st">"Iran"</span>,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Korea, Rep."</span> <span class="sc">~</span> <span class="st">"South Korea"</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Kyrgyz Republic"</span> <span class="sc">~</span> <span class="st">"Kyrgyzstan"</span>,</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Lao PDR"</span> <span class="sc">~</span> <span class="st">"Laos"</span>,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Russian Federation"</span> <span class="sc">~</span> <span class="st">"Russia"</span>,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Slovak Republic"</span> <span class="sc">~</span> <span class="st">"Slovakia"</span>,</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Turkiye"</span> <span class="sc">~</span> <span class="st">"Turkey"</span>,</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Venezuela, RB"</span> <span class="sc">~</span> <span class="st">"Venezuela"</span>,</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Viet Nam"</span> <span class="sc">~</span> <span class="st">"Vietnam"</span>,</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"West Bank and Gaza"</span> <span class="sc">~</span> <span class="st">"Palestinian Territories"</span>,</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Yemen, Rep."</span> <span class="sc">~</span> <span class="st">"Yemen"</span>,</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                                        <span class="cn">TRUE</span> <span class="sc">~</span> country_name)) <span class="sc">%&gt;%</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(country_name, country_code, gini_avg, gini_latest)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using the "extra = TRUE" option pulls in capital city &amp; latitude longitude, </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># region, and World Bank income &amp; lending indicators. We won't use them in this analysis but it's</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># worth knowing they're there.</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ginis <span class="ot">=</span> WDI<span class="sc">::</span><span class="fu">WDI</span>(<span class="at">indicator=</span><span class="st">'SI.POV.GINI'</span>, <span class="at">start=</span><span class="dv">2000</span>, <span class="at">end=</span><span class="dv">2023</span>, <span class="at">extra =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>status, <span class="sc">-</span>lastupdated) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fix missing regions </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">region =</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">case_when</span>(country <span class="sc">==</span> <span class="st">"Czechia"</span> <span class="sc">~</span> <span class="st">"Europe &amp; Central Asia"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                                        country <span class="sc">==</span> <span class="st">"Viet Nam"</span> <span class="sc">~</span> <span class="st">"East Asia &amp; Pacific"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                                        <span class="cn">TRUE</span> <span class="sc">~</span> region)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove aggregated regions </span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(region <span class="sc">!=</span> <span class="st">"Aggregates"</span>)<span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(country, year) <span class="sc">%&gt;%</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">gini =</span> SI.POV.GINI) <span class="sc">%&gt;%</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create the latest and average columns</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ginifill =</span> gini) <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(country) <span class="sc">%&gt;%</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gini_avg =</span> <span class="fu">mean</span>(gini, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(ginifill, <span class="at">.direction =</span> <span class="st">"downup"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2022</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gini_latest =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(gini), ginifill, gini)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(country<span class="sc">:</span>gini, gini_latest, ginifill, gini_avg, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">country_name =</span> country) <span class="sc">%&gt;%</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean up some country names to match with WHR data</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">country_name =</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">case_when</span>(country_name <span class="sc">==</span> <span class="st">"Czechia"</span> <span class="sc">~</span> <span class="st">"Czech Republic"</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Congo, Dem. Rep."</span> <span class="sc">~</span> <span class="st">"Congo (Kinshasa)"</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Congo, Rep."</span> <span class="sc">~</span> <span class="st">"Congo (Brazzaville)"</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Cote d'Ivoire"</span> <span class="sc">~</span> <span class="st">"Ivory Coast"</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Egypt, Arab Rep."</span> <span class="sc">~</span> <span class="st">"Egypt"</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Eswatini"</span> <span class="sc">~</span> <span class="st">"Swaziland"</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Gambia, The"</span> <span class="sc">~</span> <span class="st">"Gambia"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Hong Kong SAR, China"</span> <span class="sc">~</span> <span class="st">"Hong Kong S.A.R. of China"</span>,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Iran, Islamic Rep."</span> <span class="sc">~</span> <span class="st">"Iran"</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Korea, Rep."</span> <span class="sc">~</span> <span class="st">"South Korea"</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Kyrgyz Republic"</span> <span class="sc">~</span> <span class="st">"Kyrgyzstan"</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Lao PDR"</span> <span class="sc">~</span> <span class="st">"Laos"</span>,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Russian Federation"</span> <span class="sc">~</span> <span class="st">"Russia"</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Slovak Republic"</span> <span class="sc">~</span> <span class="st">"Slovakia"</span>,</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Turkiye"</span> <span class="sc">~</span> <span class="st">"Turkey"</span>,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Venezuela, RB"</span> <span class="sc">~</span> <span class="st">"Venezuela"</span>,</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Viet Nam"</span> <span class="sc">~</span> <span class="st">"Vietnam"</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"West Bank and Gaza"</span> <span class="sc">~</span> <span class="st">"Palestinian Territories"</span>,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                                        country_name <span class="sc">==</span> <span class="st">"Yemen, Rep."</span> <span class="sc">~</span> <span class="st">"Yemen"</span>,</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                                        <span class="cn">TRUE</span> <span class="sc">~</span> country_name)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Now let’s add it to the data we already have…</p>
+<p>Now let’s add the GINI numberss to the WHR data we already have…</p>
 <div class="cell">
 <details>
 <summary>code for joining GINI to WHR data</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="ot">&lt;-</span> whr23_fig2_1a <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">merge</span>(ginis, <span class="at">all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(country_name, country_code, region, whr_year<span class="sc">:</span>lowerwhisker, logged_gdp_per_capita,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(country_name, iso3c, region, region_whr, whr_year<span class="sc">:</span>lowerwhisker, logged_gdp_per_capita,</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                 gini_avg, gini_latest, <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="do">## fill in Taiwan, no longer in this set but still available </span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="do">### at https://pip.worldbank.org/country-profiles/TWN</span></span>
@@ -402,17 +416,16 @@ cookieconsent.run({
 </div>
 <p><em>N.B…yes, I use <code>merge()</code> and not <code>left/right/full_join()</code>…I learned SAS before SQL and old habits die hard (shrug emoji).</em></p>
 <p><em>N.B.2…Taiwan data is no longer avaialble in most WB sets, either in the spreadsheet or via the API the packages access. It is still at the WB’s <a href="https://pip.worldbank.org/country-profiles/TWN">Poverty &amp; Inequality Platform</a> so I downloaded what I could and hard-coded. Why? Because I’m a little OCD when it comes to trying to minimize missing data.</em></p>
-<p>Anyway…now we have to do some quick EDA on the GINI values in relation to the data we have. First the missing data…</p>
+<p>Anyway…now we have to do some quick EDA on the GINI values in relation to the data we have. First I want to take a quick look at the by-country difference between the latest GINI value and the mean value for the period since 2000. We subtract the average from the latest value, do a quick <code>skimr</code> check, a density plot on the latest-average difference…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># EDA tools</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer) </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(explore)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># a quick skim </span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="sc">%&gt;%</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(gini_avg, gini_latest) <span class="sc">%&gt;%</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    skimr<span class="sc">::</span><span class="fu">skim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>code for EDA skim &amp; density plot</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># a quick skim </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gini_diff =</span> gini_latest <span class="sc">-</span> gini_avg) <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(gini_latest, gini_avg, gini_diff) <span class="sc">%&gt;%</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    skimr<span class="sc">::</span><span class="fu">skim</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -427,7 +440,7 @@ cookieconsent.run({
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Number of columns</td>
-<td style="text-align: left;">2</td>
+<td style="text-align: left;">3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">_______________________</td>
@@ -439,7 +452,7 @@ cookieconsent.run({
 </tr>
 <tr class="even">
 <td style="text-align: left;">numeric</td>
-<td style="text-align: left;">2</td>
+<td style="text-align: left;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">________________________</td>
@@ -463,7 +476,7 @@ cookieconsent.run({
 <col style="width: 7%">
 <col style="width: 7%">
 <col style="width: 7%">
-<col style="width: 5%">
+<col style="width: 7%">
 <col style="width: 7%">
 </colgroup>
 <thead>
@@ -483,19 +496,6 @@ cookieconsent.run({
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">gini_avg</td>
-<td style="text-align: right;">7</td>
-<td style="text-align: right;">0.95</td>
-<td style="text-align: right;">38.09</td>
-<td style="text-align: right;">7.88</td>
-<td style="text-align: right;">24.79</td>
-<td style="text-align: right;">32.26</td>
-<td style="text-align: right;">36.68</td>
-<td style="text-align: right;">42.71</td>
-<td style="text-align: right;">62.4</td>
-<td style="text-align: left;">▆▇▅▂▁</td>
-</tr>
-<tr class="even">
 <td style="text-align: left;">gini_latest</td>
 <td style="text-align: right;">7</td>
 <td style="text-align: right;">0.95</td>
@@ -505,14 +505,98 @@ cookieconsent.run({
 <td style="text-align: right;">31.54</td>
 <td style="text-align: right;">35.30</td>
 <td style="text-align: right;">40.88</td>
-<td style="text-align: right;">63.0</td>
+<td style="text-align: right;">63.00</td>
 <td style="text-align: left;">▃▇▃▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gini_avg</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">38.09</td>
+<td style="text-align: right;">7.88</td>
+<td style="text-align: right;">24.79</td>
+<td style="text-align: right;">32.26</td>
+<td style="text-align: right;">36.68</td>
+<td style="text-align: right;">42.71</td>
+<td style="text-align: right;">62.40</td>
+<td style="text-align: left;">▆▇▅▂▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gini_diff</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">-1.37</td>
+<td style="text-align: right;">2.32</td>
+<td style="text-align: right;">-8.91</td>
+<td style="text-align: right;">-2.85</td>
+<td style="text-align: right;">-1.00</td>
+<td style="text-align: right;">0.16</td>
+<td style="text-align: right;">4.37</td>
+<td style="text-align: left;">▁▂▇▇▁</td>
 </tr>
 </tbody>
 </table>
 </div>
+<details>
+<summary>code for EDA skim &amp; density plot</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(gini_avg)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">gini_diff =</span> gini_latest <span class="sc">-</span> gini_avg) <span class="sc">%&gt;%</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(country_name, gini_latest, gini_avg, gini_diff, region_whr) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(gini_diff) <span class="sc">%&gt;%</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(gini_diff)) <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">geom_density</span>(<span class="at">fill =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="sc">-</span><span class="dv">9</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="images/eda1-1.png" class="img-fluid" style="width:100.0%"></p>
 </div>
-<p>Excellent, only 7 missing.</p>
+</div>
+<p>Quick EDA observations from the skim and denisty plot:</p>
+<ul>
+<li>The GINI scale is 0 to 100, and the spread in this WHR set is 24.7 to 62.4, almost exactly as the entire panel from the WB GINI dataset.</li>
+<li>The means, medians, standard deviations, and ranges for average and latest are close enough.</li>
+<li>The difference (latest - average) is looks on the denisty plot to be clustered just below 0, and the median difference is only -1, so we’ll use the average.</li>
+<li>We only lose 7 countries from the set by adding GINI.</li>
+</ul>
+<p>So let’s use the average and see how it relates to our WHR variables by doing first a correlation matrix from the <code>DataExplorer</code> package…</p>
+<div class="cell">
+<details>
+<summary>code for EDA correlation</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ladder_score, standard_error_of_ladder_score, gini_avg, logged_gdp_per_capita,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                 social_support<span class="sc">:</span>perceptions_of_corruption,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                  explained_by_log_gdp_per_capita<span class="sc">:</span>residual) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(residual)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(gini_avg)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    DataExplorer<span class="sc">::</span><span class="fu">plot_correlation</span>(<span class="at">maxcat =</span> 5L, <span class="at">type =</span> <span class="st">"continuous"</span>, <span class="at">geom_text_args =</span> <span class="fu">list</span>(<span class="st">"size"</span> <span class="ot">=</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="images/eda2-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<p>…and the <code>DataExplorer</code> scatterplots.</p>
+<div class="cell">
+<details>
+<summary>code for EDA scatterplots</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>DataExplorer<span class="sc">::</span><span class="fu">plot_scatterplot</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    whr23_fig2_1 <span class="sc">%&gt;%</span> <span class="fu">select</span>(gini_avg, ladder_score, logged_gdp_per_capita,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                                    social_support<span class="sc">:</span>perceptions_of_corruption), </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"gini_avg"</span>, <span class="at">nrow =</span> 3L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="images/eda3-1.png" class="img-fluid" style="width:100.0%"></p>
+</div>
+</div>
+<p>We can see from the correlation matrix and the scatterplots that:</p>
+<ul>
+<li><p>there is a mild but persistent relationship between a lower GINI score (less inequality) and the measures that correlate with more happines…the happiness score itself, life expectancy, freedom to make choices, etc.</p></li>
+<li><p>The one negative relationship was with perceptions of corruption, or the higher the inequality measure in their country, the more likely people answering the survey were to report that they perceived higher levels of corruption.</p></li>
+</ul>
+<p>Also, interestingly, a lower GINI index correlated to a higher GDP per capita…in other words, it’s better for all to spread the wealth.</p>
+<p>Ok, let’s run a couple of models to predict the happiness score and plot the results.</p>
+<p>But why, you might ask, since the WHR authors already did that? Well, I’ve never really run regression models in r. I did in SAS for one job, and I haven’t had to since then. So join me as I walk through running a model and plotting the results.</p>
 
 
 </section>
