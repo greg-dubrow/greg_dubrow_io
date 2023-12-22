@@ -316,4 +316,4 @@ We can see from the correlation matrix and the scatterplots that:
 
 -   And interestingly, a lower GINI index correlated to a higher GDP per capita...so maybe it's better for all to spread the wealth?
 
-That's it for basic EDA on the data. The next post will dig a bit deeper...look at some differences by region, and I'll try to predict happiness score and see how close I can get to the WHR model.
+That's it for basic EDA on the data. The next post will dig a bit deeper...look at some differences by region, and I'll do a quick regression to try and predict happiness score and see how close I can get to the WHR model.
