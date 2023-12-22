@@ -149,9 +149,9 @@
   {
     "objectID": "posts/exploring-happiness-analysis/index.html",
     "href": "posts/exploring-happiness-analysis/index.html",
-    "title": "Exploring Happiness - Part 2…Analysis",
+    "title": "Exploring Happiness - Analysis",
     "section": "",
-    "text": "Our cat Leo, happy in the sun"
+    "text": "Coming soon…for now, enjoy this picture of a happy cat on a balcony\n\n\n\nOur cat Leo, happy in the sun\n\n\nNow that we’re done with basic exploratory analysis on the World Happiness Report\nPredicting the happiness score  Ok, let’s run a couple of models to predict the happiness score and plot the results.\nBut why, you might ask, since the WHR authors already did that? Well, I’ve never really run regression models in r. I did in SAS for one job, and I haven’t had to since then. So join me as I walk through running a model and plotting the results."
   },
   {
     "objectID": "posts/call-me-by-my-name/index.html",
