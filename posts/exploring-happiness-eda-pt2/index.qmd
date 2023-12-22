@@ -3,12 +3,12 @@ title: "Exploring Happiness - EDA Part 2"
 author: "gregers kjerulf dubrow"
 date: '2023-12-21'
 categories: [post, news, rstats, eda]
-image: "leo_happy_balcony.jpeg"
+image: "ice_cream_cone.jpeg"
 editor: 
   mode: source
 ---
 
-![Our cat Leo, happy in the sun](leo_happy_balcony.jpeg){fig-align="left" fig-alt="happy cat laying in the sun on a balcony."}
+![Happiness in a cone](ice_cream_cone.jpeg){fig-align="left" fig-alt="cofee ice cream cone."}
 
 ```{r setup}
 #| include: false
@@ -105,11 +105,9 @@ The EDA in part 1 showed:
 -   All of the component variables except generosity have strong positive correlations with the happiness score.
 -   Perception of corruption has, as expected, a negative association with happiness.
 
-Leading me to want to explore relationship between the ladder score and components by country and region.
+But...I spaced on adding one varaible to the dataset, the GINI index, which measures *"the extent to which the distribution of income (or, in some cases, consumption expenditure) among individuals or households within an economy deviates from a perfectly equal distribution....a Gini index of 0 represents perfect equality, while an index of 100 implies perfect inequality."* (from the [World Bank GINI data page](https://data.worldbank.org/indicator/SI.POV.GINI), click the `Details` tab)
 
-But first...I spaced on adding one varaible to the dataset, the GINI index, which measures *"the extent to which the distribution of income (or, in some cases, consumption expenditure) among individuals or households within an economy deviates from a perfectly equal distribution....a Gini index of 0 represents perfect equality, while an index of 100 implies perfect inequality."* (from the [World Bank GINI data page](https://data.worldbank.org/indicator/SI.POV.GINI), click the `Details` tab)
-
-It was referenced in the statistical appendix but was not included in the dataset made avaialble. The Chapter 2 authors used two GINI values:
+It was referenced in the statistical appendix but was not included in the dataset made available. The Chapter 2 authors used two GINI values:
 
 -   a GINI of household income as reported to the Gallup survey and imputed via a STATA function, and
 -   the World Bank's GINI value, taken as the mean of GINI values from 2000 to 2022 to account for the spotty nature of by-country GINI values.
@@ -202,7 +200,7 @@ ginis = WDI::WDI(indicator='SI.POV.GINI', start=2000, end=2023, extra = TRUE) %>
 				 						TRUE ~ country_name)) 
 ```
 
-I had hoped to pull in a few other indicators to add to the model. The main one I wanted was literacy. Unfortunately there were too many missing values in the UNESCO set...most European countries and a few other key countries. I then thought about public expenditure on education but was worried about colinearity with the GINI index (no, I didn't test it). So we'll stick with what we have and not cloud up the model and other analysis with too many exogenous variables.
+I had hoped to pull in a few other indicators to add to the model. The main one I wanted was literacy. Unfortunately there were too many missing values in the UNESCO set...most European countries and a few other key countries. I then thought about public expenditure on education but was worried about colinearity with the GINI index (no, I didn't test it). So we'll stick with what we have and not cloud up the model and other analysis with too many exogenous variables. If this were a
 
 So let's add the GINI numbers to the WHR data we already have...
 
@@ -265,7 +263,7 @@ Quick EDA observations from the skim and denisty plot:
 
 -   The GINI scale is 0 to 100, and the spread in this WHR set is 24.7 to 62.4, almost exactly as the entire panel from the WB GINI dataset.
 -   The means, medians, standard deviations, and ranges for average and latest are close enough.
--   The difference (latest - average) is looks on the denisty plot to be clustered just below 0, and the median difference is only -1, so we'll use the average.
+-   The difference (latest - average) looks on the denisty plot to be clustered just below 0, and the median difference is only -1, so we'll use the average.
 -   We only lose 7 countries from the set by adding GINI.
 
 So let's use the average and see how it relates to our WHR variables by doing first a correlation matrix from the `DataExplorer` package...
@@ -312,8 +310,10 @@ DataExplorer::plot_scatterplot(
 
 We can see from the correlation matrix and the scatterplots that:
 
--   there is a mild but persistent relationship between a lower GINI score (less inequality) and the measures that correlate with more happines...the happiness score itself, life expectancy, freedom to make choices, etc.
+-   There is a mild but persistent relationship between a lower GINI score (less inequality) and the measures that correlate with more happiness...the happiness ladder score itself, life expectancy, freedom to make choices, etc.
 
--   The one negative relationship was with perceptions of corruption, or the higher the inequality measure in their country, the more likely people answering the survey were to report that they perceived higher levels of corruption.
+-   The one negative relationship was with perceptions of corruption - that is, the higher the inequality measure in their country the more likely people answering the survey were to report that they perceived higher levels of corruption.
 
-Also, interestingly, a lower GINI index correlated to a higher GDP per capita...in other words, it's better for all to spread the wealth.
+-   And interestingly, a lower GINI index correlated to a higher GDP per capita...so maybe it's better for all to spread the wealth?
+
+That's it for basic EDA on the data. The next post will dig a bit deeper...look at some differences by region, and I'll try to predict happiness score and see how close I can get to the WHR model.

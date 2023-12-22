@@ -126,11 +126,11 @@ cookieconsent.run({
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="gregers kjerulf dubrow - Exploring Happiness - EDA Part 2">
 <meta property="og:description" content="">
-<meta property="og:image" content="https://www.gregdubrow.io/posts/exploring-happiness-eda-pt2/leo_happy_balcony.jpeg">
+<meta property="og:image" content="https://www.gregdubrow.io/posts/exploring-happiness-eda-pt2/ice_cream_cone.jpeg">
 <meta property="og:site-name" content="gregers kjerulf dubrow">
 <meta name="twitter:title" content="gregers kjerulf dubrow - Exploring Happiness - EDA Part 2">
 <meta name="twitter:description" content="">
-<meta name="twitter:image" content="https://www.gregdubrow.io/posts/exploring-happiness-eda-pt2/leo_happy_balcony.jpeg">
+<meta name="twitter:image" content="https://www.gregdubrow.io/posts/exploring-happiness-eda-pt2/ice_cream_cone.jpeg">
 <meta name="twitter:creator" content="@greg_dubrow">
 <meta name="twitter:card" content="summary_large_image">
 </head>
@@ -230,8 +230,8 @@ cookieconsent.run({
 
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
-<p><img src="leo_happy_balcony.jpeg" class="img-fluid figure-img" alt="happy cat laying in the sun on a balcony."></p>
-<figcaption class="figure-caption">Our cat Leo, happy in the sun</figcaption>
+<p><img src="ice_cream_cone.jpeg" class="img-fluid figure-img" alt="cofee ice cream cone."></p>
+<figcaption class="figure-caption">Happiness in a cone</figcaption>
 </figure>
 </div>
 <p>In <a href="https://www.gregdubrow.io/posts/exploring-happiness-eda/">Part 1</a> I did some exploratory data analysis on the <a href="https://worldhappiness.report">World Happiness Report</a> data for Chapter 2 of the 2023 edition.</p>
@@ -318,9 +318,8 @@ cookieconsent.run({
 <li>All of the component variables except generosity have strong positive correlations with the happiness score.</li>
 <li>Perception of corruption has, as expected, a negative association with happiness.</li>
 </ul>
-<p>Leading me to want to explore relationship between the ladder score and components by country and region.</p>
-<p>But first…I spaced on adding one varaible to the dataset, the GINI index, which measures <em>“the extent to which the distribution of income (or, in some cases, consumption expenditure) among individuals or households within an economy deviates from a perfectly equal distribution….a Gini index of 0 represents perfect equality, while an index of 100 implies perfect inequality.”</em> (from the <a href="https://data.worldbank.org/indicator/SI.POV.GINI">World Bank GINI data page</a>, click the <code>Details</code> tab)</p>
-<p>It was referenced in the statistical appendix but was not included in the dataset made avaialble. The Chapter 2 authors used two GINI values:</p>
+<p>But…I spaced on adding one varaible to the dataset, the GINI index, which measures <em>“the extent to which the distribution of income (or, in some cases, consumption expenditure) among individuals or households within an economy deviates from a perfectly equal distribution….a Gini index of 0 represents perfect equality, while an index of 100 implies perfect inequality.”</em> (from the <a href="https://data.worldbank.org/indicator/SI.POV.GINI">World Bank GINI data page</a>, click the <code>Details</code> tab)</p>
+<p>It was referenced in the statistical appendix but was not included in the dataset made available. The Chapter 2 authors used two GINI values:</p>
 <ul>
 <li>a GINI of household income as reported to the Gallup survey and imputed via a STATA function, and</li>
 <li>the World Bank’s GINI value, taken as the mean of GINI values from 2000 to 2022 to account for the spotty nature of by-country GINI values.</li>
@@ -400,7 +399,7 @@ cookieconsent.run({
 <span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                                        <span class="cn">TRUE</span> <span class="sc">~</span> country_name)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>I had hoped to pull in a few other indicators to add to the model. The main one I wanted was literacy. Unfortunately there were too many missing values in the UNESCO set…most European countries and a few other key countries. I then thought about public expenditure on education but was worried about colinearity with the GINI index (no, I didn’t test it). So we’ll stick with what we have and not cloud up the model and other analysis with too many exogenous variables.</p>
+<p>I had hoped to pull in a few other indicators to add to the model. The main one I wanted was literacy. Unfortunately there were too many missing values in the UNESCO set…most European countries and a few other key countries. I then thought about public expenditure on education but was worried about colinearity with the GINI index (no, I didn’t test it). So we’ll stick with what we have and not cloud up the model and other analysis with too many exogenous variables. If this were a</p>
 <p>So let’s add the GINI numbers to the WHR data we already have…</p>
 <div class="cell">
 <details>
@@ -562,7 +561,7 @@ cookieconsent.run({
 <ul>
 <li>The GINI scale is 0 to 100, and the spread in this WHR set is 24.7 to 62.4, almost exactly as the entire panel from the WB GINI dataset.</li>
 <li>The means, medians, standard deviations, and ranges for average and latest are close enough.</li>
-<li>The difference (latest - average) is looks on the denisty plot to be clustered just below 0, and the median difference is only -1, so we’ll use the average.</li>
+<li>The difference (latest - average) looks on the denisty plot to be clustered just below 0, and the median difference is only -1, so we’ll use the average.</li>
 <li>We only lose 7 countries from the set by adding GINI.</li>
 </ul>
 <p>So let’s use the average and see how it relates to our WHR variables by doing first a correlation matrix from the <code>DataExplorer</code> package…</p>
@@ -596,12 +595,11 @@ cookieconsent.run({
 </div>
 <p>We can see from the correlation matrix and the scatterplots that:</p>
 <ul>
-<li><p>there is a mild but persistent relationship between a lower GINI score (less inequality) and the measures that correlate with more happines…the happiness score itself, life expectancy, freedom to make choices, etc.</p></li>
-<li><p>The one negative relationship was with perceptions of corruption, or the higher the inequality measure in their country, the more likely people answering the survey were to report that they perceived higher levels of corruption.</p></li>
+<li><p>There is a mild but persistent relationship between a lower GINI score (less inequality) and the measures that correlate with more happiness…the happiness ladder score itself, life expectancy, freedom to make choices, etc.</p></li>
+<li><p>The one negative relationship was with perceptions of corruption - that is, the higher the inequality measure in their country the more likely people answering the survey were to report that they perceived higher levels of corruption.</p></li>
+<li><p>And interestingly, a lower GINI index correlated to a higher GDP per capita…so maybe it’s better for all to spread the wealth?</p></li>
 </ul>
-<p>Also, interestingly, a lower GINI index correlated to a higher GDP per capita…in other words, it’s better for all to spread the wealth.</p>
-<p><u>Predicting the happiness score</u> <br> Ok, let’s run a couple of models to predict the happiness score and plot the results.</p>
-<p>But why, you might ask, since the WHR authors already did that? Well, I’ve never really run regression models in r. I did in SAS for one job, and I haven’t had to since then. So join me as I walk through running a model and plotting the results.</p>
+<p>That’s it for basic EDA on the data. The next post will dig a bit deeper…look at some differences by region, and I’ll try to predict happiness score and see how close I can get to the WHR model.</p>
 
 
 
