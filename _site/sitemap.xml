@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://www.gregdubrow.io/index.html</loc>
-    <lastmod>2023-12-22T15:05:44.804Z</lastmod>
+    <lastmod>2024-02-01T14:01:38.177Z</lastmod>
   </url>
   <url>
     <loc>https://www.gregdubrow.io/about.html</loc>
@@ -75,5 +75,9 @@
   <url>
     <loc>https://www.gregdubrow.io/posts/exploring-happiness-eda-pt2/index.html</loc>
     <lastmod>2023-12-22T15:02:02.005Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.gregdubrow.io/posts/r-to-tableau-and-quarto/index.html</loc>
+    <lastmod>2024-02-01T14:01:36.269Z</lastmod>
   </url>
 </urlset>

@@ -1,0 +1,168 @@
+---
+title: "r to Tableau, then show it in Quarto"
+author: "gregers kjerulf dubrow"
+date: '2024-02-01'
+categories: [post, news, rstats, tableau]
+image: "horst_r_otherplatforms.png"
+editor: 
+  mode: source
+---
+
+![r plays nicely with other outputs](horst_r_otherplatforms.png){fig-align="left" fig-alt="allison horst r artwork"}
+
+[Artwork by Allison Horst](https://allisonhorst.com/allison-horst).
+
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "images/",
+  out.width = "100%") 
+```
+
+*tl/dr - I'm trying to show I have some Tableau skills to go with my `r` skills to help my chances at employment (hint-hint).*
+
+Tableau has long been on my list to add to my data analysis skillset. I've tried in fits and starts over the years, but hadn't been able to sustain it due to work and life.
+
+I had hoped to get to it in the fall, after my CIEE contract ended and I knew I'd be without work for a bit. But four Danish classes a week and doing a few `r` projects for the blog took up some time. Then in late December I was on the wrong end of a bike-car collision (more on that later in bike and healthcare-related posts), and after I got back from 2 weeks in the hospital and started to feel better, I decided it was time to take it on.
+
+I started by replicating the [superstore data exec dashboard](https://public.tableau.com/views/ExecutiveDashboardtutorial-superstoredata/parameters?:language=en-US&:display_count=n&:origin=viz_share_link), then wanted to do an original project. Initially the idea was to do a dashboard with some other data, and see if I could embed it in a blog post using Quarto. While working on that I somehow got the idea I wanted to make the visualisation be a paramterized user-choice analysis.
+
+I wasn't nuts about the older data suggested by Tableau, and given I'm using the free Tableau Public product and I don't yet know how to connect to data and clean in Tableau, I decided on this analysis workflow for this 1st project:
+
+-   Use `r` to source and clean the data, export to CSV.
+-   Build a visualisation in Tableau, on-line
+-   Write a blog post wherein I attempt to embed the Tableau viz.
+
+I've seen the embedding done in [Jon Boeckenstedt's college enrollment trends blog](https://www.highereddatastories.com/) (I think he uses blogger) and hope it works here. *(spoiler alert...it does)*
+
+So first, let's source and clean some data. I've long wanted to try the [`worldfootballr`](https://jaseziv.github.io/worldfootballR/index.html) package, so we'll use that to get data for the [English Premier League's](https://www.premierleague.com/home) 2022-23 season. I ultimately want a dataset with total points and goals, expected points and goals, actual minus expected, and these items also for home and away matches.
+
+```{r data1, message=FALSE, ECHO=TRUE, include=TRUE, eval=FALSE}
+#| code-fold: true
+#| code-summary: "code to get and clean the data and write to csv"
+### template for r analysis work. save as w/ appropriate name to project directory
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+
+# EDA tools
+library(DataExplorer)
+library(explore)
+library(skimr)
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+# get 2022-23 match result data from understat via worldfootballr
+epl_results2223 <- understat_league_match_results(league = "EPL", season_start_year = 2022) %>%
+	select(-isResult)
+
+# because of the way the data comes, need to separate out into home and away dfs
+epl_2223_byteam_home <- epl_results2223 %>%
+	select(home_team, home_goals, away_goals, home_xG, away_xG, forecast_win, forecast_draw, forecast_loss) %>%
+	group_by(home_team) %>%
+	mutate(ga_home = away_goals) %>%
+	mutate(xga_home = away_xG) %>%
+	# actual points using match result
+	mutate(points_home = case_when(home_goals > away_goals ~ 3,
+																 home_goals < away_goals ~ 0,
+																 home_goals == away_goals ~ 1)) %>%
+	# expected points using match probability...it's a crude measure but works for our purposes
+	mutate(points_exp_home = case_when(((forecast_win > forecast_draw) & (forecast_win > forecast_loss)) ~ 3,
+																		 ((forecast_draw > forecast_win) & (forecast_draw > forecast_loss)) ~ 1,
+																		 TRUE ~ 0)) %>%
+	# create sum for each column and bind that row to the df
+	mutate(Total = rowSums(across(where(is.numeric)))) %>%
+	bind_rows(summarize(., description.y = "Total", across(where(is.numeric), sum))) %>%
+	# select only the row with totals
+	filter(description.y == "Total") %>%
+	# create a few more variables
+	mutate(goals_minus_xg_home = home_goals - home_xG) %>%
+	mutate(ga_minus_xga_home = ga_home - xga_home) %>%
+	mutate(points_minus_points_exp_home = points_home - points_exp_home) %>%
+	ungroup() %>%
+	select(team = home_team, goals_home = home_goals, xg_home = home_xG, goals_minus_xg_home,
+				 ga_home, xga_home, ga_minus_xga_home,
+				 points_home, points_exp_home, points_minus_points_exp_home)
+
+# the same steps but for away team...note the differences in coding actual & expected points
+epl_2223_byteam_away <- epl_results2223 %>%
+	select(away_team, home_goals, away_goals, away_xG, home_xG, forecast_win, forecast_draw, forecast_loss) %>%
+	group_by(away_team) %>%
+	mutate(ga_away = home_goals) %>%
+	mutate(xga_away = home_xG) %>%
+	mutate(points_away = case_when(home_goals <  away_goals ~ 3,
+																 home_goals > away_goals ~ 0,
+																 home_goals == away_goals ~ 1)) %>%
+	mutate(points_exp_away = case_when(((forecast_loss > forecast_draw) & (forecast_win < forecast_loss)) ~ 3,
+																		 ((forecast_draw > forecast_win) & (forecast_draw > forecast_loss)) ~ 1,
+																		 TRUE ~ 0)) %>%
+	mutate(Total = rowSums(across(where(is.numeric)))) %>%
+	bind_rows(summarize(., description.y = "Total", across(where(is.numeric), sum))) %>%
+	filter(description.y == "Total") %>%
+	mutate(goals_minus_xg_away = away_goals - away_xG) %>%
+	mutate(ga_minus_xga_away = ga_away - xga_away) %>%
+	mutate(points_minus_points_exp_away = points_away - points_exp_away) %>%
+	ungroup() %>%
+	select(team = away_team, goals_away = away_goals, xg_away = away_xG, goals_minus_xg_away,
+				 ga_away, xga_away, ga_minus_xga_away,
+				 points_away, points_exp_away, points_minus_points_exp_away)
+
+## bring in league table info...note, this is from FB Ref, and XG formula is different from understat. FB Ref uses opta,
+ ## understat has their own formula. we'll use the understat xG in the final dataset
+epltable_2223 <- fb_season_team_stats(country = "ENG", gender = "M", season_end_year = "2023", tier = "1st",
+																			stat_type = "league_table") %>%
+	rename(team = Squad) %>%
+	# fix a few team names that FBRef has in a different format
+	mutate(team = case_when(team == "Nott'ham Forest" ~ "Nottingham Forest",
+													team == "Manchester Utd" ~ "Manchester United",
+													team == "Newcastle Utd" ~ "Newcastle United",
+													TRUE ~ team))
+
+## merge all together, fixing team names, creating new fields.
+epl_2223_byteam_all <- epl_2223_byteam_home %>%
+	merge(epl_2223_byteam_away) %>%
+	mutate(team = case_when(team == "Wolverhampton Wanderers" ~ "Wolves",
+													 team == "Leeds" ~ "Leeds United",
+													 team == "Leicester" ~ "Leicester City",
+													 TRUE ~ team)) %>%
+	merge(epltable_2223) %>%
+	mutate(goals_total = goals_home + goals_away) %>%
+	mutate(xg_total = xg_home + xg_away) %>%
+	mutate(goals_minus_xg_total = goals_total - xg_total) %>%
+	mutate(ga_total = ga_home + ga_away) %>%
+	mutate(xga_total = xga_home + xga_away) %>%
+	mutate(ga_minus_xga_total = ga_total - xga_total) %>%
+	mutate(points_total = points_home + points_away) %>%
+	mutate(points_exp_total = points_exp_home + points_exp_away) %>%
+	mutate(points_minus_points_exp_total = points_total - points_exp_total) %>%
+	select(team, rank = Rk, W:L, Pts, Pts.MP, points_total, points_home, points_away,
+				 points_exp_total, points_exp_home, points_exp_away,
+				 points_minus_points_exp_total, points_minus_points_exp_home, points_minus_points_exp_away,
+				 goals_total, goals_home, goals_away,
+				 xg_total, xg_home, xg_away, goals_minus_xg_total, goals_minus_xg_home, goals_minus_xg_away,
+				 ga_total, ga_home, ga_away, xga_total, xga_home, xga_away, ga_minus_xga_total,
+				 GF:GD, xG:xGD.90)
+
+# write to a CSV we'll import to Tableau
+write_csv(epl_2223_byteam_all, "~/Data/football data files/epl_2223_byteam.csv")
+
+```
+
+Ok...CSV written, uploaded to the Tableau workbook. I used [this guide](https://evolytics.com/blog/tableau-201-allow-users-to-choose-measures-and-dimensions/) to build the parameters, and used other tips from the superstore exec summary how-to vids.
+
+To embed the Tableau workbook here I copied the embed code and placed in a code chunk with `{=html}` after the first three tick marks, then the embed code below the html tag.
+
+```{=html}
+<div class='tableauPlaceholder' id='viz1706794728000' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;EP&#47;EPL2022-23_17067373577980&#47;Userchoice&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='EPL2022-23_17067373577980&#47;Userchoice' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;EP&#47;EPL2022-23_17067373577980&#47;Userchoice&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1706794728000');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+```
+You can play with the data here on this page or you can go to the book on my [Tableau profile](https://public.tableau.com/app/profile/greg.d6950/vizzes). If the data tell any story it's that teams who maximize chances (convert xG, expected goals) to actual goals, have a better chance of turning expected points into actual points. Not groundbreaking analysis to be sure.
+
+It's not necessarily a final version - there are more variables to add to expand user choice, but it's enough now to get the main point, which was parameterized user choice.
+
+More to Tableau visualisations to come as I get more familiar with it and want to try new chart types and visualisations.
+
+But hoooray, I proved the concept! Injury-induced downtime FTW!

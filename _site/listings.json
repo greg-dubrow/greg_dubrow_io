@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/r-to-tableau-and-quarto/index.html",
       "/posts/exploring-happiness-eda-pt2/index.html",
       "/posts/exploring-happiness-analysis/index.html",
       "/posts/call-me-by-my-name/index.html",
