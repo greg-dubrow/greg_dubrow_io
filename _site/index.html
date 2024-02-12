@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -48,7 +48,13 @@ ul.task-list li input[type="checkbox"] {
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -57,6 +63,7 @@ ul.task-list li input[type="checkbox"] {
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -112,6 +119,8 @@ cookieconsent.run({
   "notice_banner_reject_button_hide":false,
   "preferences_center_close_button_hide":false,
   "website_name":""
+  ,
+"language":"en"
   });
 });
 </script> 
@@ -120,10 +129,37 @@ cookieconsent.run({
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
 <link rel="stylesheet" href="styles.css">
 <meta property="og:title" content="gregers kjerulf dubrow -">
 <meta property="og:image" content="https://www.gregdubrow.io/posts/tidy-tuesday-apr-07-2020-LeTour-stage2/Kraftwerk_Tour_De_France_Soundtracks_album_cover.png">
-<meta property="og:site-name" content="gregers kjerulf dubrow">
+<meta property="og:site_name" content="gregers kjerulf dubrow">
 <meta property="og:image:height" content="300">
 <meta property="og:image:width" content="300">
 <meta name="twitter:title" content="gregers kjerulf dubrow -">
@@ -137,10 +173,10 @@ cookieconsent.run({
 <body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">gregers kjerulf dubrow</span>
     </a>
@@ -152,33 +188,33 @@ cookieconsent.run({
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html" rel="" target="">
- <span class="menu-text">About me</span></a>
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About me</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/greg-dubrow" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/greg-dubrow"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://linkedin.com/in/dubrowg/" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://linkedin.com/in/dubrowg/"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/greg_dubrow" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/greg_dubrow"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -191,6 +227,7 @@ cookieconsent.run({
     <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(15)</span></div><div class="category" data-category="babynames">babynames <span class="quarto-category-count">(1)</span></div><div class="category" data-category="cycling">cycling <span class="quarto-category-count">(2)</span></div><div class="category" data-category="data visualization">data visualization <span class="quarto-category-count">(7)</span></div><div class="category" data-category="dataviz">dataviz <span class="quarto-category-count">(7)</span></div><div class="category" data-category="eda">eda <span class="quarto-category-count">(3)</span></div><div class="category" data-category="ggplot">ggplot <span class="quarto-category-count">(7)</span></div><div class="category" data-category="gosta berling">gosta berling <span class="quarto-category-count">(1)</span></div><div class="category" data-category="higher education">higher education <span class="quarto-category-count">(2)</span></div><div class="category" data-category="howto">howto <span class="quarto-category-count">(1)</span></div><div class="category" data-category="music">music <span class="quarto-category-count">(2)</span></div><div class="category" data-category="news">news <span class="quarto-category-count">(8)</span></div><div class="category" data-category="post">post <span class="quarto-category-count">(15)</span></div><div class="category" data-category="rstats">rstats <span class="quarto-category-count">(13)</span></div><div class="category" data-category="sports">sports <span class="quarto-category-count">(2)</span></div><div class="category" data-category="spotify">spotify <span class="quarto-category-count">(1)</span></div><div class="category" data-category="tableau">tableau <span class="quarto-category-count">(1)</span></div><div class="category" data-category="tidytuesday">tidytuesday <span class="quarto-category-count">(7)</span></div><div class="category" data-category="tour de france">tour de france <span class="quarto-category-count">(2)</span></div></div></div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
+
 
 
 
@@ -221,19 +258,19 @@ cookieconsent.run({
   </div>
 </div>
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="post,news,rstats,tableau" data-listing-date-sort="1706742000000" data-listing-file-modified-sort="1706795977850" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7">
+<div class="quarto-post image-right" data-index="0" data-categories="post,news,rstats,tableau" data-listing-date-sort="1706742000000" data-listing-file-modified-sort="1706795977850" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1343">
 <div class="thumbnail">
-<p><a href="./posts/r-to-tableau-and-quarto/index.html"> <img src="./posts/r-to-tableau-and-quarto/horst_r_otherplatforms.png" class="thumbnail-image"> </a></p>
+<p><a href="./posts/r-to-tableau-and-quarto/index.html" class="no-external"></a></p><a href="./posts/r-to-tableau-and-quarto/index.html" class="no-external">
+<p><img src="./posts/r-to-tableau-and-quarto/horst_r_otherplatforms.png" class="thumbnail-image"></p>
+</a><p><a href="./posts/r-to-tableau-and-quarto/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/r-to-tableau-and-quarto/index.html">
 <h3 class="no-anchor listing-title">
-r to Tableau, then show it in Quarto
+<a href="./posts/r-to-tableau-and-quarto/index.html" class="no-external">r to Tableau, then show it in Quarto</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/r-to-tableau-and-quarto/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -248,15 +285,12 @@ rstats
 tableau
 </div>
 </div>
-<a href="./posts/r-to-tableau-and-quarto/index.html">
 <div class="listing-description">
-
-Artwork by Allison Horst.
+<a href="./posts/r-to-tableau-and-quarto/index.html" class="no-external">Artwork by Allison Horst.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/r-to-tableau-and-quarto/index.html">
+<a href="./posts/r-to-tableau-and-quarto/index.html" class="no-external">
 <div class="listing-date">
 Feb 1, 2024
 </div>
@@ -266,19 +300,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="post,news,rstats,eda" data-listing-date-sort="1703113200000" data-listing-file-modified-sort="1703257286484" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9">
+<div class="quarto-post image-right" data-index="1" data-categories="post,news,rstats,eda" data-listing-date-sort="1703113200000" data-listing-file-modified-sort="1703257286484" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1796">
 <div class="thumbnail">
-<p><a href="./posts/exploring-happiness-eda-pt2/index.html"> <img src="./posts/exploring-happiness-eda-pt2/ice_cream_cone.jpeg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/exploring-happiness-eda-pt2/index.html" class="no-external"></a></p><a href="./posts/exploring-happiness-eda-pt2/index.html" class="no-external">
+<p><img src="./posts/exploring-happiness-eda-pt2/ice_cream_cone.jpeg" class="thumbnail-image"></p>
+</a><p><a href="./posts/exploring-happiness-eda-pt2/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/exploring-happiness-eda-pt2/index.html">
 <h3 class="no-anchor listing-title">
-Exploring Happiness - EDA Part 2
+<a href="./posts/exploring-happiness-eda-pt2/index.html" class="no-external">Exploring Happiness - EDA Part 2</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/exploring-happiness-eda-pt2/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -293,14 +327,12 @@ rstats
 eda
 </div>
 </div>
-<a href="./posts/exploring-happiness-eda-pt2/index.html">
 <div class="listing-description">
-In Part 1 I did some exploratory data analysis on the World Happiness Report data for Chapter 2 of the 2023 edition.
+<a href="./posts/exploring-happiness-eda-pt2/index.html" class="no-external">In Part 1 I did some exploratory data analysis on the World Happiness Report data for Chapter 2 of the 2023 edition.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/exploring-happiness-eda-pt2/index.html">
+<a href="./posts/exploring-happiness-eda-pt2/index.html" class="no-external">
 <div class="listing-date">
 Dec 21, 2023
 </div>
@@ -310,19 +342,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="post,news,rstats,eda" data-listing-date-sort="1703113200000" data-listing-file-modified-sort="1703257539825" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1">
+<div class="quarto-post image-right" data-index="2" data-categories="post,news,rstats,eda" data-listing-date-sort="1703113200000" data-listing-file-modified-sort="1703257539825" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="96">
 <div class="thumbnail">
-<p><a href="./posts/exploring-happiness-analysis/index.html"> <img src="./posts/exploring-happiness-analysis/leo_happy_balcony.jpeg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/exploring-happiness-analysis/index.html" class="no-external"></a></p><a href="./posts/exploring-happiness-analysis/index.html" class="no-external">
+<p><img src="./posts/exploring-happiness-analysis/leo_happy_balcony.jpeg" class="thumbnail-image"></p>
+</a><p><a href="./posts/exploring-happiness-analysis/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/exploring-happiness-analysis/index.html">
 <h3 class="no-anchor listing-title">
-Exploring Happiness - Analysis
+<a href="./posts/exploring-happiness-analysis/index.html" class="no-external">Exploring Happiness - Analysis</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/exploring-happiness-analysis/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -337,14 +369,12 @@ rstats
 eda
 </div>
 </div>
-<a href="./posts/exploring-happiness-analysis/index.html">
 <div class="listing-description">
-Now that we’re done with basic exploratory analysis on the World Happiness Report
+<a href="./posts/exploring-happiness-analysis/index.html" class="no-external">Now that we’re done with basic exploratory analysis on the World Happiness Report</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/exploring-happiness-analysis/index.html">
+<a href="./posts/exploring-happiness-analysis/index.html" class="no-external">
 <div class="listing-date">
 Dec 21, 2023
 </div>
@@ -354,19 +384,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="post,news,rstats,babynames" data-listing-date-sort="1702422000000" data-listing-file-modified-sort="1702502062528" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8">
+<div class="quarto-post image-right" data-index="3" data-categories="post,news,rstats,babynames" data-listing-date-sort="1702422000000" data-listing-file-modified-sort="1707745087433" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1515">
 <div class="thumbnail">
-<p><a href="./posts/call-me-by-my-name/index.html"> <img src="./posts/call-me-by-my-name/birthcertificate.jpeg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/call-me-by-my-name/index.html" class="no-external"></a></p><a href="./posts/call-me-by-my-name/index.html" class="no-external">
+<p><img src="./posts/call-me-by-my-name/birthcertificate.jpeg" class="thumbnail-image"></p>
+</a><p><a href="./posts/call-me-by-my-name/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/call-me-by-my-name/index.html">
 <h3 class="no-anchor listing-title">
-Call Me By My Name
+<a href="./posts/call-me-by-my-name/index.html" class="no-external">Call Me By My Name</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/call-me-by-my-name/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -381,14 +411,12 @@ rstats
 babynames
 </div>
 </div>
-<a href="./posts/call-me-by-my-name/index.html">
 <div class="listing-description">
-T…
+<a href="./posts/call-me-by-my-name/index.html" class="no-external">The actor Ryan O’Neal died on December 8, 2023. If you’re of a certain age and a film fan you might know him best from a pretty good run in the 1970s of very diverse films…</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/call-me-by-my-name/index.html">
+<a href="./posts/call-me-by-my-name/index.html" class="no-external">
 <div class="listing-date">
 Dec 13, 2023
 </div>
@@ -398,19 +426,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="post,news,rstats,eda" data-listing-date-sort="1700002800000" data-listing-file-modified-sort="1703152241773" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<div class="quarto-post image-right" data-index="4" data-categories="post,news,rstats,eda" data-listing-date-sort="1700002800000" data-listing-file-modified-sort="1703152241773" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2292">
 <div class="thumbnail">
-<p><a href="./posts/exploring-happiness-eda/index.html"> <img src="./posts/exploring-happiness-eda/dalias_happy.jpeg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/exploring-happiness-eda/index.html" class="no-external"></a></p><a href="./posts/exploring-happiness-eda/index.html" class="no-external">
+<p><img src="./posts/exploring-happiness-eda/dalias_happy.jpeg" class="thumbnail-image"></p>
+</a><p><a href="./posts/exploring-happiness-eda/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/exploring-happiness-eda/index.html">
 <h3 class="no-anchor listing-title">
-Exploring Happiness - Part 1…EDA
+<a href="./posts/exploring-happiness-eda/index.html" class="no-external">Exploring Happiness - Part 1…EDA</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/exploring-happiness-eda/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -425,14 +453,12 @@ rstats
 eda
 </div>
 </div>
-<a href="./posts/exploring-happiness-eda/index.html">
 <div class="listing-description">
-What makes us happy?
+<a href="./posts/exploring-happiness-eda/index.html" class="no-external">What makes us happy?</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/exploring-happiness-eda/index.html">
+<a href="./posts/exploring-happiness-eda/index.html" class="no-external">
 <div class="listing-date">
 Nov 15, 2023
 </div>
@@ -442,19 +468,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="post,news,rstats,music" data-listing-date-sort="1696802400000" data-listing-file-modified-sort="1700059335525" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4">
+<div class="quarto-post image-right" data-index="5" data-categories="post,news,rstats,music" data-listing-date-sort="1696802400000" data-listing-file-modified-sort="1700059335525" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="693">
 <div class="thumbnail">
-<p><a href="./posts/random-music-choice-for-the-new-routine/index.html"> <img src="./posts/random-music-choice-for-the-new-routine/musiccollection.jpeg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/random-music-choice-for-the-new-routine/index.html" class="no-external"></a></p><a href="./posts/random-music-choice-for-the-new-routine/index.html" class="no-external">
+<p><img src="./posts/random-music-choice-for-the-new-routine/musiccollection.jpeg" class="thumbnail-image"></p>
+</a><p><a href="./posts/random-music-choice-for-the-new-routine/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/random-music-choice-for-the-new-routine/index.html">
 <h3 class="no-anchor listing-title">
-Random music for the new routine
+<a href="./posts/random-music-choice-for-the-new-routine/index.html" class="no-external">Random music for the new routine</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/random-music-choice-for-the-new-routine/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -469,14 +495,12 @@ rstats
 music
 </div>
 </div>
-<a href="./posts/random-music-choice-for-the-new-routine/index.html">
 <div class="listing-description">
-Yes, I have a lot of music.
+<a href="./posts/random-music-choice-for-the-new-routine/index.html" class="no-external">Yes, I have a lot of music.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/random-music-choice-for-the-new-routine/index.html">
+<a href="./posts/random-music-choice-for-the-new-routine/index.html" class="no-external">
 <div class="listing-date">
 Oct 9, 2023
 </div>
@@ -486,19 +510,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="post,news,howto" data-listing-date-sort="1684015200000" data-listing-file-modified-sort="1684435711532" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4">
+<div class="quarto-post image-right" data-index="6" data-categories="post,news,howto" data-listing-date-sort="1684015200000" data-listing-file-modified-sort="1684435711532" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="732">
 <div class="thumbnail">
-<p><a href="./posts/migrating-from-hugo-to-quarto/index.html"> <img src="./posts/migrating-from-hugo-to-quarto/confluence.jpeg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/migrating-from-hugo-to-quarto/index.html" class="no-external"></a></p><a href="./posts/migrating-from-hugo-to-quarto/index.html" class="no-external">
+<p><img src="./posts/migrating-from-hugo-to-quarto/confluence.jpeg" class="thumbnail-image"></p>
+</a><p><a href="./posts/migrating-from-hugo-to-quarto/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/migrating-from-hugo-to-quarto/index.html">
 <h3 class="no-anchor listing-title">
-Migration from Hugo to Quarto
+<a href="./posts/migrating-from-hugo-to-quarto/index.html" class="no-external">Migration from Hugo to Quarto</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/migrating-from-hugo-to-quarto/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -510,14 +534,12 @@ news
 howto
 </div>
 </div>
-<a href="./posts/migrating-from-hugo-to-quarto/index.html">
 <div class="listing-description">
-As I mentioned in the Migration and Resurrection post…<code></code><code></code>
+<a href="./posts/migrating-from-hugo-to-quarto/index.html" class="no-external">As I mentioned in the Migration and Resurrection post, some issues with my old Hugo build and Netlify playing nicely with Hugo &amp; Wowchemy led to me deciding to rebuild…<code></code><code></code></a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/migrating-from-hugo-to-quarto/index.html">
+<a href="./posts/migrating-from-hugo-to-quarto/index.html" class="no-external">
 <div class="listing-date">
 May 14, 2023
 </div>
@@ -527,19 +549,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="post,news" data-listing-date-sort="1684015200000" data-listing-file-modified-sort="1684487276168" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3">
+<div class="quarto-post image-right" data-index="7" data-categories="post,news" data-listing-date-sort="1684015200000" data-listing-file-modified-sort="1684487276168" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="3" data-listing-word-count-sort="454">
 <div class="thumbnail">
-<p><a href="./posts/blog-migration-and-resurrection/index.html"> <img src="./posts/blog-migration-and-resurrection/3360_moving_day.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/blog-migration-and-resurrection/index.html" class="no-external"></a></p><a href="./posts/blog-migration-and-resurrection/index.html" class="no-external">
+<p><img src="./posts/blog-migration-and-resurrection/3360_moving_day.jpg" class="thumbnail-image"></p>
+</a><p><a href="./posts/blog-migration-and-resurrection/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/blog-migration-and-resurrection/index.html">
 <h3 class="no-anchor listing-title">
-…and we’re back. Migration and resurrection
+<a href="./posts/blog-migration-and-resurrection/index.html" class="no-external">…and we’re back. Migration and resurrection</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/blog-migration-and-resurrection/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -548,14 +570,12 @@ post
 news
 </div>
 </div>
-<a href="./posts/blog-migration-and-resurrection/index.html">
 <div class="listing-description">
-So much has happened since my last post here in February 2021. The blog was set up during the early stages of COVID lockdown when all of a sudden I had more time on my hands.
+<a href="./posts/blog-migration-and-resurrection/index.html" class="no-external">So much has happened since my last post here in February 2021. The blog was set up during the early stages of COVID lockdown when all of a sudden I had more time on my hands.</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/blog-migration-and-resurrection/index.html">
+<a href="./posts/blog-migration-and-resurrection/index.html" class="no-external">
 <div class="listing-date">
 May 14, 2023
 </div>
@@ -565,19 +585,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,music,spotify,gosta berling" data-listing-date-sort="1614466800000" data-listing-file-modified-sort="1700059478312" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11">
+<div class="quarto-post image-right" data-index="8" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,music,spotify,gosta berling" data-listing-date-sort="1614466800000" data-listing-file-modified-sort="1700059478312" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2077">
 <div class="thumbnail">
-<p><a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html"> <img src="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/gb_winterland_front.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html" class="no-external"></a></p><a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html" class="no-external">
+<p><img src="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/gb_winterland_front.jpg" class="thumbnail-image"></p>
+</a><p><a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html">
 <h3 class="no-anchor listing-title">
-Sad Songs &amp; Pretty Charts - a Gosta Berling Music Data Visualization
+<a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html" class="no-external">Sad Songs &amp; Pretty Charts - a Gosta Berling Music Data Visualization</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -607,14 +627,12 @@ spotify
 gosta berling
 </div>
 </div>
-<a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html">
 <div class="listing-description">
-For…
+<a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html" class="no-external">For this post, I thought I’d focus on music analytics, given that music and data science/analysis are two things I’ve spent most of my waking hours doing for a number of…</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html">
+<a href="./posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/index.html" class="no-external">
 <div class="listing-date">
 Feb 28, 2021
 </div>
@@ -624,19 +642,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,higher education" data-listing-date-sort="1614294000000" data-listing-file-modified-sort="1702475691095" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14">
+<div class="quarto-post image-right" data-index="9" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,higher education" data-listing-date-sort="1614294000000" data-listing-file-modified-sort="1702475691095" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2715">
 <div class="thumbnail">
-<p><a href="./posts/invited-talk-usf-feb2020/index.html"> <img src="./posts/invited-talk-usf-feb2020/usanfranlogo.png" class="thumbnail-image"> </a></p>
+<p><a href="./posts/invited-talk-usf-feb2020/index.html" class="no-external"></a></p><a href="./posts/invited-talk-usf-feb2020/index.html" class="no-external">
+<p><img src="./posts/invited-talk-usf-feb2020/usanfranlogo.png" class="thumbnail-image"></p>
+</a><p><a href="./posts/invited-talk-usf-feb2020/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/invited-talk-usf-feb2020/index.html">
 <h3 class="no-anchor listing-title">
-Invited Talk at University of San Francisco, February 2020
+<a href="./posts/invited-talk-usf-feb2020/index.html" class="no-external">Invited Talk at University of San Francisco, February 2020</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/invited-talk-usf-feb2020/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -660,14 +678,12 @@ data visualization
 higher education
 </div>
 </div>
-<a href="./posts/invited-talk-usf-feb2020/index.html">
 <div class="listing-description">
-In early 2020 (back in the days of in-person gatherings) I was invited to give a talk at two budget forums at the University of San Francisco. The general theme was looking at the landscape of enrollments in higher education, with a specific focus on liberal arts colleges, especially Jesuit colleges. Because I…
+<a href="./posts/invited-talk-usf-feb2020/index.html" class="no-external">In early 2020 (back in the days of in-person gatherings) I was invited to give a talk at two budget forums at the University of San Francisco. The general theme was looking…</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/invited-talk-usf-feb2020/index.html">
+<a href="./posts/invited-talk-usf-feb2020/index.html" class="no-external">
 <div class="listing-date">
 Feb 26, 2021
 </div>
@@ -677,19 +693,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,higher education" data-listing-date-sort="1614207600000" data-listing-file-modified-sort="1702461585565" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="33">
+<div class="quarto-post image-right" data-index="10" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,higher education" data-listing-date-sort="1614207600000" data-listing-file-modified-sort="1702461585565" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="33" data-listing-word-count-sort="6470">
 <div class="thumbnail">
-<p><a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html"> <img src="./posts/tidy-tuesday-feb-02-2021-hbcu/hbcu-collage.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html" class="no-external"></a></p><a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html" class="no-external">
+<p><img src="./posts/tidy-tuesday-feb-02-2021-hbcu/hbcu-collage.jpg" class="thumbnail-image"></p>
+</a><p><a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html">
 <h3 class="no-anchor listing-title">
-Tidy Tuesday, February 2, 2021 - HBCU Enrollment
+<a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html" class="no-external">Tidy Tuesday, February 2, 2021 - HBCU Enrollment</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -713,14 +729,12 @@ data visualization
 higher education
 </div>
 </div>
-<a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html">
 <div class="listing-description">
-When the the Tidy Tuesday HBCU dataset was posted I got excited because here was something right in my scope of knowledge; enrollment in higher education. It was a great first Tidy Tuesday set for Black History…
+<a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html" class="no-external">When the the Tidy Tuesday HBCU dataset was posted I got excited because here was something right in my scope of knowledge; enrollment in higher education. It was a great…</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html">
+<a href="./posts/tidy-tuesday-feb-02-2021-hbcu/index.html" class="no-external">
 <div class="listing-date">
 Feb 25, 2021
 </div>
@@ -730,19 +744,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,sports,cycling,tour de france" data-listing-date-sort="1607036400000" data-listing-file-modified-sort="1684485866771" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="34">
+<div class="quarto-post image-right" data-index="11" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,sports,cycling,tour de france" data-listing-date-sort="1607036400000" data-listing-file-modified-sort="1684485866771" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="34" data-listing-word-count-sort="6686">
 <div class="thumbnail">
-<p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html"> <img src="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/Kraftwerk_Tour_De_France_Soundtracks_album_cover.png" class="thumbnail-image"> </a></p>
+<p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html" class="no-external"></a></p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html" class="no-external">
+<p><img src="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/Kraftwerk_Tour_De_France_Soundtracks_album_cover.png" class="thumbnail-image"></p>
+</a><p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html">
 <h3 class="no-anchor listing-title">
-Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 2, charts!)
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html" class="no-external">Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 2, charts!)</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -772,14 +786,12 @@ cycling
 tour de france
 </div>
 </div>
-<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html">
 <div class="listing-description">
-Stage 1 ended up being all about wrangling and cleaning the #TidyTuesday Tour de France data. When I first dug into the data I wasn’t sure what I wanted to visualize. It wasn’t…
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html" class="no-external">Stage 1 ended up being all about wrangling and cleaning the #TidyTuesday Tour de France data. When I first dug into the data I wasn’t sure what I wanted to visualize. It…</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html">
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html" class="no-external">
 <div class="listing-date">
 Dec 4, 2020
 </div>
@@ -789,19 +801,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,sports,cycling,tour de france" data-listing-date-sort="1606690800000" data-listing-file-modified-sort="1700147716842" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11">
+<div class="quarto-post image-right" data-index="12" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization,sports,cycling,tour de france" data-listing-date-sort="1606690800000" data-listing-file-modified-sort="1700147716842" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2046">
 <div class="thumbnail">
-<p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html"> <img src="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/Kraftwerk_Tour_De_France_Soundtracks_album_cover.png" class="thumbnail-image"> </a></p>
+<p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html" class="no-external"></a></p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html" class="no-external">
+<p><img src="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/Kraftwerk_Tour_De_France_Soundtracks_album_cover.png" class="thumbnail-image"></p>
+</a><p><a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html">
 <h3 class="no-anchor listing-title">
-Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html" class="no-external">Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -831,14 +843,12 @@ cycling
 tour de france
 </div>
 </div>
-<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html">
 <div class="listing-description">
- | 
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html" class="no-external"> | </a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html">
+<a href="./posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html" class="no-external">
 <div class="listing-date">
 Nov 30, 2020
 </div>
@@ -848,19 +858,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="13" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization" data-listing-date-sort="1606604400000" data-listing-file-modified-sort="1684124898357" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12">
+<div class="quarto-post image-right" data-index="13" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization" data-listing-date-sort="1606604400000" data-listing-file-modified-sort="1684124898357" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2394">
 <div class="thumbnail">
-<p><a href="./posts/tidy-tuesday-maryland-bridges/index.html"> <img src="./posts/tidy-tuesday-maryland-bridges/fskbr.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/tidy-tuesday-maryland-bridges/index.html" class="no-external"></a></p><a href="./posts/tidy-tuesday-maryland-bridges/index.html" class="no-external">
+<p><img src="./posts/tidy-tuesday-maryland-bridges/fskbr.jpg" class="thumbnail-image"></p>
+</a><p><a href="./posts/tidy-tuesday-maryland-bridges/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/tidy-tuesday-maryland-bridges/index.html">
 <h3 class="no-anchor listing-title">
-Tidy Tuesday, November 27, 2018 - Maryland Bridges
+<a href="./posts/tidy-tuesday-maryland-bridges/index.html" class="no-external">Tidy Tuesday, November 27, 2018 - Maryland Bridges</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/tidy-tuesday-maryland-bridges/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -881,14 +891,12 @@ dataviz
 data visualization
 </div>
 </div>
-<a href="./posts/tidy-tuesday-maryland-bridges/index.html">
 <div class="listing-description">
-This dataset was posted to the #TidyTuesday repo back in November 2018. I worked on it a bit then, but didn’t…
+<a href="./posts/tidy-tuesday-maryland-bridges/index.html" class="no-external">This dataset was posted to the #TidyTuesday repo back in November 2018. I worked on it a bit then, but didn’t properly finish it until March of 2020. With the blog finally…</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/tidy-tuesday-maryland-bridges/index.html">
+<a href="./posts/tidy-tuesday-maryland-bridges/index.html" class="no-external">
 <div class="listing-date">
 Nov 29, 2020
 </div>
@@ -898,19 +906,19 @@ gregers kjerulf dubrow
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization" data-listing-date-sort="1606431600000" data-listing-file-modified-sort="1684404894761" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16">
+<div class="quarto-post image-right" data-index="14" data-categories="post,tidytuesday,rstats,ggplot,dataviz,data visualization" data-listing-date-sort="1606431600000" data-listing-file-modified-sort="1684404894761" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3144">
 <div class="thumbnail">
-<p><a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html"> <img src="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/cascade.jpg" class="thumbnail-image"> </a></p>
+<p><a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html" class="no-external"></a></p><a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html" class="no-external">
+<p><img src="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/cascade.jpg" class="thumbnail-image"></p>
+</a><p><a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html" class="no-external"></a></p>
 </div>
 <div class="body">
-<a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html">
 <h3 class="no-anchor listing-title">
-Tidy Tuesday, November 24, 2020 - Hiking Trails in WA State
+<a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html" class="no-external">Tidy Tuesday, November 24, 2020 - Hiking Trails in WA State</a>
 </h3>
 <div class="listing-subtitle">
-
+<a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html" class="no-external"></a>
 </div>
-</a>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('post'); return false;">
 post
@@ -931,14 +939,12 @@ dataviz
 data visualization
 </div>
 </div>
-<a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html">
 <div class="listing-description">
-Every week I’m so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from #TidyTuesday, the weekly…
+<a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html" class="no-external">Every week I’m so impressed by the amount of beautiful, creative and informative analyses and data viz efforts that spring from #TidyTuesday, the weekly data project that…</a>
 </div>
-</a>
 </div>
 <div class="metadata">
-<a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html">
+<a href="./posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html" class="no-external">
 <div class="listing-date">
 Nov 27, 2020
 </div>
@@ -1032,10 +1038,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -1045,8 +1050,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -1059,6 +1073,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -1102,6 +1235,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1127,6 +1261,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1192,20 +1352,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="https://www.quarto.org">Built with Quarto</a>
+    <a class="nav-link" href="https://www.quarto.org">
+<p>Built with Quarto</p>
+</a>
   </li>  
 </ul>
     </div>   
-    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-center">
+
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="./license.html">License</a>
+    <a class="nav-link" href="./license.html">
+<p>License</p>
+</a>
   </li>  
 </ul>
     </div>
   </div>
 </footer>
+
 
 
 
