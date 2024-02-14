@@ -1,7 +1,7 @@
 ---
 title: "Exploring Happiness - Analysis"
 author: "gregers kjerulf dubrow"
-date: '2023-12-21'
+date: '2019-12-21'
 categories: [post, news, rstats, eda]
 image: "leo_happy_balcony.jpeg"
 editor: 
