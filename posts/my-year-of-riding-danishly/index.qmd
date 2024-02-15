@@ -251,7 +251,7 @@ act_data <- compile_activities(myact) %>%
 
 Ok, we have some data, let's see what it looks like. These two `DataExplorer` plots show (on the right) a general overview of the dataset...percent of observations missing, percent of discrete & continuous variables, etc and on the left, the percent missing for each variable.
 
-To put them next to each other I've used a [bootstrap css grid system](https://getbootstrap.com/docs/5.1/layout/css-grid/) to define the columns and place the plots there. I'll use the css grids later for the gt tables. They won't show in this rendered html doc, so go to the .qmd file(add link) to see how it works. The code is `plot_intro(strava_data)`
+To put them next to each other I've used a [bootstrap css grid system](https://getbootstrap.com/docs/5.1/layout/css-grid/) to define the columns and place the plots there. I'll use the css grids later for the gt tables. They won't show in this rendered html doc, so go to the [.qmd file](https://github.com/greg-dubrow/greg_dubrow_io/blob/main/posts/my-year-of-riding-danishly/index.qmd) to see how it works. The code is `plot_intro(strava_data)`
 
 ::: grid
 ::: g-col-6
