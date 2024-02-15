@@ -2,9 +2,9 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/my-year-of-riding-danishly/index.html",
       "/posts/r-to-tableau-and-quarto/index.html",
       "/posts/exploring-happiness-eda-pt2/index.html",
-      "/posts/exploring-happiness-analysis/index.html",
       "/posts/call-me-by-my-name/index.html",
       "/posts/exploring-happiness-eda/index.html",
       "/posts/random-music-choice-for-the-new-routine/index.html",
@@ -16,7 +16,8 @@
       "/posts/tidy-tuesday-apr-07-2020-LeTour-stage2/index.html",
       "/posts/tidy-tuesday-apr-07-2020-LeTour-stage1/index.html",
       "/posts/tidy-tuesday-maryland-bridges/index.html",
-      "/posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html"
+      "/posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/index.html",
+      "/posts/exploring-happiness-analysis/index.html"
     ]
   }
 ]
