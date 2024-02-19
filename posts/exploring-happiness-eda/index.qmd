@@ -4,11 +4,14 @@ author: "gregers kjerulf dubrow"
 date: '2023-11-15'
 categories: [post, news, rstats, eda]
 image: "dalias_happy.jpeg"
+toc: true
 editor: 
   mode: source
 ---
 
 ![Our cat Dalias (aka Potato), in a happy moment](dalias_happy.jpeg){fig-align="left" fig-alt="happy cat on a sofa."}
+
+## Introduction {#intro}
 
 What makes us happy?
 
@@ -20,7 +23,9 @@ Among the most referenced measures is the [World Happiness Report](https://world
 
 For this post (and at least one, maybe more to come) I want to dig into the data that has been made available. Every year the WHR research team releases data for chapter two, which has composite scores by country based on the ladder score question, along with related questions from the survey. They add logged GDP and other data in the full chapter report. GDP is made available in the chapter data for release.
 
-[The Data]{.underline} <br> The Chapter 2 data has been consistently offered for download for years now. There are two datasets:
+## The Data {#data}
+
+<br> The Chapter 2 data has been consistently offered for download for years now. There are two datasets:
 
 -   Data for *Figure 1* includes the three three-year rolling average of the happiness ladder question (a 0-10 scale, described in the statistical appendix) along with related measures, aggregated by country. We also get the ladder score of a hypothetical dystopian country.
 -   Data for *Table 1* has the output of the OLS regression model to predict each country's ladder score.
@@ -29,7 +34,7 @@ The Figure 1 data also includes OLS output in form of the percent of each countr
 
 Both the report's [statisitcal appendix](https://happiness-report.s3.amazonaws.com/2023/WHR+23_Statistical_Appendix.pdf) (downloads a pdf) and [on-line version of Chapter 2](https://worldhappiness.report/ed/2023/world-happiness-trust-and-social-connections-in-times-of-crisis/) explain everything in more detail so I won't repeat it here.
 
-[Working with the data]{.underline} <br> I'll be using `r` for all aspects of the work; importing the data, cleaning, analysing, and visualising. So let's go...
+I'll be using `r` for all steps of the workflow; importing the data, cleaning, analysing, and visualising. So let's go...
 
 For this post, I want to focus on Exploratory Data Analysis (EDA). It's the part of the analytical process where you get a broad overview of the data...look for things that need cleaning, look for distributions and relationships. In the past I'd build my own charts and tables, and that took quite a lot of time and mental energy.
 
@@ -123,7 +128,9 @@ Regardless, we now have a dataset, so let's explore it.
 whr23_fig2_1 <- readRDS(file = "~/Data/r/World Happiness Report/data/whr23_fig2_1.rds")
 ```
 
-[The `DataExplorer` package]{.underline} <br> Let's start with `DataExplorer`. The [`create_report()`](https://boxuancui.github.io/DataExplorer/reference/create_report.html) function runs the full set of native reports and outputs to a directory of your choosing with a filename of your choosing. But for a review I want to go through a few of the individual report elements.
+## EDA with DataExplorer - Overview {#dataexplorer}
+
+Let's start with `DataExplorer`. The [`create_report()`](https://boxuancui.github.io/DataExplorer/reference/create_report.html) function runs the full set of native reports and outputs to a directory of your choosing with a filename of your choosing. But for a review I want to go through a few of the individual report elements.
 
 [`introduce()`](https://boxuancui.github.io/DataExplorer/reference/introduce.html) outputs a table showing rows, columns and other information. If you want to see this information in chart form, [`plot_intro()`](https://boxuancui.github.io/DataExplorer/reference/plot_intro.html) and [`plot_missing()`](https://boxuancui.github.io/DataExplorer/reference/plot_missing.html) do that.
 
@@ -146,6 +153,8 @@ plot_missing(whr23_fig2_1)
 ```
 
 There are hardly any missing values in the set, which will make analysis easier.
+
+## EDA with DataExplorer - Distributions {#dataexplorer2}
 
 Ok, so how about the distribution of our variables? [`plot_bar()`](https://boxuancui.github.io/DataExplorer/reference/plot_bar.html) takes all discrete variables and [`plot_histogram()`](https://boxuancui.github.io/DataExplorer/reference/plot_histogram.html) runs for the continuous variables. Depending on how many columns of each type your dataset has you will need to play with the `nrow` and `ncol` options so that everything renders to the RStudio plot column. For the histograms you can change the number of binsm change the x-axis to log or some other option (the default is continuous). You can also customize the look a bit with passing arguments to the `ggtheme =` and `theme_config()` functions.
 
@@ -177,6 +186,8 @@ plot_histogram(whr23_fig2_1, nrow = 5L)
 
 The histograms render in alpha order of the variable name, not order in the dataset. When the plots render, we look through them to see if there are any unusual skews or other things we want to watch out for depending on the type of analyses to be run. In this case there are a few solitary bars in some of the histograms, like values above 0.4 in the *generosity* column. But nothing too skewed so that if we took a closer look at distributions by way of means or interquartiles that we'd be too worried.
 
+## EDA with DataExplorer - Correlations {#dataexplorer3}
+
 Now for my favorite part of this package, a correlation matrix! We'll run [`plot_correlation()`](https://boxuancui.github.io/DataExplorer/reference/plot_correlation.html) without the year, dystopia ladder score, and whiskers and make sure to only do continuous. We can also adjust things like the type of correlation (default is pearson), the size of the coefficient labels in the chart and other elements.
 
 ```{r eda3, echo=TRUE, error=FALSE, message=FALSE}
@@ -190,7 +201,8 @@ Now for my favorite part of this package, a correlation matrix! We'll run [`plot
 
 ## correlation...remove some columns, clean NA in pipe, continuous only, change text size
 whr23_fig2_1 %>%
-	select(-whr_year, -ladder_score_in_dystopia, -upperwhisker, -lowerwhisker) %>%
+	select(-whr_year, -ladder_score_in_dystopia, -upperwhisker, -lowerwhisker, -year,
+				 -ginifill, -gini, -gini_latest, -gini_avg) %>%
 	filter(!is.na(residual)) %>%
 	plot_correlation(type = "continuous", geom_text_args = list("size" = 3))
 ```
@@ -200,6 +212,8 @@ The way my brain works is to look for visual patterns and relationships. So a co
 The weakest association is between generosity, which comes from a question asking *"Have you donated to charity in the past month?"* So while donations to charity are a good thing, they don't necessarily move the needle on happiness. At least not in the aggregate. But maybe by country or region? Something to take a look at later. This is why we do EDA...
 
 We also see that we could have run this without the "explained by..." columns as they have the same coefficients as the component variables.
+
+## EDA with DataExplorer - Scatterplots {#dataexplorer4}
 
 As much as I love a correlation matrix, I love scatterplots even more. I clearly have a thing for patterns and relationships. The [`plot_scatterplot`](https://boxuancui.github.io/DataExplorer/reference/plot_scatterplot.html) function returns plots for all the variables you pass along, against the one you call in the `by =` argument. Here we want to see the association between the ladder score and component variables from Chapter 2.
 
@@ -238,6 +252,8 @@ whr23_fig2_1 %>%
 There are a few other functions offered to do principal component analysis and qq (quantile-quantile) plots, but they did not help much with this dataset.
 
 Overall there are plenty of helpful features in `DataExplorer` that make it worthwhile to use for EDA. I'd like the ability to color scatterplots by a discrete variable, or to facet the histograms or scatterplots, but as is, a robust EDA tool.
+
+## EDA with Explore - Interactive EDA {#explore}
 
 [The `explore` package]{.underline} <br> The best function here is [`explore(dataset)`](https://rolkra.github.io/explore/reference/explore.html), which launches a `shiny` window with four tabs.
 
@@ -279,7 +295,9 @@ whr23_fig2_1 %>%
 
 The [main vignette](https://rolkra.github.io/explore/articles/explore.html) and [reference guide](https://rolkra.github.io/explore/reference/index.html) are both very comprehensive, so no need to repeat too much here. But there are some fun features like decision trees, and lots of flexibilty to explore multiple variables in relation to each other.
 
-[The `skimr` package]{.underline} <br> Then there is [`skimr`](https://cran.r-project.org/web/packages/skimr/vignettes/skimr.html), one of the first EDA packages that I remember seeing. If there's a feature I like most, it's the basic `skim()` function, which returns means & other distributions, as well as little histograms.
+## EDA with Skimr {#skimr}
+
+Then there is [`skimr`](https://cran.r-project.org/web/packages/skimr/vignettes/skimr.html), one of the first EDA packages that I remember seeing. If there's a feature I like most, it's the basic `skim()` function, which returns means & other distributions, as well as little histograms.
 
 -   <div>
 
@@ -294,7 +312,9 @@ The [main vignette](https://rolkra.github.io/explore/articles/explore.html) and 
 
 It's especially helpful on small and medium-sized datasets, to get a quick overview and look for outliers.
 
-[Happiness data takeaways]{.underline} <br> Using these packages for EDA on the happiness data, we learned that:
+## Happiness data takeaways {#summary}
+
+Using these packages for EDA on the happiness data, we learned that:
 
 -   There are not many missing values in the data.
 -   All of the component variables except generosity have strong positive correlations with the happiness score.
@@ -302,6 +322,8 @@ It's especially helpful on small and medium-sized datasets, to get a quick overv
 
 We also came away wanting to know a bit more about differences by region, so that's a good starting point for the next post, which will be a slightly deeper dive into the data.
 
-[Conclusion]{.underline} <br> There is no one perfect EDA package that suits all needs for any dataset. `DataExplorer` has some robust features, particularly in this usecase the correlation heatmap and the scatterplots. I loved the native reports and shiny app in `explorer`. I had planned to look at [`correlationfunnel`](https://business-science.github.io/correlationfunnel/), but it's only really suited to a use-case with binary outcomes such as customer sign-up, churn, employee retention, college admissions outcomes (admits, yield), student success outcomes like retention and graduation. I'll have to find another dataset to try that package. Doing these package test-drives reminded me that `skimr` is also very useful.
+## Conclusion {#conclusion}
+
+There is no one perfect EDA package that suits all needs for any dataset. `DataExplorer` has some robust features, particularly in this usecase the correlation heatmap and the scatterplots. I loved the native reports and shiny app in `explorer`. I had planned to look at [`correlationfunnel`](https://business-science.github.io/correlationfunnel/), but it's only really suited to a use-case with binary outcomes such as customer sign-up, churn, employee retention, college admissions outcomes (admits, yield), student success outcomes like retention and graduation. I'll have to find another dataset to try that package. Doing these package test-drives reminded me that `skimr` is also very useful.
 
 Going forward I'll be setting up a more deliberate EDA workflow using parts of each of these packages, depending on the size of the dataset and the main questions I'd have of the data.

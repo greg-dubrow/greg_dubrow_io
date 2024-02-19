@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
 <meta name="dcterms.date" content="2024-02-01">
+<meta name="description" content="Adventures in the data multiverse">
 
 <title>gregers kjerulf dubrow - r to Tableau, then show it in Quarto</title>
 <style>
@@ -24,7 +25,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -82,7 +83,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -91,6 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -110,13 +118,15 @@ gtag('config', 'G-09CSH6M61C', { 'anonymize_ip': false});
 document.addEventListener('DOMContentLoaded', function () {
 cookieconsent.run({
   "notice_banner_type":"simple",
-  "consent_type":"implied",
+  "consent_type":"express",
   "palette":"light",
   "language":"en",
-  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "page_load_consent_levels":["strictly-necessary"],
   "notice_banner_reject_button_hide":false,
   "preferences_center_close_button_hide":false,
   "website_name":""
+  ,
+"language":"en"
   });
 });
 </script> 
@@ -125,13 +135,13 @@ cookieconsent.run({
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="gregers kjerulf dubrow - r to Tableau, then show it in Quarto">
-<meta property="og:description" content="">
+<meta property="og:description" content="Adventures in the data multiverse">
 <meta property="og:image" content="https://www.gregdubrow.io/posts/r-to-tableau-and-quarto/horst_r_otherplatforms.png">
-<meta property="og:site-name" content="gregers kjerulf dubrow">
+<meta property="og:site_name" content="gregers kjerulf dubrow">
 <meta property="og:image:height" content="2160">
 <meta property="og:image:width" content="3840">
 <meta name="twitter:title" content="gregers kjerulf dubrow - r to Tableau, then show it in Quarto">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="Adventures in the data multiverse">
 <meta name="twitter:image" content="https://www.gregdubrow.io/posts/r-to-tableau-and-quarto/horst_r_otherplatforms.png">
 <meta name="twitter:creator" content="@greg_dubrow">
 <meta name="twitter:image-height" content="2160">
@@ -139,13 +149,13 @@ cookieconsent.run({
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">gregers kjerulf dubrow</span>
     </a>
@@ -157,33 +167,33 @@ cookieconsent.run({
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html" rel="" target="">
- <span class="menu-text">About me</span></a>
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About me</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/greg-dubrow" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/greg-dubrow"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://linkedin.com/in/dubrowg/" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://linkedin.com/in/dubrowg/"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/greg_dubrow" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/greg_dubrow"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../index.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -192,7 +202,12 @@ cookieconsent.run({
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">r to Tableau, then show it in Quarto</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          Adventures in the data multiverse
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">post</div>
                 <div class="quarto-category">news</div>
                 <div class="quarto-category">rstats</div>
@@ -225,21 +240,34 @@ cookieconsent.run({
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Introduction</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Getting &amp; cleaning some data</a></li>
+  <li><a href="#tableau" id="toc-tableau" class="nav-link" data-scroll-target="#tableau">Embed the Tableau workbook</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
+
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
-<p><img src="horst_r_otherplatforms.png" class="img-fluid figure-img" alt="allison horst r artwork"></p>
-<figcaption class="figure-caption">r plays nicely with other outputs</figcaption>
+<p><img src="horst_r_otherplatforms.png" class="img-fluid quarto-figure quarto-figure-left figure-img" alt="allison horst r artwork"></p>
+<figcaption>r plays nicely with other outputs</figcaption>
 </figure>
 </div>
 <p><a href="https://allisonhorst.com/allison-horst">Artwork by Allison Horst</a>.</p>
 <p><em>tl/dr - I’m trying to show I have some Tableau skills to go with my <code>r</code> skills to help my chances at employment (hint-hint).</em></p>
+<section id="intro" class="level2">
+<h2 class="anchored" data-anchor-id="intro">Introduction</h2>
 <p>Tableau has long been on my list to add to my data analysis skillset. I’ve tried in fits and starts over the years, but hadn’t been able to sustain it due to work and life.</p>
 <p>I had hoped to get to it in the fall, after my CIEE contract ended and I knew I’d be without work for a bit. But four Danish classes a week and doing a few <code>r</code> projects for the blog took up some time. Then in late December I was on the wrong end of a bike-car collision (more on that later in bike and healthcare-related posts), and after I got back from 2 weeks in the hospital and started to feel better, I decided it was time to take it on.</p>
 <p>I started by replicating the <a href="https://public.tableau.com/views/ExecutiveDashboardtutorial-superstoredata/parameters?:language=en-US&amp;:display_count=n&amp;:origin=viz_share_link">superstore data exec dashboard</a>, then wanted to do an original project. Initially the idea was to do a dashboard with some other data, and see if I could embed it in a blog post using Quarto. While working on that I somehow got the idea I wanted to make the visualisation be a paramterized user-choice analysis.</p>
@@ -250,9 +278,12 @@ cookieconsent.run({
 <li>Write a blog post wherein I attempt to embed the Tableau viz.</li>
 </ul>
 <p>I’ve seen the embedding done in <a href="https://www.highereddatastories.com/">Jon Boeckenstedt’s college enrollment trends blog</a> (I think he uses blogger) and hope it works here. <em>(spoiler alert…it does)</em></p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Getting &amp; cleaning some data</h2>
 <p>So first, let’s source and clean some data. I’ve long wanted to try the <a href="https://jaseziv.github.io/worldfootballR/index.html"><code>worldfootballr</code></a> package, so we’ll use that to get data for the <a href="https://www.premierleague.com/home">English Premier League’s</a> 2022-23 season. I ultimately want a dataset with total points and goals, expected points and goals, actual minus expected, and these items also for home and away matches.</p>
 <div class="cell" data-echo="true">
-<details>
+<details class="code-fold">
 <summary>code to get and clean the data and write to csv</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">### template for r analysis work. save as w/ appropriate name to project directory</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -363,9 +394,11 @@ cookieconsent.run({
 <span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(epl_2223_byteam_all, <span class="st">"~/Data/football data files/epl_2223_byteam.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
+<section id="tableau" class="level2">
+<h2 class="anchored" data-anchor-id="tableau">Embed the Tableau workbook</h2>
 <p>Ok…CSV written, uploaded to the Tableau workbook. I used <a href="https://evolytics.com/blog/tableau-201-allow-users-to-choose-measures-and-dimensions/">this guide</a> to build the parameters, and used other tips from the superstore exec summary how-to vids.</p>
 <p>To embed the Tableau workbook here I copied the embed code and placed in a code chunk with <code>{=html}</code> after the first three tick marks, then the embed code below the html tag.</p>
-
 <div class="tableauPlaceholder" id="viz1706794728000" style="position: relative"><noscript><a href="#"><img alt=" " src="https://public.tableau.com/static/images/EP/EPL2022-23_17067373577980/Userchoice/1_rss.png" style="border: none"></a></noscript><object class="tableauViz" style="display:none;"><param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F"> <param name="embed_code_version" value="3"> <param name="site_root" value=""><param name="name" value="EPL2022-23_17067373577980/Userchoice"><param name="tabs" value="no"><param name="toolbar" value="yes"><param name="static_image" value="https://public.tableau.com/static/images/EP/EPL2022-23_17067373577980/Userchoice/1.png"> <param name="animate_transition" value="yes"><param name="display_static_image" value="yes"><param name="display_spinner" value="yes"><param name="display_overlay" value="yes"><param name="display_count" value="yes"><param name="language" value="en-US"></object></div>                <script type="text/javascript">                    var divElement = document.getElementById('viz1706794728000');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
 <p>You can play with the data here on this page or you can go to the book on my <a href="https://public.tableau.com/app/profile/greg.d6950/vizzes">Tableau profile</a>. If the data tell any story it’s that teams who maximize chances (convert xG, expected goals) to actual goals, have a better chance of turning expected points into actual points. Not groundbreaking analysis to be sure.</p>
 <p>It’s not necessarily a final version - there are more variables to add to expand user choice, but it’s enough now to get the main point, which was parameterized user choice.</p>
@@ -373,6 +406,7 @@ cookieconsent.run({
 <p>But hoooray, I proved the concept! Injury-induced downtime FTW!</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -454,10 +488,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -467,8 +500,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -481,6 +523,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -524,6 +685,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -549,6 +711,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -614,20 +802,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="https://www.quarto.org">Built with Quarto</a>
+    <a class="nav-link" href="https://www.quarto.org">
+<p>Built with Quarto</p>
+</a>
   </li>  
 </ul>
     </div>   
-    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-center">
+
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="../../license.html">License</a>
+    <a class="nav-link" href="../../license.html">
+<p>License</p>
+</a>
   </li>  
 </ul>
     </div>
   </div>
 </footer>
+
 
 
 

@@ -1,9 +1,11 @@
 ---
 title: "r to Tableau, then show it in Quarto"
+description: "Adventures in the data multiverse"
 author: "gregers kjerulf dubrow"
 date: '2024-02-01'
 categories: [post, news, rstats, tableau]
 image: "horst_r_otherplatforms.png"
+toc: true
 editor: 
   mode: source
 ---
@@ -23,6 +25,8 @@ knitr::opts_chunk$set(
 
 *tl/dr - I'm trying to show I have some Tableau skills to go with my `r` skills to help my chances at employment (hint-hint).*
 
+## Introduction {#intro}
+
 Tableau has long been on my list to add to my data analysis skillset. I've tried in fits and starts over the years, but hadn't been able to sustain it due to work and life.
 
 I had hoped to get to it in the fall, after my CIEE contract ended and I knew I'd be without work for a bit. But four Danish classes a week and doing a few `r` projects for the blog took up some time. Then in late December I was on the wrong end of a bike-car collision (more on that later in bike and healthcare-related posts), and after I got back from 2 weeks in the hospital and started to feel better, I decided it was time to take it on.
@@ -36,6 +40,8 @@ I wasn't nuts about the older data suggested by Tableau, and given I'm using the
 -   Write a blog post wherein I attempt to embed the Tableau viz.
 
 I've seen the embedding done in [Jon Boeckenstedt's college enrollment trends blog](https://www.highereddatastories.com/) (I think he uses blogger) and hope it works here. *(spoiler alert...it does)*
+
+## Getting & cleaning some data {#data}
 
 So first, let's source and clean some data. I've long wanted to try the [`worldfootballr`](https://jaseziv.github.io/worldfootballR/index.html) package, so we'll use that to get data for the [English Premier League's](https://www.premierleague.com/home) 2022-23 season. I ultimately want a dataset with total points and goals, expected points and goals, actual minus expected, and these items also for home and away matches.
 
@@ -151,6 +157,8 @@ epl_2223_byteam_all <- epl_2223_byteam_home %>%
 write_csv(epl_2223_byteam_all, "~/Data/football data files/epl_2223_byteam.csv")
 
 ```
+
+## Embed the Tableau workbook {#tableau}
 
 Ok...CSV written, uploaded to the Tableau workbook. I used [this guide](https://evolytics.com/blog/tableau-201-allow-users-to-choose-measures-and-dimensions/) to build the parameters, and used other tips from the superstore exec summary how-to vids.
 

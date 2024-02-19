@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -24,7 +24,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -82,7 +82,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -91,6 +97,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -110,13 +117,15 @@ gtag('config', 'G-09CSH6M61C', { 'anonymize_ip': false});
 document.addEventListener('DOMContentLoaded', function () {
 cookieconsent.run({
   "notice_banner_type":"simple",
-  "consent_type":"implied",
+  "consent_type":"express",
   "palette":"light",
   "language":"en",
-  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "page_load_consent_levels":["strictly-necessary"],
   "notice_banner_reject_button_hide":false,
   "preferences_center_close_button_hide":false,
   "website_name":""
+  ,
+"language":"en"
   });
 });
 </script> 
@@ -125,23 +134,23 @@ cookieconsent.run({
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="gregers kjerulf dubrow - Exploring Happiness - Part 1…EDA">
-<meta property="og:description" content="">
+<meta property="og:description" content="personal website for grgers kjerulf dubrow">
 <meta property="og:image" content="https://www.gregdubrow.io/posts/exploring-happiness-eda/dalias_happy.jpeg">
-<meta property="og:site-name" content="gregers kjerulf dubrow">
+<meta property="og:site_name" content="gregers kjerulf dubrow">
 <meta name="twitter:title" content="gregers kjerulf dubrow - Exploring Happiness - Part 1…EDA">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="personal website for grgers kjerulf dubrow">
 <meta name="twitter:image" content="https://www.gregdubrow.io/posts/exploring-happiness-eda/dalias_happy.jpeg">
 <meta name="twitter:creator" content="@greg_dubrow">
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">gregers kjerulf dubrow</span>
     </a>
@@ -153,33 +162,33 @@ cookieconsent.run({
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html" rel="" target="">
- <span class="menu-text">About me</span></a>
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About me</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/greg-dubrow" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/greg-dubrow"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://linkedin.com/in/dubrowg/" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://linkedin.com/in/dubrowg/"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/greg_dubrow" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/greg_dubrow"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="../../index.xml" rel="" target=""><i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -221,32 +230,55 @@ cookieconsent.run({
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#intro" id="toc-intro" class="nav-link active" data-scroll-target="#intro">Introduction</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">The Data</a></li>
+  <li><a href="#dataexplorer" id="toc-dataexplorer" class="nav-link" data-scroll-target="#dataexplorer">EDA with DataExplorer - Overview</a></li>
+  <li><a href="#dataexplorer2" id="toc-dataexplorer2" class="nav-link" data-scroll-target="#dataexplorer2">EDA with DataExplorer - Distributions</a></li>
+  <li><a href="#dataexplorer3" id="toc-dataexplorer3" class="nav-link" data-scroll-target="#dataexplorer3">EDA with DataExplorer - Correlations</a></li>
+  <li><a href="#dataexplorer4" id="toc-dataexplorer4" class="nav-link" data-scroll-target="#dataexplorer4">EDA with DataExplorer - Scatterplots</a></li>
+  <li><a href="#explore" id="toc-explore" class="nav-link" data-scroll-target="#explore">EDA with Explore - Interactive EDA</a></li>
+  <li><a href="#skimr" id="toc-skimr" class="nav-link" data-scroll-target="#skimr">EDA with Skimr</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Happiness data takeaways</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
+
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
-<p><img src="dalias_happy.jpeg" class="img-fluid figure-img" alt="happy cat on a sofa."></p>
-<figcaption class="figure-caption">Our cat Dalias (aka Potato), in a happy moment</figcaption>
+<p><img src="dalias_happy.jpeg" class="img-fluid quarto-figure quarto-figure-left figure-img" alt="happy cat on a sofa."></p>
+<figcaption>Our cat Dalias (aka Potato), in a happy moment</figcaption>
 </figure>
 </div>
+<section id="intro" class="level2">
+<h2 class="anchored" data-anchor-id="intro">Introduction</h2>
 <p>What makes us happy?</p>
 <p>A subjective question to be sure. The things that make me happy might not do much for you, and what brings you happiness might not work for me. To each their own? Or are there some basic things that boost our collective happiness, things most of us agree are good?</p>
 <p>There have been attempts to answer the question in a universal way, by focusing on broad quality of life measures and activities. A perfect question for social scientists to dig into, and so they have.</p>
 <p>Among the most referenced measures is the <a href="https://worldhappiness.report">World Happiness Report</a>. A yearly multi-chapter report published by <a href="https://www.unsdsn.org/">Sustainable Development Solutions Network</a>, using responses from the <a href="https://www.gallup.com/178667/gallup-world-poll-work.aspx">Gallup World Poll</a>.</p>
 <p>For this post (and at least one, maybe more to come) I want to dig into the data that has been made available. Every year the WHR research team releases data for chapter two, which has composite scores by country based on the ladder score question, along with related questions from the survey. They add logged GDP and other data in the full chapter report. GDP is made available in the chapter data for release.</p>
-<p><u>The Data</u> <br> The Chapter 2 data has been consistently offered for download for years now. There are two datasets:</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">The Data</h2>
+<p><br> The Chapter 2 data has been consistently offered for download for years now. There are two datasets:</p>
 <ul>
 <li>Data for <em>Figure 1</em> includes the three three-year rolling average of the happiness ladder question (a 0-10 scale, described in the statistical appendix) along with related measures, aggregated by country. We also get the ladder score of a hypothetical dystopian country.</li>
 <li>Data for <em>Table 1</em> has the output of the OLS regression model to predict each country’s ladder score.</li>
 </ul>
 <p>The Figure 1 data also includes OLS output in form of the percent of each country’s happiness score that could be attributed to the component variables. Another column in the Figure 1 set includes a column with the dystopia score plus the country’s residual of the actual and predicted ladder scores. In the data loading code below you’ll see that I added a column separating out the residual.</p>
 <p>Both the report’s <a href="https://happiness-report.s3.amazonaws.com/2023/WHR+23_Statistical_Appendix.pdf">statisitcal appendix</a> (downloads a pdf) and <a href="https://worldhappiness.report/ed/2023/world-happiness-trust-and-social-connections-in-times-of-crisis/">on-line version of Chapter 2</a> explain everything in more detail so I won’t repeat it here.</p>
-<p><u>Working with the data</u> <br> I’ll be using <code>r</code> for all aspects of the work; importing the data, cleaning, analysing, and visualising. So let’s go…</p>
+<p>I’ll be using <code>r</code> for all steps of the workflow; importing the data, cleaning, analysing, and visualising. So let’s go…</p>
 <p>For this post, I want to focus on Exploratory Data Analysis (EDA). It’s the part of the analytical process where you get a broad overview of the data…look for things that need cleaning, look for distributions and relationships. In the past I’d build my own charts and tables, and that took quite a lot of time and mental energy.</p>
 <p>Thankfully there are packages to speed up the work. So to get a quick look at this first set of WHR data, I’ll test-drive the EDA packages <a href="https://boxuancui.github.io/DataExplorer/"><code>DataExplorer</code></a> by Boxuan Cui, and Roland Krasser’s <a href="https://rolkra.github.io/explore"><code>explorer</code></a>.</p>
 <p>To start with let’s load packages to import and clean the data. These are the three packages I use for almost every analysis in <code>r</code>.</p>
@@ -297,7 +329,10 @@ cookieconsent.run({
 </div>
 <p>Another way to do it is to hard code them. I had to go back to the <a href="https://worldhappiness.report/ed/2018/#appendices-and-data">2018 report</a> to find a list.</p>
 <p>Regardless, we now have a dataset, so let’s explore it.</p>
-<p><u>The <code>DataExplorer</code> package</u> <br> Let’s start with <code>DataExplorer</code>. The <a href="https://boxuancui.github.io/DataExplorer/reference/create_report.html"><code>create_report()</code></a> function runs the full set of native reports and outputs to a directory of your choosing with a filename of your choosing. But for a review I want to go through a few of the individual report elements.</p>
+</section>
+<section id="dataexplorer" class="level2">
+<h2 class="anchored" data-anchor-id="dataexplorer">EDA with DataExplorer - Overview</h2>
+<p>Let’s start with <code>DataExplorer</code>. The <a href="https://boxuancui.github.io/DataExplorer/reference/create_report.html"><code>create_report()</code></a> function runs the full set of native reports and outputs to a directory of your choosing with a filename of your choosing. But for a review I want to go through a few of the individual report elements.</p>
 <p><a href="https://boxuancui.github.io/DataExplorer/reference/introduce.html"><code>introduce()</code></a> outputs a table showing rows, columns and other information. If you want to see this information in chart form, <a href="https://boxuancui.github.io/DataExplorer/reference/plot_intro.html"><code>plot_intro()</code></a> and <a href="https://boxuancui.github.io/DataExplorer/reference/plot_missing.html"><code>plot_missing()</code></a> do that.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## DataExplorer for EDA</span></span>
@@ -308,55 +343,96 @@ cookieconsent.run({
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 9</span></span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    rows columns discrete_columns continuous_columns all_missing_columns</span></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;   &lt;int&gt;            &lt;int&gt;              &lt;int&gt;               &lt;int&gt;</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   150      22                2                 20                   0</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   137      35               10                 25                   0</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: total_missing_values &lt;int&gt;, complete_rows &lt;int&gt;,</span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   total_observations &lt;int&gt;, memory_usage &lt;dbl&gt;</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_intro</span>(whr23_fig2_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda1-1.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda1-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing</span>(whr23_fig2_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda1-2.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda1-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>There are hardly any missing values in the set, which will make analysis easier.</p>
+</section>
+<section id="dataexplorer2" class="level2">
+<h2 class="anchored" data-anchor-id="dataexplorer2">EDA with DataExplorer - Distributions</h2>
 <p>Ok, so how about the distribution of our variables? <a href="https://boxuancui.github.io/DataExplorer/reference/plot_bar.html"><code>plot_bar()</code></a> takes all discrete variables and <a href="https://boxuancui.github.io/DataExplorer/reference/plot_histogram.html"><code>plot_histogram()</code></a> runs for the continuous variables. Depending on how many columns of each type your dataset has you will need to play with the <code>nrow</code> and <code>ncol</code> options so that everything renders to the RStudio plot column. For the histograms you can change the number of binsm change the x-axis to log or some other option (the default is continuous). You can also customize the look a bit with passing arguments to the <code>ggtheme =</code> and <code>theme_config()</code> functions.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_bar</span>(whr23_fig2_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda2-1.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda2-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
 </div>
 </div>
-<p>For the discrete variable bar charts, for this dataset there isn’t much to look at. But for a dataset with demographic varaibles, geographic places, etc. this would be very helpful.</p>
+</div>
+<p>For the discrete variable bar charts, for this dataset there isn’t much to look at. But for a dataset with demographic variables, geographic places, etc. this would be very helpful.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_histogram</span>(whr23_fig2_1, <span class="at">nrow =</span> 5L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_histogram</span>(whr23_fig2_1, <span class="at">nrow =</span> <span class="dv">5</span>L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda2a-1.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda2a-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="images/eda2a-2.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The histograms render in alpha order of the variable name, not order in the dataset. When the plots render, we look through them to see if there are any unusual skews or other things we want to watch out for depending on the type of analyses to be run. In this case there are a few solitary bars in some of the histograms, like values above 0.4 in the <em>generosity</em> column. But nothing too skewed so that if we took a closer look at distributions by way of means or interquartiles that we’d be too worried.</p>
+</section>
+<section id="dataexplorer3" class="level2">
+<h2 class="anchored" data-anchor-id="dataexplorer3">EDA with DataExplorer - Correlations</h2>
 <p>Now for my favorite part of this package, a correlation matrix! We’ll run <a href="https://boxuancui.github.io/DataExplorer/reference/plot_correlation.html"><code>plot_correlation()</code></a> without the year, dystopia ladder score, and whiskers and make sure to only do continuous. We can also adjust things like the type of correlation (default is pearson), the size of the coefficient labels in the chart and other elements.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="do">## correlation...remove some columns, clean NA in pipe, continuous only, change text size</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>whr_year, <span class="sc">-</span>ladder_score_in_dystopia, <span class="sc">-</span>upperwhisker, <span class="sc">-</span>lowerwhisker) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(residual)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_correlation</span>(<span class="at">type =</span> <span class="st">"continuous"</span>, <span class="at">geom_text_args =</span> <span class="fu">list</span>(<span class="st">"size"</span> <span class="ot">=</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>whr_year, <span class="sc">-</span>ladder_score_in_dystopia, <span class="sc">-</span>upperwhisker, <span class="sc">-</span>lowerwhisker, <span class="sc">-</span>year,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">-</span>ginifill, <span class="sc">-</span>gini, <span class="sc">-</span>gini_latest, <span class="sc">-</span>gini_avg) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(residual)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_correlation</span>(<span class="at">type =</span> <span class="st">"continuous"</span>, <span class="at">geom_text_args =</span> <span class="fu">list</span>(<span class="st">"size"</span> <span class="ot">=</span> <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda3-1.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda3-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The way my brain works is to look for visual patterns and relationships. So a correlation matrix like this is perfect to give me a broad view of how the continuous variables relate to each other. The matrix heatmap returns positive relationships in red, negative in blue. I first want to look at the relationships of the component variables to the ladder score, and we see positive associations for everything except for perception of corruption, which makes sense because you’d likely report being less happy if you lived in a corrupt country.</p>
 <p>The weakest association is between generosity, which comes from a question asking <em>“Have you donated to charity in the past month?”</em> So while donations to charity are a good thing, they don’t necessarily move the needle on happiness. At least not in the aggregate. But maybe by country or region? Something to take a look at later. This is why we do EDA…</p>
 <p>We also see that we could have run this without the “explained by…” columns as they have the same coefficients as the component variables.</p>
+</section>
+<section id="dataexplorer4" class="level2">
+<h2 class="anchored" data-anchor-id="dataexplorer4">EDA with DataExplorer - Scatterplots</h2>
 <p>As much as I love a correlation matrix, I love scatterplots even more. I clearly have a thing for patterns and relationships. The <a href="https://boxuancui.github.io/DataExplorer/reference/plot_scatterplot.html"><code>plot_scatterplot</code></a> function returns plots for all the variables you pass along, against the one you call in the <code>by =</code> argument. Here we want to see the association between the ladder score and component variables from Chapter 2.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_scatterplot</span>(</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    whr23_fig2_1 <span class="sc">%&gt;%</span> <span class="fu">select</span>(ladder_score, social_support<span class="sc">:</span>perceptions_of_corruption, dystopia_residual, residual), </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"ladder_score"</span>, <span class="at">nrow =</span> 3L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="st">"ladder_score"</span>, <span class="at">nrow =</span> <span class="dv">3</span>L)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda4-1.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda4-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>We know from the correlation heatmap that we don’t need the “explained_by_*” variables as they were redundant to the component variables. The x/y distributions here confirm what we saw in the correlations, including the slightly negative relationship between the ladder score and perceptions of corruption, and that generosity was a weaker relationship.</p>
@@ -367,20 +443,27 @@ cookieconsent.run({
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> region)) <span class="sc">+</span></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda4a-1.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda4a-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>There are a few other functions offered to do principal component analysis and qq (quantile-quantile) plots, but they did not help much with this dataset.</p>
 <p>Overall there are plenty of helpful features in <code>DataExplorer</code> that make it worthwhile to use for EDA. I’d like the ability to color scatterplots by a discrete variable, or to facet the histograms or scatterplots, but as is, a robust EDA tool.</p>
+</section>
+<section id="explore" class="level2">
+<h2 class="anchored" data-anchor-id="explore">EDA with Explore - Interactive EDA</h2>
 <p><u>The <code>explore</code> package</u> <br> The best function here is <a href="https://rolkra.github.io/explore/reference/explore.html"><code>explore(dataset)</code></a>, which launches a <code>shiny</code> window with four tabs.</p>
 <p>The “overview” tab shown here, displays a table with mean, min, max, and unique &amp; missing value counts by variable.</p>
 <div class="quarto-figure quarto-figure-left">
 <figure class="figure">
-<p><img src="explore_shiny_overview.png" class="img-fluid figure-img" alt="output of explore(dataset) overview tab."></p>
+<p><img src="explore_shiny_overview.png" class="img-fluid quarto-figure quarto-figure-left figure-img" alt="output of explore(dataset) overview tab."></p>
 </figure>
 </div>
-<p>The “variable” tab allows you to explore variables on their own… <img src="explore_shiny_expl1var.png" class="img-fluid" data-fig-align="left" alt="output of explore(dataset) variable tab area plot."></p>
-<p>…or in relation to one another. <img src="explore_shiny_expl2vars.png" class="img-fluid" data-fig-align="left" alt="output of explore(dataset) area tab area and scatter."> You not only get a chart appropriate to the variable type (categoricals with bars, continuous with area plots), but when you target against another variable you get a scatterplot.</p>
+<p>The “variable” tab allows you to explore variables on their own… <img src="explore_shiny_expl1var.png" class="img-fluid quarto-figure quarto-figure-left" alt="output of explore(dataset) variable tab area plot."></p>
+<p>…or in relation to one another. <img src="explore_shiny_expl2vars.png" class="img-fluid quarto-figure quarto-figure-left" alt="output of explore(dataset) area tab area and scatter."> You not only get a chart appropriate to the variable type (categoricals with bars, continuous with area plots), but when you target against another variable you get a scatterplot.</p>
 <p>The <em>explain</em> tab runs a decision tree against a target variable, and the <em>data</em> tab displays the entire dataset as a table, all rows and all columns. So before launching this you may want to be mindful of running it against too large a dataset.</p>
 <p>If you don’t want to launch the shiny app, you can output a report in html…</p>
 <div class="cell">
@@ -394,34 +477,41 @@ cookieconsent.run({
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ladder_score, social_support<span class="sc">:</span>perceptions_of_corruption,</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                 explained_by_log_gdp_per_capita<span class="sc">:</span>residual) <span class="sc">%&gt;%</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">describe_all</span>() </span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; select: dropped 8 variables (country_name, region, whr_year, standard_error_of_ladder_score, upperwhisker, …)</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; select: dropped 21 variables (country_name, iso3c, region, region_whr, whr_year, …)</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 14 × 8</span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    variable                          type     na na_pct unique   min  mean   max</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;                             &lt;chr&gt; &lt;int&gt;  &lt;dbl&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 ladder_score                      dbl      13    8.7    138  1.86  5.54  7.8 </span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 social_support                    dbl      13    8.7    138  0.34  0.8   0.98</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 healthy_life_expectancy           dbl      14    9.3    137 51.5  65.0  77.3 </span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 freedom_to_make_life_choices      dbl      13    8.7    138  0.38  0.79  0.96</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 generosity                        dbl      13    8.7    138 -0.25  0.02  0.53</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 perceptions_of_corruption         dbl      13    8.7    138  0.15  0.73  0.93</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 explained_by_log_gdp_per_capita   dbl      13    8.7    138  0     1.41  2.2 </span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 explained_by_social_support       dbl      13    8.7    138  0     1.16  1.62</span></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 explained_by_healthy_life_expect… dbl      14    9.3    137  0     0.37  0.7 </span></span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 explained_by_freedom_to_make_lif… dbl      13    8.7    138  0     0.54  0.77</span></span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 explained_by_generosity           dbl      13    8.7    138  0     0.15  0.42</span></span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 explained_by_perceptions_of_corr… dbl      13    8.7    138  0     0.15  0.56</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 dystopia_residual                 dbl      14    9.3    137 -0.11  1.78  2.95</span></span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 residual                          dbl      14    9.3    137 -1.89  0     1.18</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 ladder_score                      dbl       0    0      137  1.86  5.54  7.8 </span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 social_support                    dbl       0    0      137  0.34  0.8   0.98</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 healthy_life_expectancy           dbl       1    0.7    137 51.5  65.0  77.3 </span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 freedom_to_make_life_choices      dbl       0    0      137  0.38  0.79  0.96</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 generosity                        dbl       0    0      137 -0.25  0.02  0.53</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 perceptions_of_corruption         dbl       0    0      137  0.15  0.73  0.93</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 explained_by_log_gdp_per_capita   dbl       0    0      137  0     1.41  2.2 </span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 explained_by_social_support       dbl       0    0      137  0     1.16  1.62</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 explained_by_healthy_life_expect… dbl       1    0.7    137  0     0.37  0.7 </span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 explained_by_freedom_to_make_lif… dbl       0    0      137  0     0.54  0.77</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 explained_by_generosity           dbl       0    0      137  0     0.15  0.42</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 explained_by_perceptions_of_corr… dbl       0    0      137  0     0.15  0.56</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 dystopia_residual                 dbl       1    0.7    137 -0.11  1.78  2.95</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 residual                          dbl       1    0.7    137 -1.89  0     1.18</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="sc">%&gt;%</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">explore</span>(ladder_score)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="images/eda7-1.png" class="img-fluid" style="width:100.0%"></p>
+<div>
+<figure class="figure">
+<p><img src="images/eda7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>The <a href="https://rolkra.github.io/explore/articles/explore.html">main vignette</a> and <a href="https://rolkra.github.io/explore/reference/index.html">reference guide</a> are both very comprehensive, so no need to repeat too much here. But there are some fun features like decision trees, and lots of flexibilty to explore multiple variables in relation to each other.</p>
-<p><u>The <code>skimr</code> package</u> <br> Then there is <a href="https://cran.r-project.org/web/packages/skimr/vignettes/skimr.html"><code>skimr</code></a>, one of the first EDA packages that I remember seeing. If there’s a feature I like most, it’s the basic <code>skim()</code> function, which returns means &amp; other distributions, as well as little histograms.</p>
+</section>
+<section id="skimr" class="level2">
+<h2 class="anchored" data-anchor-id="skimr">EDA with Skimr</h2>
+<p>Then there is <a href="https://cran.r-project.org/web/packages/skimr/vignettes/skimr.html"><code>skimr</code></a>, one of the first EDA packages that I remember seeing. If there’s a feature I like most, it’s the basic <code>skim()</code> function, which returns means &amp; other distributions, as well as little histograms.</p>
 <ul>
 <li><div>
 <div class="cell">
@@ -429,7 +519,7 @@ cookieconsent.run({
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>whr23_fig2_1 <span class="sc">%&gt;%</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ladder_score, social_support<span class="sc">:</span>perceptions_of_corruption, residual) <span class="sc">%&gt;%</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">skim</span>()</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; select: dropped 15 variables (country_name, region, whr_year, standard_error_of_ladder_score, upperwhisker, …)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; select: dropped 28 variables (country_name, iso3c, region, region_whr, whr_year, …)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -440,7 +530,7 @@ cookieconsent.run({
 </tr>
 <tr class="even">
 <td style="text-align: left;">Number of rows</td>
-<td style="text-align: left;">150</td>
+<td style="text-align: left;">137</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Number of columns</td>
@@ -501,8 +591,8 @@ cookieconsent.run({
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">ladder_score</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
 <td style="text-align: right;">5.54</td>
 <td style="text-align: right;">1.14</td>
 <td style="text-align: right;">1.86</td>
@@ -514,8 +604,8 @@ cookieconsent.run({
 </tr>
 <tr class="even">
 <td style="text-align: left;">social_support</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
 <td style="text-align: right;">0.80</td>
 <td style="text-align: right;">0.13</td>
 <td style="text-align: right;">0.34</td>
@@ -527,8 +617,8 @@ cookieconsent.run({
 </tr>
 <tr class="odd">
 <td style="text-align: left;">healthy_life_expectancy</td>
-<td style="text-align: right;">14</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.99</td>
 <td style="text-align: right;">64.97</td>
 <td style="text-align: right;">5.75</td>
 <td style="text-align: right;">51.53</td>
@@ -540,8 +630,8 @@ cookieconsent.run({
 </tr>
 <tr class="even">
 <td style="text-align: left;">freedom_to_make_life_choices</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
 <td style="text-align: right;">0.79</td>
 <td style="text-align: right;">0.11</td>
 <td style="text-align: right;">0.38</td>
@@ -553,8 +643,8 @@ cookieconsent.run({
 </tr>
 <tr class="odd">
 <td style="text-align: left;">generosity</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
 <td style="text-align: right;">0.02</td>
 <td style="text-align: right;">0.14</td>
 <td style="text-align: right;">-0.25</td>
@@ -566,8 +656,8 @@ cookieconsent.run({
 </tr>
 <tr class="even">
 <td style="text-align: left;">perceptions_of_corruption</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
 <td style="text-align: right;">0.73</td>
 <td style="text-align: right;">0.18</td>
 <td style="text-align: right;">0.15</td>
@@ -579,8 +669,8 @@ cookieconsent.run({
 </tr>
 <tr class="odd">
 <td style="text-align: left;">residual</td>
-<td style="text-align: right;">14</td>
-<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.99</td>
 <td style="text-align: right;">0.00</td>
 <td style="text-align: right;">0.50</td>
 <td style="text-align: right;">-1.89</td>
@@ -597,17 +687,24 @@ cookieconsent.run({
 </div></li>
 </ul>
 <p>It’s especially helpful on small and medium-sized datasets, to get a quick overview and look for outliers.</p>
-<p><u>Happiness data takeaways</u> <br> Using these packages for EDA on the happiness data, we learned that:</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Happiness data takeaways</h2>
+<p>Using these packages for EDA on the happiness data, we learned that:</p>
 <ul>
 <li>There are not many missing values in the data.</li>
 <li>All of the component variables except generosity have strong positive correlations with the happiness score.</li>
 <li>Perception of corruption has, as expected, a negative association with happiness.</li>
 </ul>
 <p>We also came away wanting to know a bit more about differences by region, so that’s a good starting point for the next post, which will be a slightly deeper dive into the data.</p>
-<p><u>Conclusion</u> <br> There is no one perfect EDA package that suits all needs for any dataset. <code>DataExplorer</code> has some robust features, particularly in this usecase the correlation heatmap and the scatterplots. I loved the native reports and shiny app in <code>explorer</code>. I had planned to look at <a href="https://business-science.github.io/correlationfunnel/"><code>correlationfunnel</code></a>, but it’s only really suited to a use-case with binary outcomes such as customer sign-up, churn, employee retention, college admissions outcomes (admits, yield), student success outcomes like retention and graduation. I’ll have to find another dataset to try that package. Doing these package test-drives reminded me that <code>skimr</code> is also very useful.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>There is no one perfect EDA package that suits all needs for any dataset. <code>DataExplorer</code> has some robust features, particularly in this usecase the correlation heatmap and the scatterplots. I loved the native reports and shiny app in <code>explorer</code>. I had planned to look at <a href="https://business-science.github.io/correlationfunnel/"><code>correlationfunnel</code></a>, but it’s only really suited to a use-case with binary outcomes such as customer sign-up, churn, employee retention, college admissions outcomes (admits, yield), student success outcomes like retention and graduation. I’ll have to find another dataset to try that package. Doing these package test-drives reminded me that <code>skimr</code> is also very useful.</p>
 <p>Going forward I’ll be setting up a more deliberate EDA workflow using parts of each of these packages, depending on the size of the dataset and the main questions I’d have of the data.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -689,10 +786,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -702,8 +798,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -716,6 +821,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -759,6 +983,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -784,6 +1009,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -849,20 +1100,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="https://www.quarto.org">Built with Quarto</a>
+    <a class="nav-link" href="https://www.quarto.org">
+<p>Built with Quarto</p>
+</a>
   </li>  
 </ul>
     </div>   
-    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-center">
+
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="../../license.html">License</a>
+    <a class="nav-link" href="../../license.html">
+<p>License</p>
+</a>
   </li>  
 </ul>
     </div>
   </div>
 </footer>
+
 
 
 
