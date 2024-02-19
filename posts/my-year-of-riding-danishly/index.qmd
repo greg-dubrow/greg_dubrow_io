@@ -1,9 +1,11 @@
 ---
 title: "My Year of Riding Danishly"
+description: "When your bike is how how you get everywhere"
 author: "gregers kjerulf dubrow"
 date: '2024-02-15'
 categories: [post, news, rstats, bicycle, denmark]
 image: "bike_dragor.jpeg"
+toc: true
 editor: 
   mode: source
 ---
