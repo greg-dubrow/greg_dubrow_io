@@ -13,7 +13,7 @@ website:
     creator: "@greg_dubrow"
   open-graph: true
   cookie-consent:
-    type: implied
+    type: express
   navbar:
     pinned: true
     right:
