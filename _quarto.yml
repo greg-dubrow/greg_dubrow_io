@@ -12,7 +12,7 @@ website:
   twitter-card:
     creator: "@greg_dubrow"
   open-graph: true
-  cookie-consent:
+  cookie-consent: true
     type: express
   navbar:
     pinned: true
