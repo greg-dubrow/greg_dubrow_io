@@ -6,10 +6,10 @@ website:
   description: "personal website for grgers kjerulf dubrow"
   site-url: https://www.gregdubrow.io
   cookie-consent: true
-  #   type: express
-  # google-analytics:
-  #   tracking-id: "G-09CSH6M61C"
-  #   anonymize-ip: false
+    type: express
+  google-analytics:
+    tracking-id: "G-09CSH6M61C"
+    anonymize-ip: false
   repo-url: https://github.com/greg-dubrow/greg_dubrow_io
   twitter-card:
     creator: "@greg_dubrow"
