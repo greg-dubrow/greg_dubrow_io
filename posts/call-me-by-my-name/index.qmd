@@ -1,14 +1,18 @@
 ---
 title: "Call Me By My Name"
+description: "Ryans and Tatums and Jennifers oh my"
 author: "gregers kjerulf dubrow"
 date: '2023-12-13'
 categories: [post, news, rstats, babynames]
 image: birthcertificate.jpeg
+toc: true 
 editor: 
   mode: source
 ---
 
 ![](birthcertificate.jpeg){width="50%"}
+
+## Introduction {#intro}
 
 The actor Ryan O'Neal died on December 8, 2023. If you're of a certain age and a film fan you might know him best from a pretty good run in the 1970s of very diverse films from [Love Story](https://www.imdb.com/title/tt0066011/?ref_=nm_flmg_t_46_act), to the [Peter Bogdonavich](https://www.imdb.com/name/nm0000953/?ref_=tt_ov_dr) gems [What's Up Doc](https://www.imdb.com/title/tt0069495/?ref_=nm_flmg_t_43_act) and [Paper Moon](https://www.imdb.com/title/tt0070510/?ref_=nm_flmg_t_41_act), and then working with [Stanley Kubrick](https://www.imdb.com/name/nm0000040/?ref_=tt_ov_dr) in [Barry Lyndon](https://www.imdb.com/title/tt0072684/?ref_=nm_knf_t_3) and [Richard Attenborough](https://www.imdb.com/name/nm0000277/?ref_=tt_ov_dr) in [A Bridge Too Far](https://www.imdb.com/title/tt0075784/?ref_=nm_flmg_c_38_act). Not to mention the under-rated [The Driver](https://www.imdb.com/title/tt0077474/?ref_=nm_flmg_t_37_act). If you're of a certain age but more into celebrity gossip you might know him best from dating Farrah Fawcett and being John McEnroe's father-in-law.
 
@@ -17,6 +21,8 @@ If your name is Ryan, like my friend Ryan Godfrey, you will know him not only fr
 [![Popularity of the first name "Ryan"](ryang_ryannames.png){width="75%"}](https://bsky.app/profile/rgo.bsky.social/post/3kg3cmd5t2f2j)
 
 ...showed that while correlation may not always be causation, Ryan was mostly a last name until Love Story hit big and made Ryan O'Neal a star. And ironically, Ryan wasn't even Ryan O'Neal's given first name...it was Charles.
+
+## Getting Baby Name Data {#data}
 
 You can go to the US Social Security Administration's (SSA) [baby names page](https://www.ssa.gov/oact/babynames/) and check for yourself what are the popular names in any given year, or track the popularity of names over time. You can also download data and do your own analysis. Or you can use the [`babynames` package](https://hadley.github.io/babynames/) created by [Hadley Wickham](https://hadley.nz/) of Posit (formerly RStudio). Which is what we'll do here to look at a few names of interest.
 
@@ -46,6 +52,8 @@ library(babynames) # pacakge with name data from US Social Security Admin
 ```
 
 The package comes with a few datasets. We will use the `babynames` set, which has year of birth, sex, name, number, and proportion of people of that sex with that name.
+
+## Counting Ryans {#ryans}
 
 Unlike most of my posts, I won't be doing any data transformation or fancy visuals...I just want to see how a few names have trended over the years. First, let's replicate Ryan G's chart, and look at the name "Ryan". We'll start at 1940 since we already know from Ryan G's chart when it took off.
 
@@ -136,6 +144,8 @@ namesdf %>%
 	labs(title = "Ryan...not just for boys", x= "", y = "")
 ```
 
+## Counting Tatums {#tatums}
+
 Thinking about O'Neal's effect on the name Ryan, I got to thinking about the name of his daughter [Tatum](https://www.imdb.com/name/nm0001575/?ref_=nm_pdt_ch). She won an Oscar for Paper Moon so I wondered if the name became more popular in the early-mid 1970...
 
 ```{r tatum, echo=TRUE, error=FALSE, message=FALSE}
@@ -159,6 +169,8 @@ namesdf %>%
 ```
 
 ...and sure enough it did. Not to the same extent as Ryan, but a definite pop from 1973 on. After Paper Moon she was in [The Bad News Bears](https://www.imdb.com/title/tt0074174/?ref_=nm_knf_t_2), [International Velvet](https://www.imdb.com/title/tt0077743/?ref_=nm_flmg_t_34_act) and [Little Darlings](https://www.imdb.com/title/tt0081060/?ref_=nm_knf_t_4). So like her dad had a run of fame through the early 1980s. But why the jump in the name's popularity in the late 1990s and through the 2000s? Her very public relationship and marriage to tennis pro John McEnroe? She didn't do much film or TV work until the early-mid 2000s. So that resurgence, combined with a nostaliga bump? Some other famous Tatum I'm overlooking?
+
+## Counting Jennifers {#jennifers}
 
 All this name trending chatter reminded me of my own firmly held belief which is that it's very statistically likely a Gen X man or woman in the US will have dated at least one Jennifer in their lives. I've dated more than one. It's almost unavoidable. Why? Well let's look at birth numbers...
 

@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 ![My Univega bike enjoying the view at Dragør](bike_dragor.jpeg){fig-align="left" fig-alt="red road bicyle on a hill overlooking a bay."}
 
-[Introduction]{.underline} <br>
+## Introduction {#intro}
 
 I like playing with data and I like riding bikes, so here's a post (my longest yet, I think) where I look at my own cycling data from the [Strava app](https://www.strava.com). I've used Strava since 2019. In San Francisco I mostly did workout rides, though there was a period where I rode to work once or twice a week. Since I knew I'd be riding just about everywhere here in Denmark, I made sure to track every ride this year, not just workouts, so I'd have a complete record of rides in 2023 and could see how many rides and kilometers I'd do in a year of riding like a Dane.
 
@@ -35,7 +35,7 @@ So let's explore my year of riding Danishly. We'll cover how to get data, what y
 
 But first...
 
-[My Life with Bikes]{.underline} <br>
+## My Life with Bikes {#mybikes}
 
 Ever since I was a young boy I've loved riding bicycles. My first bike was a birthday present when I was 8 or 9 years old...a yellow and black road runner bike with a banana seat, coaster brakes, similar to [this one here](https://www.worthpoint.com/worthopedia/vintage-iverson-road-runner-20-boys-293307633). I rode that thing for many years. In 10th grade I saved money from various jobs to get a Panasonic 12-speed. I rode that through grad school, and for some reason didn't take it with me when I moved cities for work. Though it likely would have been the bike that got stolen instead of the bike I bought after the move.
 
