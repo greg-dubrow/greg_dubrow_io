@@ -6,7 +6,7 @@ website:
   description: "personal website for grgers kjerulf dubrow"
   site-url: https://www.gregdubrow.io
   cookie-consent: true
-    type: express
+    consent-type: express
   google-analytics:
     tracking-id: "G-09CSH6M61C"
     anonymize-ip: false
@@ -38,7 +38,7 @@ format:
   html:
     theme: cosmo
     css: styles.css
-    code-overflow: wrap
+    code-overflow: scroll
 editor:
   mode: source
 
