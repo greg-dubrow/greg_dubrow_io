@@ -3,7 +3,7 @@ title: "My Year of Riding Danishly"
 description: "When your bike is how how you get everywhere"
 author: "gregers kjerulf dubrow"
 date: '2024-02-15'
-categories: [post, news, rstats, bicycle, denmark]
+categories: [post, rstats, eda, ggplot, regression, ols, bicycle, denmark]
 image: "bike_dragor.jpeg"
 toc: true
 editor: 
@@ -284,6 +284,8 @@ plot_missing(strava_data)
 :::
 
 The main take-away here is that the `average_elapsed_speed` variable is missing 27% of observations, so we won't bother with it in our analysis.
+
+## EDA with Correlations
 
 Now for one of my favorite `DataExplorer` functions, `plot_correlation` to produce a correlation heatmap. The deeper the shade of red, the stronger the correlation.
 

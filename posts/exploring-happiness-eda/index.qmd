@@ -2,7 +2,7 @@
 title: "Exploring Happiness - Part 1...EDA"
 author: "gregers kjerulf dubrow"
 date: '2023-11-15'
-categories: [post, news, rstats, eda]
+categories: [post, rstats, eda]
 image: "dalias_happy.jpeg"
 toc: true
 editor: 

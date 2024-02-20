@@ -1,0 +1,39 @@
+---
+title: "Quick Note on Quarto Blogs and GDPR"
+description: "Cookies, but only if you want them"
+author: "gregers kjerulf dubrow"
+date: '2024-02-20'
+categories: [post, news, privacy, GDPR, cookies]
+image: "bike_dragor.jpeg"
+editor: 
+  mode: source
+---
+
+To some minor chagrin, thanks to someone raising an issue in the [github repo](https://github.com/greg-dubrow/greg_dubrow_io) for the blog, I realised that I was out of compliance with [GDPR rules about website cookies](https://gdpr.eu/cookies/).
+
+I was offering people a more onerus opt-out choice (on the left) when I should have been offering them a clear way to decline (on the right).
+
+::: {layout-ncol="2"}
+![not compliant with GDPR](cookies_gdpr_bad.jpg){fig-alt="example of cookie opt-out not compliant with GDPR"}
+
+![compliant with GDPR](cookies_gdpr_good.jpg){fig-alt="example of cookie opt-out compliant with GDPR"}
+:::
+
+A quick search and I found the correction I needed to make, changing the `_quarto.yml` file section on cookie consent from the default. A simple fix, in the `website:` section change `type: implied` (the default) to `type: express`.
+
+Simple, right?
+
+Well...after pushing the changes multiple times, the cookie consent pop-up didn't change.
+
+Some more searching and I came across [this helpful thread](https://github.com/quarto-dev/quarto-cli/discussions/5958) in the quarto dev github repo that touched on my issue. [Declan Naughton](https://models-on-a-plane.pages.dev/) who started the issue offered a solution using another privacy option, [Cookie Consent](https://www.cookieconsent.com/).
+
+While looking into that, downloading the files and planning carefully how to implement it without breaking anything, I got distracted and redid a post to add a table of contents on the right, using `toc: true` in the post yaml. I pushed that, and huh...the GDPR-compliant cookie consent window popped up.
+
+This does beg the question as to why the default in quarto is the non-compliant consent option. Regardless, if you have blog readers in the EU and want to make sure you're compliant, do the following:
+
+-   Change the `_quarto-yml` file so that `cookie-consent:` is `type: express`
+-   Add a new post or edit, re-render and push an old post
+-   Check and double-check that the compliant cookie pop-up shows
+-   If all this talk of cookies makes you hungry, eat cookie!
+
+![nom nom nom](cookie-cookie-monster.gif){fig-align="left" fig-alt="animated gif of the cookie monster eating cookies"}

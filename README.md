@@ -1,2 +1,3 @@
 # greg_dubrow_io
-personal website and data blog
+
+code for personal website and data blog at [gregdubrow.io](https://www.gregdubrow.io/)

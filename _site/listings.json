@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/quarto-blogs-and-gdpr/index.html",
       "/posts/my-year-of-riding-danishly/index.html",
       "/posts/r-to-tableau-and-quarto/index.html",
       "/posts/exploring-happiness-eda-pt2/index.html",

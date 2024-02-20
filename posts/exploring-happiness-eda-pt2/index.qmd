@@ -1,9 +1,11 @@
 ---
 title: "Exploring Happiness - EDA Part 2"
+description: "Adding a splash of GINI"
 author: "gregers kjerulf dubrow"
 date: '2023-12-21'
-categories: [post, news, rstats, eda]
+categories: [post, rstats, eda]
 image: "ice_cream_cone.jpeg"
+toc: true
 editor: 
   mode: source
 ---
@@ -18,6 +20,8 @@ knitr::opts_chunk$set(
   fig.path = "images/",
   out.width = "100%") 
 ```
+
+## Introduction
 
 In [Part 1](https://www.gregdubrow.io/posts/exploring-happiness-eda/) I did some exploratory data analysis on the [World Happiness Report](https://worldhappiness.report) data for Chapter 2 of the 2023 edition.
 
@@ -94,6 +98,8 @@ explore(DATA %>%
 ### continue with deeper analysis here or start new r script
 ```
 
+## Recap of 1st EDA post
+
 But let's get back to examining what makes people happy. By way of a quick recap:
 
 -   The WHR comes from an annual world-wide survey administered by [Gallup](https://www.gallup.com/178667/gallup-world-poll-work.aspx) and is published by the [Sustainable Development Solutions Network](https://www.unsdsn.org/).
@@ -133,9 +139,11 @@ source("~/Data/r/basic functions.R")
 # load data 
 whr23_fig2_1a <- readRDS(
 	file = "~/Data/r/World Happiness Report/data/whr23_fig2_1.rds") %>%
-		filter(!is.na(ladder_score)) %>%
-	rename(region_whr = region)
+		filter(!is.na(ladder_score)) 
+
 ```
+
+## Adding GINI
 
 To get the GINI values you can go to the World Bank's GINI page and downloaded the latest spreadsheet, or...
 
@@ -228,7 +236,9 @@ whr23_fig2_1 <- whr23_fig2_1a %>%
 
 *N.B...yes, I use `merge()` and not `left/right/full_join()`...I learned SAS before SQL and old habits die hard `(shrug emoji)`.*
 
-*N.B.2...Taiwan data is no longer avaialble in most WB sets, either in the spreadsheet or via the API the packages access. It is still at the WB's [Poverty & Inequality Platform](https://pip.worldbank.org/country-profiles/TWN) so I downloaded what I could and hard-coded. Why? Because I'm a little OCD when it comes to trying to minimize missing data.*
+*N.B.2...Taiwan data is no longer available in most WB sets, either in the spreadsheet or via the API the packages access. It is still at the WB's [Poverty & Inequality Platform](https://pip.worldbank.org/country-profiles/TWN) so I downloaded what I could and hard-coded. Why? Because I'm a little OCD when it comes to trying to minimize missing data.*
+
+## Redo the EDA
 
 Anyway...now we have to do some quick EDA on the GINI values in relation to the data we have. First I want to take a quick look at the by-country difference between the latest GINI value and the mean value for the period since 2000. We subtract the average from the latest value, do a quick `skimr` check, a density plot on the latest-average difference...
 
