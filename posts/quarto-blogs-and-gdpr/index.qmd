@@ -4,7 +4,7 @@ description: "Cookies, but only if you want them"
 author: "gregers kjerulf dubrow"
 date: '2024-02-20'
 categories: [post, news, privacy, GDPR, cookies]
-image: "bike_dragor.jpeg"
+image: "2ChocolateChipCookies.jpg"
 editor: 
   mode: source
 ---
@@ -37,3 +37,5 @@ This does beg the question as to why the default in quarto is the non-compliant 
 -   If all this talk of cookies makes you hungry, eat cookie!
 
 ![nom nom nom](cookie-cookie-monster.gif){fig-align="left" fig-alt="animated gif of the cookie monster eating cookies"}
+
+*n.b. - cookie image in post header from this [wikipedia entry on cookies](https://en.wikipedia.org/wiki/Cookie)*
