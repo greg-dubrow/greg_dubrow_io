@@ -11,7 +11,7 @@ editor:
 
 To some minor chagrin, thanks to someone raising an issue in the [github repo](https://github.com/greg-dubrow/greg_dubrow_io) for the blog, I realised that I was out of compliance with [GDPR rules about website cookies](https://gdpr.eu/cookies/).
 
-I was offering people a more onerus opt-out choice (on the left) when I should have been offering them a clear way to decline (on the right).
+I was offering people a more onerous opt-out choice (on the left) when I should have been offering them a clear way to decline (on the right).
 
 ::: {layout-ncol="2"}
 ![not compliant with GDPR](cookies_gdpr_bad.jpg){fig-alt="example of cookie opt-out not compliant with GDPR"}
