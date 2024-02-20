@@ -1,22 +1,24 @@
 ---
 title: "Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)"
+description: "A mountain of data about the Tour de France"
 author: "gregers kjerulf dubrow"
 date: '2020-11-30'
-categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization, sports, cycling, tour de france]
+categories: [post, tidytuesday, rstats, sports, cycling, tour de france]
 image: "Kraftwerk_Tour_De_France_Soundtracks_album_cover.png"
+toc: true
 editor: 
   mode: source
 ---
 
 ![](Kraftwerk_Tour_De_France_Soundtracks_album_cover.png) \| ![](bike_twinpeaks.jpg){width="49%"}
 
-### A mountain of data about the Tour de France...
+## Introduction
 
 Having looked at [hiking trails in Washington state](https://www.gregdubrow.io/posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/) and [bridges in Maryland](https://www.gregdubrow.io/posts/tidy-tuesday-maryland-bridges/) I poked around the [#TidyTuesday repo](https://github.com/rfordatascience/tidytuesday) and saw this [trove of data](https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-04-07) from back in April on [The Tour de France](https://www.letour.fr/en/). I love this race, I cycle for exercise, and I love the Kraftwerk album, so of course I had to dig in.
 
-So I don't bury the lede, this is a two-part post. Why? Because there was a lot of data munging & cleaning needed to get the data into shape for whart I wanted to do. So this post is all about what I needed to do on that end. The analysis post will come soon. Also, I'm trying to work out how to do a code show/hide thing in hugo academic so bear with me that the code takes up lots of pixels.
+So I don't bury the lede, this is a two-part post. Why? Because there was a lot of data munging & cleaning needed to get the data into shape for what I wanted to do. So this post is all about what I needed to do on that end. The analysis post will come soon. Also, I'm trying to work out how to do a code show/hide thing in hugo academic so bear with me that the code takes up lots of pixels.
 
-(\*update - migrating to 'Quarto' means a native code-fold feature...hooray!)
+*(update - migrating to 'Quarto' means a native code-fold feature...hooray!)*
 
 So let's dig in...first we'll load packages and create a '%notin% operator...
 
@@ -34,12 +36,14 @@ library(tdf) # to get original stage results file
 `%notin%` <- negate(`%in%`)
 ```
 
+## Getting the Data & Initial Cleaning {#data1}
+
 There's a ton of data here, sourced from the [`tdf` package from Alastair Rushworth](https://github.com/alastairrushworth/tdf) and (Thomas Camminady's data set) (https://github.com/camminady/LeTourDataSet), via [Kaggle](https://www.kaggle.com/jaminliu/a-brief-tour-of-tour-de-france-in-numbers/)
 
 There are three distinct sets to work thru, each going back to the first run of the race in 1903:\
-\* A dataframe of overall ([General Classification, or Yellow Jersey / *maillot jaune*](https://en.wikipedia.org/wiki/General_classification_in_the_Tour_de_France)) winners from 1903 to 2019 comes from the Tidy Tuesday frame.\
-\* A dataframe with stage winners for races 1903 to 2017, also in the Tidy Tuesday set, sourced from Kaggle.\
-\* A frame of overall stage results, sourced from the `tdf` pacakge due to issues with date conversion in the data included in the Tidy Tuesday set.
+- A dataframe of overall ([General Classification, or Yellow Jersey / *maillot jaune*](https://en.wikipedia.org/wiki/General_classification_in_the_Tour_de_France)) winners from 1903 to 2019 comes from the Tidy Tuesday frame.\
+- A dataframe with stage winners for races 1903 to 2017, also in the Tidy Tuesday set, sourced from Kaggle.\
+- A frame of overall stage results, sourced from the `tdf` pacakge due to issues with date conversion in the data included in the Tidy Tuesday set.
 
 The stage winner set needs a bit of mungung...I created a stage_results_id column similar to the one in the stage results set. But it needs leading zeros for stages 1-9 so it sorts properly.
 
@@ -113,13 +117,15 @@ tdf_stagewin <- rbind(tdf_stagewin1, tdf_stagewin2) %>%
 glimpse(tdf_stagewin)
 ```
 
+## More Data Cleaning {#data2}
+
 Stage data in CSV from the tidy tuesday repository seems to have truncated the times, leaving only the seconds in a character field. To get complete results we need to pull from `tdf` package using the cleaning script from the Tidy Tuesday page. Some operations will take a while, so best to run as a background job if you want to do something else while it runs. Or go get a cup of coffee.
 
 In terms of cleaning:\
-\* The stage_results_id & rank fields needs leading zeros.\
-\* The rank field needs a bit of clean-up to fix the 1000s codes.\
-\* Since rider names were last-first, I wanted to separate out first and last, and also make a field with the full name, but first name in front. Stackoverlflow was my regex friend here.\
-\* Other minor fixes
+- The stage_results_id & rank fields needs leading zeros.\
+- The rank field needs a bit of clean-up to fix the 1000s codes.\
+- Since rider names were last-first, I wanted to separate out first and last, and also make a field with the full name, but first name in front. Stackoverlflow was my regex friend here.\
+- Other minor fixes
 
 In the process of cleaning and comparing to the stage winners set, I noticed there were some problems in years where individual stages were split into 2 or 3 legs (A, B & C). Either while it was scraped or combined, the A leg results ended up repeating to the B leg, and in some cases the C leg wasn't reported. I put it in as an issue in the github repo. But that shouldn't take away from what's an amazing dataset to work with. In the analysis section I'll work around the problems with those stages.
 
@@ -196,6 +202,8 @@ tdf_stagedata <- readRDS("data/tdf_stagedata.rds")
 glimpse(tdf_stagedata)
 
 ```
+
+## What's Next {#next}
 
 Poking around the Kaggle site referenced above I found [these datasets](https://github.com/thomascamminady/LeTourDataSet/tree/master) of final results for all riders in all races since 1903. A few different fields than in the tidy tuesday winners set.
 

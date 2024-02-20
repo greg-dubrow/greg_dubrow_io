@@ -2,12 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.550">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
 <meta name="dcterms.date" content="2020-11-30">
+<meta name="description" content="A mountain of data about the Tour de France">
 
 <title>gregers kjerulf dubrow - Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)</title>
 <style>
@@ -24,7 +25,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -82,7 +83,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -91,6 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -110,13 +118,15 @@ gtag('config', 'G-09CSH6M61C', { 'anonymize_ip': false});
 document.addEventListener('DOMContentLoaded', function () {
 cookieconsent.run({
   "notice_banner_type":"simple",
-  "consent_type":"implied",
+  "consent_type":"express",
   "palette":"light",
   "language":"en",
-  "page_load_consent_levels":["strictly-necessary","functionality","tracking","targeting"],
+  "page_load_consent_levels":["strictly-necessary"],
   "notice_banner_reject_button_hide":false,
   "preferences_center_close_button_hide":false,
   "website_name":""
+  ,
+"language":"en"
   });
 });
 </script> 
@@ -125,13 +135,13 @@ cookieconsent.run({
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="gregers kjerulf dubrow - Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)">
-<meta property="og:description" content="">
+<meta property="og:description" content="A mountain of data about the Tour de France">
 <meta property="og:image" content="https://www.gregdubrow.io/posts/tidy-tuesday-apr-07-2020-LeTour-stage1/Kraftwerk_Tour_De_France_Soundtracks_album_cover.png">
-<meta property="og:site-name" content="gregers kjerulf dubrow">
+<meta property="og:site_name" content="gregers kjerulf dubrow">
 <meta property="og:image:height" content="300">
 <meta property="og:image:width" content="300">
 <meta name="twitter:title" content="gregers kjerulf dubrow - Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)">
-<meta name="twitter:description" content="">
+<meta name="twitter:description" content="A mountain of data about the Tour de France">
 <meta name="twitter:image" content="https://www.gregdubrow.io/posts/tidy-tuesday-apr-07-2020-LeTour-stage1/Kraftwerk_Tour_De_France_Soundtracks_album_cover.png">
 <meta name="twitter:creator" content="@greg_dubrow">
 <meta name="twitter:image-height" content="300">
@@ -139,13 +149,13 @@ cookieconsent.run({
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">gregers kjerulf dubrow</span>
     </a>
@@ -157,28 +167,33 @@ cookieconsent.run({
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html" rel="" target="">
- <span class="menu-text">About me</span></a>
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About me</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/greg-dubrow" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/greg-dubrow"> <i class="bi bi-github" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://linkedin.com/in/dubrowg/" rel="" target=""><i class="bi bi-linkedin" role="img">
+    <a class="nav-link" href="https://linkedin.com/in/dubrowg/"> <i class="bi bi-linkedin" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/greg_dubrow" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/greg_dubrow"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -187,13 +202,15 @@ cookieconsent.run({
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Tidy Tuesday, April 07, 2020 - Le Tour! (Stage 1, cleaning the data)</h1>
-                                <div class="quarto-categories">
+                  <div>
+        <div class="description">
+          A mountain of data about the Tour de France
+        </div>
+      </div>
+                          <div class="quarto-categories">
                 <div class="quarto-category">post</div>
                 <div class="quarto-category">tidytuesday</div>
                 <div class="quarto-category">rstats</div>
-                <div class="quarto-category">ggplot</div>
-                <div class="quarto-category">dataviz</div>
-                <div class="quarto-category">data visualization</div>
                 <div class="quarto-category">sports</div>
                 <div class="quarto-category">cycling</div>
                 <div class="quarto-category">tour de france</div>
@@ -225,19 +242,31 @@ cookieconsent.run({
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data1" id="toc-data1" class="nav-link" data-scroll-target="#data1">Getting the Data &amp; Initial Cleaning</a></li>
+  <li><a href="#data2" id="toc-data2" class="nav-link" data-scroll-target="#data2">More Data Cleaning</a></li>
+  <li><a href="#next" id="toc-next" class="nav-link" data-scroll-target="#next">What’s Next</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
+
 <p><img src="Kraftwerk_Tour_De_France_Soundtracks_album_cover.png" class="img-fluid"> | <img src="bike_twinpeaks.jpg" class="img-fluid" style="width:49.0%"></p>
-<section id="a-mountain-of-data-about-the-tour-de-france" class="level3">
-<h3 class="anchored" data-anchor-id="a-mountain-of-data-about-the-tour-de-france">A mountain of data about the Tour de France…</h3>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
 <p>Having looked at <a href="https://www.gregdubrow.io/posts/tidy-tuesday-nov-11-2020-hiking-trails-in-wash-state/">hiking trails in Washington state</a> and <a href="https://www.gregdubrow.io/posts/tidy-tuesday-maryland-bridges/">bridges in Maryland</a> I poked around the <a href="https://github.com/rfordatascience/tidytuesday">#TidyTuesday repo</a> and saw this <a href="https://github.com/rfordatascience/tidytuesday/tree/master/data/2020/2020-04-07">trove of data</a> from back in April on <a href="https://www.letour.fr/en/">The Tour de France</a>. I love this race, I cycle for exercise, and I love the Kraftwerk album, so of course I had to dig in.</p>
-<p>So I don’t bury the lede, this is a two-part post. Why? Because there was a lot of data munging &amp; cleaning needed to get the data into shape for whart I wanted to do. So this post is all about what I needed to do on that end. The analysis post will come soon. Also, I’m trying to work out how to do a code show/hide thing in hugo academic so bear with me that the code takes up lots of pixels.</p>
-<p>(*update - migrating to ‘Quarto’ means a native code-fold feature…hooray!)</p>
+<p>So I don’t bury the lede, this is a two-part post. Why? Because there was a lot of data munging &amp; cleaning needed to get the data into shape for what I wanted to do. So this post is all about what I needed to do on that end. The analysis post will come soon. Also, I’m trying to work out how to do a code show/hide thing in hugo academic so bear with me that the code takes up lots of pixels.</p>
+<p><em>(update - migrating to ‘Quarto’ means a native code-fold feature…hooray!)</em></p>
 <p>So let’s dig in…first we’ll load packages and create a ’%notin% operator…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load packages</span></span>
@@ -249,15 +278,18 @@ cookieconsent.run({
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># create notin operator to help with cleaning &amp; analysis</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="st">`</span><span class="at">%notin%</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">negate</span>(<span class="st">`</span><span class="at">%in%</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="data1" class="level2">
+<h2 class="anchored" data-anchor-id="data1">Getting the Data &amp; Initial Cleaning</h2>
 <p>There’s a ton of data here, sourced from the <a href="https://github.com/alastairrushworth/tdf"><code>tdf</code> package from Alastair Rushworth</a> and (Thomas Camminady’s data set) (https://github.com/camminady/LeTourDataSet), via <a href="https://www.kaggle.com/jaminliu/a-brief-tour-of-tour-de-france-in-numbers/">Kaggle</a></p>
 <p>There are three distinct sets to work thru, each going back to the first run of the race in 1903:<br>
-* A dataframe of overall (<a href="https://en.wikipedia.org/wiki/General_classification_in_the_Tour_de_France">General Classification, or Yellow Jersey / <em>maillot jaune</em></a>) winners from 1903 to 2019 comes from the Tidy Tuesday frame.<br>
-* A dataframe with stage winners for races 1903 to 2017, also in the Tidy Tuesday set, sourced from Kaggle.<br>
-* A frame of overall stage results, sourced from the <code>tdf</code> pacakge due to issues with date conversion in the data included in the Tidy Tuesday set.</p>
+- A dataframe of overall (<a href="https://en.wikipedia.org/wiki/General_classification_in_the_Tour_de_France">General Classification, or Yellow Jersey / <em>maillot jaune</em></a>) winners from 1903 to 2019 comes from the Tidy Tuesday frame.<br>
+- A dataframe with stage winners for races 1903 to 2017, also in the Tidy Tuesday set, sourced from Kaggle.<br>
+- A frame of overall stage results, sourced from the <code>tdf</code> pacakge due to issues with date conversion in the data included in the Tidy Tuesday set.</p>
 <p>The stage winner set needs a bit of mungung…I created a stage_results_id column similar to the one in the stage results set. But it needs leading zeros for stages 1-9 so it sorts properly.</p>
 <p>I then got it in my head I wanted results through 2020, so I grabbed them from wikipedia; but the hard way, with copy-paste since my scraping skills aren’t there &amp; I just wanted it done. Data is uploaded to my <a href="https://github.com/greg-dubrow/tidy-tuesday-projects/tree/master/2020/tt_2020-04-07_letour/data">github repo</a> if you want to use it. (yes, it’s in an excel file…)</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show tdf data cleaning pt1</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load main file from tt repo</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tt_tdf <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="st">'2020-04-07'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -268,7 +300,7 @@ cookieconsent.run({
     Downloading file 2 of 3: `tdf_stages.csv`
     Downloading file 3 of 3: `tdf_winners.csv`</code></pre>
 </div>
-<details>
+<details class="code-fold">
 <summary>Show tdf data cleaning pt1</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create race winners set. comes from tdf package. includes up to 2019</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tdf_winners <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(tt_tdf<span class="sc">$</span>tdf_winners)</span>
@@ -347,15 +379,18 @@ $ stage_ltr        &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "
 $ stage_num        &lt;chr&gt; "01", "02", "03", "04", "05", "06", "07", "08", "09",…</code></pre>
 </div>
 </div>
+</section>
+<section id="data2" class="level2">
+<h2 class="anchored" data-anchor-id="data2">More Data Cleaning</h2>
 <p>Stage data in CSV from the tidy tuesday repository seems to have truncated the times, leaving only the seconds in a character field. To get complete results we need to pull from <code>tdf</code> package using the cleaning script from the Tidy Tuesday page. Some operations will take a while, so best to run as a background job if you want to do something else while it runs. Or go get a cup of coffee.</p>
 <p>In terms of cleaning:<br>
-* The stage_results_id &amp; rank fields needs leading zeros.<br>
-* The rank field needs a bit of clean-up to fix the 1000s codes.<br>
-* Since rider names were last-first, I wanted to separate out first and last, and also make a field with the full name, but first name in front. Stackoverlflow was my regex friend here.<br>
-* Other minor fixes</p>
+- The stage_results_id &amp; rank fields needs leading zeros.<br>
+- The rank field needs a bit of clean-up to fix the 1000s codes.<br>
+- Since rider names were last-first, I wanted to separate out first and last, and also make a field with the full name, but first name in front. Stackoverlflow was my regex friend here.<br>
+- Other minor fixes</p>
 <p>In the process of cleaning and comparing to the stage winners set, I noticed there were some problems in years where individual stages were split into 2 or 3 legs (A, B &amp; C). Either while it was scraped or combined, the A leg results ended up repeating to the B leg, and in some cases the C leg wasn’t reported. I put it in as an issue in the github repo. But that shouldn’t take away from what’s an amazing dataset to work with. In the analysis section I’ll work around the problems with those stages.</p>
 <div class="cell">
-<details>
+<details class="code-fold">
 <summary>Show tdf data cleaning pt2</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>all_years <span class="ot">&lt;-</span> tdf<span class="sc">::</span>editions <span class="sc">%&gt;%</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_longer</span>(stage_results) <span class="sc">%&gt;%</span></span>
@@ -437,10 +472,13 @@ $ stage_num        &lt;chr&gt; "01", "01", "01", "01", "01", "01", "01", "01", "
 $ stage_ltr        &lt;chr&gt; "", "", "", "", "", "", "", "", "", "", "", "", "", "…</code></pre>
 </div>
 </div>
+</section>
+<section id="next" class="level2">
+<h2 class="anchored" data-anchor-id="next">What’s Next</h2>
 <p>Poking around the Kaggle site referenced above I found <a href="https://github.com/thomascamminady/LeTourDataSet/tree/master">these datasets</a> of final results for all riders in all races since 1903. A few different fields than in the tidy tuesday winners set.</p>
 <p>Now this is a ton of data to work with, and I won’t use it all. Figured I’d include the code to get it all in case you get inspired to grab it and take a look.</p>
 <p>Ok…that’s it for cleaning &amp; prepping…charts and tables in <a href="https://www.gregdubrow.io/posts/tidy-tuesday-apr-07-2020-letour-stage2/">Stage 2</a>.</p>
-<p><em>This post was last updated on 2023-05-19</em></p>
+<p><em>This post was last updated on 2024-02-20</em></p>
 
 
 </section>
@@ -525,10 +563,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -538,8 +575,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -552,6 +598,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -595,6 +760,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -620,6 +786,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -685,20 +877,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     <div class="nav-footer-left">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="https://www.quarto.org">Built with Quarto</a>
+    <a class="nav-link" href="https://www.quarto.org">
+<p>Built with Quarto</p>
+</a>
   </li>  
 </ul>
     </div>   
-    <div class="nav-footer-center"><div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-center">
+
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
     <div class="nav-footer-right">
       <ul class="footer-items list-unstyled">
     <li class="nav-item">
-    <a class="nav-link" href="../../license.html">License</a>
+    <a class="nav-link" href="../../license.html">
+<p>License</p>
+</a>
   </li>  
 </ul>
     </div>
   </div>
 </footer>
+
 
 
 
