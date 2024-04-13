@@ -576,7 +576,7 @@ sumtable %>%
 :::
 :::
 
-The rides spanned 1 km to 60 km, with the average & median ride around 4-5km, which makes sense given that my work commute was a bit over 4km andd school rides between 4km - 6km. The elevation stats are what you'd expect for Denmark, and the average ride burned 140-150 units of energy.
+The rides spanned 1 km to 60 km, with the average & median ride around 4-5km, which makes sense given that my work commute was a bit over 4km and school rides between 4km - 6km. The elevation stats are what you'd expect for Denmark, and the average ride burned 140-150 units of energy.
 
 ## Analysis Pt 2 Plots {#plots}
 
@@ -835,7 +835,7 @@ But kind of cool to visualise time this way, right?
 
 Having seen the relationships between the variables in the EDA correlation and scatterplots, I wanted to run some simple OLS regressions to see the effect of the variables on explaining how long a ride took, how many average watts I was producing, and how much energy I burned.
 
-The `modelsummary` package is very helpful for wrapping a bunch of functions together to help display regression statistics.I especially liked the ability to put multiple modles together and display results side-by-side for wasy comparison. It is a common way to present regression results when you run multiple models, but it's not that easy to do without lots of manual work. But voila, pass the models into a list, and `modelsummary` does the rest when you call the object.
+The `modelsummary` package is very helpful for wrapping a bunch of functions together to help display regression statistics.I especially liked the ability to put multiple models together and display results side-by-side for easy comparison. It is a common way to present regression results when you run multiple models, but it's not that easy to do without lots of manual work. But voila, pass the models into a list, and `modelsummary` does the rest when you call the object.
 
 ```{r regression1, echo=TRUE, error=FALSE, message=FALSE}
 #| fig.width: 8.0
@@ -853,13 +853,14 @@ strava_models <- strava_data %>%
 	filter(activity_year == 2023) 
 
 ride_models <- list(
-	"time" = lm(moving_time ~ distance_km + average_speed + elevation_gain + average_grade + average_watts,
+	"Time" = lm(moving_time ~ distance_km + average_speed + elevation_gain + average_grade + average_watts,
 							data = strava_models),
-	"watts" = lm(average_watts ~ moving_time + distance_km +average_speed + elevation_gain + average_grade + kilojoules,
+	"Watts" = lm(average_watts ~ moving_time + distance_km +average_speed + elevation_gain + average_grade + kilojoules,
 							 data = strava_models),
-	"kilojoules" = lm(kilojoules ~ moving_time + distance_km +average_speed + elevation_gain + average_grade + average_watts,
+	"Kilojoules" = lm(kilojoules ~ moving_time + distance_km +average_speed + elevation_gain + average_grade + average_watts,
 											data = strava_models))
-modelsummary(ride_models, stars = TRUE, gof_omit = "IC|Adj|F|RMSE|Log")
+
+modelsummary(ride_models, stars = TRUE, gof_omit = "IC|Adj|F|RMSE|Log", output = "gt")
 modelplot(ride_models, coef_omit = "Interc")
 
 ```
@@ -870,11 +871,11 @@ For the "watts" model the largest effect size was average_grade, which makes sen
 
 Overall the models were robust, each explaining well over 80% of variance.
 
-but before we're fully satisfied with the models, let's do a quick check for colinearity, I used the `vif` function from the `car` package and `stack` from base `r` in one call to create objects I could then pass to `gt` for better display. I won't display all the code, as it runs, but the main calls are:
+But before we're fully satisfied with the models, let's do a quick check for colinearity, I used the `vif` function from the `car` package and `stack` from base `r` in one call to create objects I could then pass to `gt` for better display. I won't display all the code, as it runs, but the main calls are:
 
 ```{r colin, echo=TRUE, error=FALSE, message=FALSE, eval=FALSE}
 # create the data obejct for the time model in the list
-colin_time <- stack(car::vif(ride_models$time))
+colin_time <- stack(car::vif(ride_models$Time))
 
 # show the results using gt
 colin_time %>%
@@ -894,9 +895,9 @@ colin_time %>%
 #| echo: false
 
 
-colin_time <- stack(car::vif(ride_models$time))
-colin_watts <- stack(car::vif(ride_models$watts))
-colin_joules <- stack(car::vif(ride_models$kilojoules))
+colin_time <- stack(car::vif(ride_models$Time))
+colin_watts <- stack(car::vif(ride_models$Watts))
+colin_joules <- stack(car::vif(ride_models$Kilojoules))
 
 colin_time %>%
 	gt() %>%
@@ -936,7 +937,7 @@ colin_joules %>%
 :::
 :::
 
-As we can see, there's some problematic colinearity with moving_time and distance_km in the "watts" and "kilojoules" models, so let's redo models removing the variables with most colinearity. We add the new versions to the list we already created so we can see the output side-by-sdie.
+As we can see, there's some problematic colinearity with moving_time and distance_km in the "watts" and "kilojoules" models, so let's redo models removing the variables with most colinearity. We add the new versions to the list we already created so we can see the output side-by-side.
 
 Won't run the plot of estimates as we can see they didn't change significantly enough. It also shows that though the colinearity numbers were a bit concerning, ultimately the models were not negatively affected.
 
@@ -957,13 +958,13 @@ ride_models <- list(
 							data = strava_models),
 	"watts" = lm(average_watts ~ moving_time + distance_km +average_speed + elevation_gain + average_grade + kilojoules,
 							 data = strava_models),
-	"watts2" = lm(average_watts ~ distance_km +average_speed + elevation_gain + average_grade + kilojoules,
+	"watts2" = lm(average_watts ~ distance_km +average_speed + elevation_gain + average_grade,
 							 data = strava_models),
 	"kilojoules" = lm(kilojoules ~ moving_time + distance_km +average_speed + elevation_gain + average_grade + average_watts,
 											data = strava_models),
   "kilojoules2" = lm(kilojoules ~ moving_time + average_speed + elevation_gain + average_grade + average_watts,
 											data = strava_models))
-modelsummary(ride_models, stars = TRUE, gof_omit = "IC|Adj|F|RMSE|Log")
+modelsummary(ride_models, stars = TRUE, gof_omit = "IC|Adj|F|RMSE|Log", output = "gt")
 
 ```
 
