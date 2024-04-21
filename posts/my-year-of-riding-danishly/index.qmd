@@ -6,6 +6,7 @@ date: '2024-02-15'
 categories: [post, rstats, eda, ggplot, regression, ols, bicycle, denmark]
 image: "bike_dragor.jpeg"
 toc: true
+lightbox: true
 editor: 
   mode: source
 ---
