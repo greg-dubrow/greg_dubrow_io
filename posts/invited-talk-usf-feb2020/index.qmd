@@ -2,8 +2,10 @@
 title: "Invited Talk at University of San Francisco, February 2020"
 author: "gregers kjerulf dubrow"
 date: '2021-02-26'
-categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization, higher education]
+categories: [post, rstats, ggplot, dataviz, data visualization, higher education]
 image: "usanfranlogo.png"
+toc: true
+lightbox: true
 editor: 
   mode: source
 ---
