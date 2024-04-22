@@ -3,9 +3,9 @@ title: "30 Day Chart Challenge 2024"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
 date: "today"
-categories: [post, rstats, ggplot, dataviz, chartchallenge, tidytuesday]
+categories: [post, rstats, ggplot, dataviz, chartchallenge, tidytuesday, eurostat]
 image: "prompts.png"
-toc: true
+toc: false
 lightbox: true
 editor: 
   mode: source
@@ -162,3 +162,86 @@ ukeduc %>%
 ```
 
 We see from this chart that most in regions the rate of 4-year college degree completion (level 6+) was in the mid-high 20s, with students from the London region having the highest rate at 36%.
+
+*created and posted April 21, 2024*
+
+## Prompt #2 - Neo {#prompt2}
+
+The way I chose to interpret "neo" was by using births by country, or new people by country. The data come from [EuroStat](https://ec.europa.eu/eurostat), via the [`eurostat`](https://github.com/rOpenGov/eurostat) package. I'll use total live births and births per 1000 people for the year 2022 (most recent year available). I'll use `patchwork` to combine the plots. Unlike prompt 1, this only took a little more than an hour to do.
+
+Getting the data is super simple, and it doesn't need much cleaning, so I'll do all the code in one chunk.
+
+```{r prompt2, message=FALSE, ECHO = TRUE, eval= TRUE}
+#| fig.width: 9.0
+#| fig.height: 7.0
+#| fig-dpi: 300
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting data and making the plots"
+
+# to know the table code "tps00204", I had to look up the dataset on-line and copy that value.
+# there is a function in the package to list all available data.
+births <- eurostat::get_eurostat("tps00204", type = "label", time_format = "num") %>%
+	select(-freq) %>%
+	rename(year = TIME_PERIOD)
+
+# make the plots
+total_births <-
+births %>%
+	filter(year == 2022) %>%
+	filter(indic_de == "Live births - number") %>%
+	filter(!grepl("Euro",geo)) %>%
+	arrange(desc(values), geo) %>%
+	mutate(geo = forcats::fct_inorder(geo)) %>%
+	{. ->> tmp} %>%
+	ggplot(aes(values, fct_rev(geo))) +
+	geom_bar(stat = "identity", fill = "#FFCC00") +
+	scale_y_discrete(position = "right") +
+	# need to subset data to get highest label to align similar to the rest
+	geom_text(data = subset(tmp, values <800000),
+		aes(label = format(values, big.mark=",")),
+						color= "#003399", size = 4,
+						hjust = -.25, nudge_x = .25) +
+	geom_text(data = subset(tmp, values >800000),
+						aes(label = format(values, big.mark = ",")),
+						color= "#003399", size = 4,
+						hjust = 1, nudge_x = .5) +
+	labs(y = "", x = "Total Live Births - 2022") +
+	theme_minimal() +
+	theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+births_per1k <-
+births %>%
+	filter(year == 2022) %>%
+	filter(indic_de == "Crude birth rate - per thousand persons") %>%
+	filter(!grepl("Euro",geo)) %>%
+	arrange(desc(values), geo) %>%
+	mutate(geo = forcats::fct_inorder(geo)) %>%
+	ggplot(aes(values, fct_rev(geo))) +
+	geom_bar(stat = "identity", fill = "#003399") +
+	geom_text(aes(label = values),
+						position = position_stack(vjust = 0.5),
+						color= "#FFCC00", vjust = 0.5, size = 4) +
+	labs(y = "", x = "Births per 1000 persons - 2022") +
+	theme_minimal() +
+	theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+
+# put them together with patchwork
+library(patchwork)
+total_births + births_per1k + plot_annotation(
+	title = 'Turkey tops in both total births and births / 1000 people',
+	subtitle = 'France only other country top 10 in both measures. San Marino bottom in both',
+	caption = 'Data from EuroStats using eurostat package')
+```
+
+There you have it. Turkey is tops in both total number of births and births per 1000 people. France is the only other country in the top 10. Interestingly, Spain is near the top in total number (it's a big country) but towards the bottom in births per 1000. San Marino is last in both total births and rate.
+
+What other interesting insights do you see here?
+
+*created and posted April 22, 2024*

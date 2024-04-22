@@ -2,14 +2,15 @@
 title: "Sad Songs & Pretty Charts - a Gosta Berling Music Data Visualization"
 author: "gregers kjerulf dubrow"
 date: '2021-02-28'
-categories: [post, tidytuesday, rstats, ggplot, dataviz, data visualization,
+categories: [post, rstats, ggplot, dataviz, data visualization,
 music, spotify, gosta berling]
 image: "gb_winterland_front.jpg"
+lightbox: true
 editor: 
   mode: source
 ---
 
-## Using the Spotify API and `spotifyr` package to visualize some music I've made
+### Using the Spotify API and `spotifyr` package to visualize some music I've made
 
 For this post, I thought I'd focus on music analytics, given that music and data science/analysis are two things I've spent most of my waking hours doing for a number of years now.
 
