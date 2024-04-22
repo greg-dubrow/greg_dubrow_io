@@ -167,7 +167,7 @@ We see from this chart that most in regions the rate of 4-year college degree co
 
 ## Prompt #2 - Neo {#prompt2}
 
-The way I chose to interpret "neo" was by using births by country, or new people by country. The data come from [EuroStat](https://ec.europa.eu/eurostat), via the [`eurostat`](https://github.com/rOpenGov/eurostat) package. I'll use total live births and births per 1000 people for the year 2022 (most recent year available). I'll use `patchwork` to combine the plots. Unlike prompt 1, this only took a little more than an hour to do.
+The way I chose to interpret "neo" was by using births by country, or new people by country. The data come from [EuroStat](https://ec.europa.eu/eurostat), via the [`eurostat`](https://github.com/rOpenGov/eurostat) package. I'll use total live births and births per 1000 people for the year 2022 (most recent year available). I'll use [`patchwork`](https://patchwork.data-imaginist.com/) to combine the plots. Unlike prompt 1, this only took a little more than an hour to do.
 
 Getting the data is super simple, and it doesn't need much cleaning, so I'll do all the code in one chunk.
 

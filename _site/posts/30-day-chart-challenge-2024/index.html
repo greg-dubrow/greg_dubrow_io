@@ -389,7 +389,7 @@ cookieconsent.run({
 </section>
 <section id="prompt2" class="level2">
 <h2 class="anchored" data-anchor-id="prompt2">Prompt #2 - Neo</h2>
-<p>The way I chose to interpret “neo” was by using births by country, or new people by country. The data come from <a href="https://ec.europa.eu/eurostat">EuroStat</a>, via the <a href="https://github.com/rOpenGov/eurostat"><code>eurostat</code></a> package. I’ll use total live births and births per 1000 people for the year 2022 (most recent year available). I’ll use <code>patchwork</code> to combine the plots. Unlike prompt 1, this only took a little more than an hour to do.</p>
+<p>The way I chose to interpret “neo” was by using births by country, or new people by country. The data come from <a href="https://ec.europa.eu/eurostat">EuroStat</a>, via the <a href="https://github.com/rOpenGov/eurostat"><code>eurostat</code></a> package. I’ll use total live births and births per 1000 people for the year 2022 (most recent year available). I’ll use <a href="https://patchwork.data-imaginist.com/"><code>patchwork</code></a> to combine the plots. Unlike prompt 1, this only took a little more than an hour to do.</p>
 <p>Getting the data is super simple, and it doesn’t need much cleaning, so I’ll do all the code in one chunk.</p>
 <div class="cell" data-echo="true">
 <details class="code-fold">
@@ -401,7 +401,7 @@ cookieconsent.run({
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> TIME_PERIOD)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>indexed <span class="dv">0</span>B <span class="cf">in</span>  <span class="dv">0</span>s, <span class="dv">0</span>B<span class="sc">/</span>s</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">2.96</span>PB<span class="sc">/</span>s</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">1.07</span>PB<span class="sc">/</span>s</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                                              </span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make the plots</span></span>
@@ -900,7 +900,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
