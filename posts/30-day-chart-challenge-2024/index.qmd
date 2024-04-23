@@ -246,7 +246,7 @@ What other interesting insights do you see here?
 
 *created and posted April 22, 2024*
 
-## Prompts #3 & 4 - Redo & Waffle {#prompt3&4}
+## Prompts #3 & 4 - Redo & Waffle {#prompts3and4}
 
 For this prompt I fulfilled prompt 3 "redo" by redoing the chart for prompt 1, and made it a waffle chart to fulfill prompt 4. I'd never done a waffle chart before, so new chart type...hooray! Cheers to Yann Holtz for his [code-through](https://r-graph-gallery.com/web-waffle-for-time-evolution.html) on his "R Graph Gallery" website to help me better understand how to set-up the data and plot it.
 
