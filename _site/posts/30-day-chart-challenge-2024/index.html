@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
-<meta name="dcterms.date" content="2024-04-22">
+<meta name="dcterms.date" content="2024-04-23">
 <meta name="description" content="Let’s make some charts!">
 
 <title>gregers kjerulf dubrow - 30 Day Chart Challenge 2024</title>
@@ -235,7 +235,7 @@ cookieconsent.run({
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 22, 2024</p>
+        <p class="date">April 23, 2024</p>
       </div>
     </div>
     
@@ -401,7 +401,7 @@ cookieconsent.run({
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> TIME_PERIOD)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>indexed <span class="dv">0</span>B <span class="cf">in</span>  <span class="dv">0</span>s, <span class="dv">0</span>B<span class="sc">/</span>s</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">1.07</span>PB<span class="sc">/</span>s</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">2.76</span>PB<span class="sc">/</span>s</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                                              </span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make the plots</span></span>
@@ -464,6 +464,170 @@ cookieconsent.run({
 <p>There you have it. Turkey is tops in both total number of births and births per 1000 people. France is the only other country in the top 10. Interestingly, Spain is near the top in total number (it’s a big country) but towards the bottom in births per 1000. San Marino is last in both total births and rate.</p>
 <p>What other interesting insights do you see here?</p>
 <p><em>created and posted April 22, 2024</em></p>
+</section>
+<section id="prompts-3-4---redo-waffle-prompt34" class="level2">
+<h2 class="anchored" data-anchor-id="prompts-3-4---redo-waffle-prompt34">Prompts #3 &amp; 4 - Redo &amp; Waffle {#prompt3&amp;4}</h2>
+<p>For this prompt I fulfilled prompt 3 “redo” by redoing the chart for prompt 1, and made it a waffle chart to fulfill prompt 4. I’d never done a waffle chart before, so new chart type…hooray! Cheers to Yann Holtz for his <a href="https://r-graph-gallery.com/web-waffle-for-time-evolution.html">code-through</a> on his “R Graph Gallery” website to help me better understand how to set-up the data and plot it.</p>
+<p>I’m once again using educational attainment data from the UK, via a Tidy Tuesday set from January 2024. We’ll get the data and make the chart in the same code chunk.</p>
+<div class="cell" data-echo="true">
+<details class="code-fold">
+<summary>Show code for getting data and making the plots</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytuesdayR) <span class="co">#to get data from tidy tuesday repo</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># some custom functions</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ggplot helpers - load if necessary</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(waffle) <span class="co"># ggplot helper to make a waffle chart</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext) <span class="co"># helper functions for ggplot text</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># load tidy tuesday data</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>ukeduc1 <span class="ot">&lt;-</span> <span class="fu">tt_load</span>(<span class="st">"2024-01-23"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Downloading file 1 of 1: `english_education.csv`</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># get variable names</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>ukeduc_names <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(<span class="fu">names</span>(ukeduc1<span class="sc">$</span>english_education))</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co"># create tibble from csv, clean data</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>ukeduc <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(ukeduc1<span class="sc">$</span>english_education) <span class="sc">%&gt;%</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">town11nm =</span> <span class="fu">ifelse</span>(town11nm <span class="sc">==</span> <span class="st">"Outer london BUAs"</span>, <span class="st">"Outer London BUAs"</span>, town11nm)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">ttwa_classification =</span> <span class="fu">ifelse</span>(town11nm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Inner London BUAs"</span>, <span class="st">"Outer London BUAs"</span>),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                                                                 <span class="st">"Majority conurbation"</span>, ttwa_classification)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ttwa11nm =</span> <span class="fu">ifelse</span>(town11nm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Inner London BUAs"</span>, <span class="st">"Outer London BUAs"</span>),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"London"</span>, ttwa11nm)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ttwa11cd =</span> <span class="fu">ifelse</span>(town11nm <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Inner London BUAs"</span>, <span class="st">"Outer London BUAs"</span>),</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"E30000234"</span>, ttwa11cd)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="dv">26</span><span class="sc">:</span><span class="dv">29</span>, <span class="sc">~</span><span class="fu">ifelse</span>(<span class="fu">is.na</span>(.),<span class="dv">0</span>,.))) <span class="sc">%&gt;%</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">level_sum =</span> <span class="fu">rowSums</span>(.[<span class="fu">c</span>(<span class="dv">26</span><span class="sc">:</span><span class="dv">29</span>)])) <span class="sc">%&gt;%</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">highest_level_qualification_achieved_by_age_22_na =</span> <span class="dv">100</span> <span class="sc">-</span> level_sum) <span class="sc">%&gt;%</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_lesslev1_age22 =</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">round</span>(highest_level_qualification_achieved_by_age_22_less_than_level_1 <span class="sc">*</span> (ks4_2012_2013_counts<span class="sc">/</span><span class="dv">100</span>) ,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_lev1to2_age22 =</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">round</span>(highest_level_qualification_achieved_by_age_22_level_1_to_level_2 <span class="sc">*</span> (ks4_2012_2013_counts<span class="sc">/</span><span class="dv">100</span>) ,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_lev3to5_age22 =</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">round</span>(highest_level_qualification_achieved_by_age_22_level_3_to_level_5 <span class="sc">*</span> (ks4_2012_2013_counts<span class="sc">/</span><span class="dv">100</span>) ,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_lev6plus_age22 =</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">round</span>(highest_level_qualification_achieved_by_age_22_level_6_or_above <span class="sc">*</span> (ks4_2012_2013_counts<span class="sc">/</span><span class="dv">100</span>) ,<span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">n_lev_na_age22 =</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">round</span>(highest_level_qualification_achieved_by_age_22_na <span class="sc">*</span> (ks4_2012_2013_counts<span class="sc">/</span><span class="dv">100</span>) ,<span class="dv">0</span>))</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ukeduc)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 1,104</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 38</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ town11cd                                                          &lt;chr&gt; "E34…</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ town11nm                                                          &lt;chr&gt; "Car…</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ population_2011                                                   &lt;dbl&gt; 5456…</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ size_flag                                                         &lt;chr&gt; "Sma…</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ rgn11nm                                                           &lt;chr&gt; "Eas…</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ coastal                                                           &lt;chr&gt; "Non…</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ coastal_detailed                                                  &lt;chr&gt; "Sma…</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ttwa11cd                                                          &lt;chr&gt; "E30…</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ttwa11nm                                                          &lt;chr&gt; "Wor…</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ttwa_classification                                               &lt;chr&gt; "Maj…</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ job_density_flag                                                  &lt;chr&gt; "Res…</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ income_flag                                                       &lt;chr&gt; "Hig…</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ university_flag                                                   &lt;chr&gt; "No …</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ level4qual_residents35_64_2011                                    &lt;chr&gt; "Low…</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ks4_2012_2013_counts                                              &lt;dbl&gt; 65, …</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ key_stage_2_attainment_school_year_2007_to_2008                   &lt;dbl&gt; 65.0…</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ key_stage_4_attainment_school_year_2012_to_2013                   &lt;dbl&gt; 70.7…</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ level_2_at_age_18                                                 &lt;dbl&gt; 72.3…</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ level_3_at_age_18                                                 &lt;dbl&gt; 50.7…</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ activity_at_age_19_full_time_higher_education                     &lt;dbl&gt; 30.7…</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ activity_at_age_19_sustained_further_education                    &lt;dbl&gt; 21.5…</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ activity_at_age_19_appprenticeships                               &lt;dbl&gt; NA, …</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ activity_at_age_19_employment_with_earnings_above_0               &lt;dbl&gt; 52.3…</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ activity_at_age_19_employment_with_earnings_above_10_000          &lt;dbl&gt; 36.9…</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ activity_at_age_19_out_of_work                                    &lt;dbl&gt; NA, …</span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ highest_level_qualification_achieved_by_age_22_less_than_level_1  &lt;dbl&gt; 0.0,…</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ highest_level_qualification_achieved_by_age_22_level_1_to_level_2 &lt;dbl&gt; 34.9…</span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ highest_level_qualification_achieved_by_age_22_level_3_to_level_5 &lt;dbl&gt; 39.7…</span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ highest_level_qualification_achieved_by_age_22_level_6_or_above   &lt;dbl&gt; 0.0,…</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ highest_level_qualification_achieved_b_age_22_average_score       &lt;dbl&gt; 3.32…</span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ education_score                                                   &lt;dbl&gt; -0.5…</span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ level_sum                                                         &lt;dbl&gt; 74.6…</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ highest_level_qualification_achieved_by_age_22_na                 &lt;dbl&gt; 25.4…</span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ n_lesslev1_age22                                                  &lt;dbl&gt; 0, 0…</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ n_lev1to2_age22                                                   &lt;dbl&gt; 23, …</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ n_lev3to5_age22                                                   &lt;dbl&gt; 26, …</span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ n_lev6plus_age22                                                  &lt;dbl&gt; 0, 8…</span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ n_lev_na_age22                                                    &lt;dbl&gt; 17, …</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="co"># cohort ed attainment by region</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a>ukeduc2 <span class="ot">&lt;-</span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a>    ukeduc <span class="sc">%&gt;%</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">region =</span>rgn11nm ) <span class="sc">%&gt;%</span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(region) <span class="sc">%&gt;%</span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">region_cohort =</span> <span class="fu">sum</span>(ks4_2012_2013_counts),</span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>                        <span class="at">region_levless1_age22 =</span> <span class="fu">sum</span>(n_lesslev1_age22),</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a>                        <span class="at">region_lev1to2_age22 =</span> <span class="fu">sum</span>(n_lev1to2_age22),</span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a>                        <span class="at">region_lev3to5_age22 =</span> <span class="fu">sum</span>(n_lev3to5_age22),</span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>                        <span class="at">region_lev6plus_age22 =</span> <span class="fu">sum</span>(n_lev6plus_age22)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">ends_with</span>(<span class="st">"age22"</span>), <span class="at">names_to =</span> <span class="st">"ed_attain_age22"</span>, <span class="at">values_to =</span> <span class="st">"ed_attain_n"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ed_attain_pct =</span> ed_attain_n <span class="sc">/</span> region_cohort) <span class="sc">%&gt;%</span></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ed_attain_pct2 =</span> <span class="fu">round</span>(ed_attain_pct<span class="sc">*</span><span class="dv">100</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">region =</span> <span class="fu">factor</span>(region))<span class="sc">%&gt;%</span></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(region)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(region, region_cohort, ed_attain_age22, ed_attain_pct2) <span class="sc">%&gt;%</span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>    <span class="do">## the data was a bit messy, so to get the values to sum to 100 to make the waffle</span></span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a>    <span class="do">## chart fill the plot area, I had to do a little reshaping after doing the percentages.</span></span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> ed_attain_age22, <span class="at">values_from =</span> ed_attain_pct2) <span class="sc">%&gt;%</span></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">region_sum =</span> <span class="fu">rowSums</span>(.[<span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>)])) <span class="sc">%&gt;%</span></span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">region_lev_na_age22 =</span> <span class="fu">ifelse</span>(region_sum <span class="sc">&lt;</span> <span class="dv">100</span>, <span class="dv">100</span> <span class="sc">-</span> region_sum, <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>region_sum) <span class="sc">%&gt;%</span></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">ends_with</span>(<span class="st">"age22"</span>), <span class="at">names_to =</span> <span class="st">"ed_attain_age22"</span>, <span class="at">values_to =</span> <span class="st">"ed_attain_pct"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">ed_attain_age22 =</span></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a>                <span class="fu">factor</span>(ed_attain_age22,</span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"region_lev_na_age22"</span>, <span class="st">"region_levless1_age22"</span>, <span class="st">"region_lev1to2_age22"</span>,</span>
+<span id="cb4-113"><a href="#cb4-113" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">"region_lev3to5_age22"</span>, <span class="st">"region_lev6plus_age22"</span>),</span>
+<span id="cb4-114"><a href="#cb4-114" aria-hidden="true" tabindex="-1"></a>                             <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"No data"</span>, <span class="st">"Level &lt;1"</span>, <span class="st">"Level = 1-2"</span>,</span>
+<span id="cb4-115"><a href="#cb4-115" aria-hidden="true" tabindex="-1"></a>                                                 <span class="st">"Level = 3-5"</span>, <span class="st">"Level = 6+"</span>)))</span>
+<span id="cb4-116"><a href="#cb4-116" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(ukeduc2)</span>
+<span id="cb4-117"><a href="#cb4-117" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 45</span></span>
+<span id="cb4-118"><a href="#cb4-118" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
+<span id="cb4-119"><a href="#cb4-119" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ region          &lt;fct&gt; East Midlands, East Midlands, East Midlands, East Midl…</span></span>
+<span id="cb4-120"><a href="#cb4-120" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ region_cohort   &lt;dbl&gt; 39811, 39811, 39811, 39811, 39811, 48849, 48849, 48849…</span></span>
+<span id="cb4-121"><a href="#cb4-121" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ed_attain_age22 &lt;fct&gt; Level &lt;1, Level = 1-2, Level = 3-5, Level = 6+, No dat…</span></span>
+<span id="cb4-122"><a href="#cb4-122" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ ed_attain_pct   &lt;dbl&gt; 2, 30, 41, 25, 2, 2, 27, 43, 27, 1, 2, 19, 43, 36, 0, …</span></span>
+<span id="cb4-123"><a href="#cb4-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-124"><a href="#cb4-124" aria-hidden="true" tabindex="-1"></a><span class="do">## chart</span></span>
+<span id="cb4-125"><a href="#cb4-125" aria-hidden="true" tabindex="-1"></a>ukeduc2 <span class="sc">%&gt;%</span></span>
+<span id="cb4-126"><a href="#cb4-126" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> ed_attain_age22, <span class="at">values =</span> ed_attain_pct)) <span class="sc">+</span></span>
+<span id="cb4-127"><a href="#cb4-127" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_waffle</span>(<span class="at">na.rm=</span><span class="cn">TRUE</span>, <span class="at">n_rows=</span><span class="dv">10</span>, <span class="at">flip=</span><span class="cn">TRUE</span>, <span class="at">size =</span> <span class="fl">0.33</span>, <span class="at">colour =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb4-128"><a href="#cb4-128" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>region, <span class="at">nrow=</span><span class="dv">1</span>,<span class="at">strip.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb4-129"><a href="#cb4-129" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_discrete</span>() <span class="sc">+</span></span>
+<span id="cb4-130"><a href="#cb4-130" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(x) x <span class="sc">*</span> <span class="dv">10</span>, <span class="co"># make this multiplyer the same as n_rows</span></span>
+<span id="cb4-131"><a href="#cb4-131" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb4-132"><a href="#cb4-132" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb4-133"><a href="#cb4-133" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Students in London most likely to have at least 4-year degree by Age 22"</span>,</span>
+<span id="cb4-134"><a href="#cb4-134" aria-hidden="true" tabindex="-1"></a>                 <span class="at">subtitle =</span> <span class="st">"Sixth Year Educational Outcomes for Level 4 2012-13 Cohort by UK Region&lt;br&gt;</span></span>
+<span id="cb4-135"><a href="#cb4-135" aria-hidden="true" tabindex="-1"></a><span class="st">                 Each block = 1 %"</span>,</span>
+<span id="cb4-136"><a href="#cb4-136" aria-hidden="true" tabindex="-1"></a>                 <span class="at">caption =</span> <span class="st">"*Tidy Tuesday data 01/23/2024, from UK Office of National Statistics*"</span>,</span>
+<span id="cb4-137"><a href="#cb4-137" aria-hidden="true" tabindex="-1"></a>                 <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb4-138"><a href="#cb4-138" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb4-139"><a href="#cb4-139" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">'cm'</span>),</span>
+<span id="cb4-140"><a href="#cb4-140" aria-hidden="true" tabindex="-1"></a>                    <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">'cm'</span>), <span class="at">legend.margin=</span><span class="fu">margin</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb4-141"><a href="#cb4-141" aria-hidden="true" tabindex="-1"></a>                    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>), <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb4-142"><a href="#cb4-142" aria-hidden="true" tabindex="-1"></a>                    <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb4-143"><a href="#cb4-143" aria-hidden="true" tabindex="-1"></a>                    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb4-144"><a href="#cb4-144" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">label.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb4-145"><a href="#cb4-145" aria-hidden="true" tabindex="-1"></a>                                                         <span class="at">title =</span> <span class="st">"Cohort at Age 22"</span>, <span class="at">title.position =</span> <span class="st">"top"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="images/prompt3&amp;4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="images/prompt3&amp;4-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>So alright, a waffle chart. Similar insights from the horizontal bar, just visualized a bit differently.</p>
+<p><em>created and posted April 23, 2024</em></p>
 
 
 </section>
@@ -900,7 +1064,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":false,"openEffect":"zoom","closeEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
