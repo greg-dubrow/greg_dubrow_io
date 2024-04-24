@@ -387,9 +387,9 @@ So alright, a waffle chart. Similar insights from the horizontal bar, just visua
 
 Staying with the theme of educational attainment, but switching countries to Denmark (where I was born and now live again), let's look at differences in educational attainment for people in Denmark aged 25-69. The data come from Danmarks Statistik (Statistics Danmark, the national statistics agency) via the [`danstat`](https://github.com/ValeriVoev/danstat) package. I've been wanting to use the package, this was a great excuse.
 
-I won't do too much explaining about education levels in Denmark, you can read up on them on the \[ministry's page\](https://ufm.dk/en/education/the-danish-education-system.
+I won't do too much explaining about education levels in Denmark, you can read up on them on the [ministry's page](https://ufm.dk/en/education/the-danish-education-system).
 
-The `danstat` package is fairly easy to use once you get the hang of sorting out the table name and number, and variable names and values you need to filter on. It's a good idea to start at Danmarks Statistik's \[StatBank\] page(https://www.statbank.dk/statbank5a/default.asp?w=1680), search the data you want, and when you find the table, you'll see the code, in this case HFUDD11, and use that in the package calls. To see what I mean, let's start with getting the data.
+The `danstat` package is fairly easy to use once you get the hang of sorting out the table name and number, and variable names and values you need to filter on. It's a good idea to start at Danmarks Statistik's [StatBank page](https://www.statbank.dk/statbank5a/default.asp?w=1680), search the data you want, and when you find the table, you'll see the code, in this case HFUDD11, and use that in the package calls. To see what I mean, let's start with getting the data.
 
 ```{r prompt5_1, message=FALSE, ECHO = TRUE, eval= TRUE}
 #| warning: false
@@ -434,7 +434,7 @@ edattain <- get_data("hfudd11", variables_ed, language = "da") %>%
 
 The data I pulled is by sex, age, and education level. I needed to age variable to filter for age 25+, as the set starts at age 15. At some point for another post I plan to look a bit more deeply at educational attainment here, including region and age and other fields. So let's clean the data and get it ready to plot a diverging bar chart.
 
-Even though I've calcuated percentages for sex by age by education level, I won't be doing any breakdowns by age here, again, that's a later independent post. But at least I have the code now.
+Even though I've calculated percentages for sex by age by education level, I won't be doing any breakdowns by age here, again, that's a later independent post. But at least I have the code now.
 
 ```{r prompt5_2, message=FALSE, ECHO = TRUE, eval= TRUE}
 #| warning: false

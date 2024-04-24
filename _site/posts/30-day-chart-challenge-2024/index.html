@@ -414,7 +414,7 @@ cookieconsent.run({
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> TIME_PERIOD)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>indexed <span class="dv">0</span>B <span class="cf">in</span>  <span class="dv">0</span>s, <span class="dv">0</span>B<span class="sc">/</span>s</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">1.70</span>PB<span class="sc">/</span>s</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">2.30</span>PB<span class="sc">/</span>s</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                                              </span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make the plots</span></span>
@@ -646,8 +646,8 @@ cookieconsent.run({
 <section id="prompt5" class="level2">
 <h2 class="anchored" data-anchor-id="prompt5">Prompt #5 - Diverging</h2>
 <p>Staying with the theme of educational attainment, but switching countries to Denmark (where I was born and now live again), let’s look at differences in educational attainment for people in Denmark aged 25-69. The data come from Danmarks Statistik (Statistics Danmark, the national statistics agency) via the <a href="https://github.com/ValeriVoev/danstat"><code>danstat</code></a> package. I’ve been wanting to use the package, this was a great excuse.</p>
-<p>I won’t do too much explaining about education levels in Denmark, you can read up on them on the [ministry’s page](https://ufm.dk/en/education/the-danish-education-system.</p>
-<p>The <code>danstat</code> package is fairly easy to use once you get the hang of sorting out the table name and number, and variable names and values you need to filter on. It’s a good idea to start at Danmarks Statistik’s [StatBank] page(https://www.statbank.dk/statbank5a/default.asp?w=1680), search the data you want, and when you find the table, you’ll see the code, in this case HFUDD11, and use that in the package calls. To see what I mean, let’s start with getting the data.</p>
+<p>I won’t do too much explaining about education levels in Denmark, you can read up on them on the <a href="https://ufm.dk/en/education/the-danish-education-system">ministry’s page</a>.</p>
+<p>The <code>danstat</code> package is fairly easy to use once you get the hang of sorting out the table name and number, and variable names and values you need to filter on. It’s a good idea to start at Danmarks Statistik’s <a href="https://www.statbank.dk/statbank5a/default.asp?w=1680">StatBank page</a>, search the data you want, and when you find the table, you’ll see the code, in this case HFUDD11, and use that in the package calls. To see what I mean, let’s start with getting the data.</p>
 <div class="cell" data-echo="true">
 <details class="code-fold">
 <summary>Show code for getting data</summary>
@@ -682,7 +682,7 @@ cookieconsent.run({
 </details>
 </div>
 <p>The data I pulled is by sex, age, and education level. I needed to age variable to filter for age 25+, as the set starts at age 15. At some point for another post I plan to look a bit more deeply at educational attainment here, including region and age and other fields. So let’s clean the data and get it ready to plot a diverging bar chart.</p>
-<p>Even though I’ve calcuated percentages for sex by age by education level, I won’t be doing any breakdowns by age here, again, that’s a later independent post. But at least I have the code now.</p>
+<p>Even though I’ve calculated percentages for sex by age by education level, I won’t be doing any breakdowns by age here, again, that’s a later independent post. But at least I have the code now.</p>
 <div class="cell" data-echo="true">
 <details class="code-fold">
 <summary>Show code for cleaning data</summary>
@@ -1208,7 +1208,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","loop":false});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":false,"closeEffect":"zoom","openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
