@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
-<meta name="dcterms.date" content="2024-04-23">
+<meta name="dcterms.date" content="2024-04-24">
 <meta name="description" content="Let’s make some charts!">
 
 <title>gregers kjerulf dubrow - 30 Day Chart Challenge 2024</title>
@@ -152,7 +152,7 @@ cookieconsent.run({
 <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -235,7 +235,7 @@ cookieconsent.run({
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 23, 2024</p>
+        <p class="date">April 24, 2024</p>
       </div>
     </div>
     
@@ -246,7 +246,19 @@ cookieconsent.run({
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#plan" id="toc-plan" class="nav-link active" data-scroll-target="#plan">My Plan for the Challenge</a></li>
+  <li><a href="#prompt1" id="toc-prompt1" class="nav-link" data-scroll-target="#prompt1">Prompt #1 - Part-to-Whole</a></li>
+  <li><a href="#prompt2" id="toc-prompt2" class="nav-link" data-scroll-target="#prompt2">Prompt #2 - Neo</a></li>
+  <li><a href="#prompts3and4" id="toc-prompts3and4" class="nav-link" data-scroll-target="#prompts3and4">Prompts #3 &amp; 4 - Redo &amp; Waffle</a></li>
+  <li><a href="#prompt5" id="toc-prompt5" class="nav-link" data-scroll-target="#prompt5">Prompt #5 - Diverging</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -267,6 +279,7 @@ cookieconsent.run({
 <li>Produce charts for as many prompts as possible, working in prompt-day order.</li>
 <li>Post them to social media on my <a href="https://bsky.app/profile/gregerskjerulf.bsky.social">Bluesky</a>, <a href="https://fosstodon.org/@Greg_Dubrow">Mastodon</a>, <a href="https://twitter.com/greg_dubrow">Twitter</a>, and <a href="https://www.linkedin.com/in/dubrowg/">LinkedIn</a> accounts.</li>
 <li>Add them to this post, meaning the posting date will refresh to the date I’ve added the chart.So If I get to alot or even all of them, this will be a long post.</li>
+<li>Use the table of contents to the right to navigate to a specific chart.</li>
 </ul>
 <p>I may not get to every prompt, but I’ll do what I can. So let’s get going.</p>
 </section>
@@ -401,7 +414,7 @@ cookieconsent.run({
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> TIME_PERIOD)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>indexed <span class="dv">0</span>B <span class="cf">in</span>  <span class="dv">0</span>s, <span class="dv">0</span>B<span class="sc">/</span>s</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">2.68</span>PB<span class="sc">/</span>s</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">1.70</span>PB<span class="sc">/</span>s</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                                              </span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make the plots</span></span>
@@ -629,6 +642,136 @@ cookieconsent.run({
 </div>
 <p>So alright, a waffle chart. Similar insights from the horizontal bar, just visualized a bit differently.</p>
 <p><em>created and posted April 23, 2024</em></p>
+</section>
+<section id="prompt5" class="level2">
+<h2 class="anchored" data-anchor-id="prompt5">Prompt #5 - Diverging</h2>
+<p>Staying with the theme of educational attainment, but switching countries to Denmark (where I was born and now live again), let’s look at differences in educational attainment for people in Denmark aged 25-69. The data come from Danmarks Statistik (Statistics Danmark, the national statistics agency) via the <a href="https://github.com/ValeriVoev/danstat"><code>danstat</code></a> package. I’ve been wanting to use the package, this was a great excuse.</p>
+<p>I won’t do too much explaining about education levels in Denmark, you can read up on them on the [ministry’s page](https://ufm.dk/en/education/the-danish-education-system.</p>
+<p>The <code>danstat</code> package is fairly easy to use once you get the hang of sorting out the table name and number, and variable names and values you need to filter on. It’s a good idea to start at Danmarks Statistik’s [StatBank] page(https://www.statbank.dk/statbank5a/default.asp?w=1680), search the data you want, and when you find the table, you’ll see the code, in this case HFUDD11, and use that in the package calls. To see what I mean, let’s start with getting the data.</p>
+<div class="cell" data-echo="true">
+<details class="code-fold">
+<summary>Show code for getting data</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(danstat) <span class="co"># package to get Danish statistics via api</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext) <span class="co"># enhancements for text in ggplot</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># some custom functions</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># metadata for table variables, click thru nested tables to find variables and ids for filters</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>table_meta <span class="ot">&lt;-</span> danstat<span class="sc">::</span><span class="fu">get_table_metadata</span>(<span class="at">table_id =</span> <span class="st">"hfudd11"</span>, <span class="at">variables_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># create variable list using the ID value in the variable</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>variables_ed <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"bopomr"</span>, <span class="at">values =</span> <span class="st">"000"</span>),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"hfudd"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"H10"</span>, <span class="st">"H20"</span>, <span class="st">"H30"</span>, <span class="st">"H35"</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"H40"</span>, <span class="st">"H50"</span>, <span class="st">"H60"</span>, <span class="st">"H70"</span>, <span class="st">"H80"</span>, <span class="st">"H90"</span>)),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"køn"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"M"</span>,<span class="st">"K"</span>)),</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"alder"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"25-29"</span>, <span class="st">"30-34"</span>, <span class="st">"35-39"</span>, <span class="st">"40-44"</span>, <span class="st">"45-49"</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>                                                <span class="st">"50-54"</span>, <span class="st">"55-59"</span>, <span class="st">"60-64"</span>, <span class="st">"65-69"</span>)),</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"tid"</span>, <span class="at">values =</span> <span class="dv">2023</span>))</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># past variable list along with table name. </span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># note that in package, table name is lower case, though upper case on statbank page.</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>edattain <span class="ot">&lt;-</span> <span class="fu">get_data</span>(<span class="st">"hfudd11"</span>, variables_ed, <span class="at">language =</span> <span class="st">"da"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="at">sex =</span> KØN, <span class="at">age =</span> ALDER, <span class="at">edlevel =</span> HFUDD, <span class="at">n =</span> INDHOLD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The data I pulled is by sex, age, and education level. I needed to age variable to filter for age 25+, as the set starts at age 15. At some point for another post I plan to look a bit more deeply at educational attainment here, including region and age and other fields. So let’s clean the data and get it ready to plot a diverging bar chart.</p>
+<p>Even though I’ve calcuated percentages for sex by age by education level, I won’t be doing any breakdowns by age here, again, that’s a later independent post. But at least I have the code now.</p>
+<div class="cell" data-echo="true">
+<details class="code-fold">
+<summary>Show code for cleaning data</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>edattain1 <span class="ot">&lt;-</span> edattain <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="do">## create factors from the education levels</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">edlevel =</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">factor</span>(edlevel,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"H10 Grundskole"</span>, <span class="st">"H20 Gymnasiale uddannelser"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"H30 Erhvervsfaglige uddannelser"</span>, <span class="st">"H35 Adgangsgivende uddannelsesforløb"</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"H40 Korte videregående uddannelser, KVU"</span>, <span class="st">"H50 Mellemlange videregående uddannelser, MVU"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"H60 Bacheloruddannelser, BACH"</span>, <span class="st">"H70 Lange videregående uddannelser, LVU"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">"H80 Ph.d. og forskeruddannelser"</span>, <span class="st">"H90 Uoplyst mv."</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Grundskole/Primary"</span>, <span class="st">"Gymnasium"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Erhvervsfaglige/Vocational HS"</span>, <span class="st">"Adgangsgivende/Qualifying"</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"KVU/2-year college"</span>, <span class="st">"MVU/Professional BA"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Bachelor"</span>, <span class="st">"LVU/Masters"</span>, <span class="st">"PhD"</span>, <span class="st">"Not stated"</span> ))) <span class="sc">%&gt;%</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Kvinder"</span>, <span class="st">"Kvinder/Women"</span>, <span class="st">"Mænd/Men"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculate total number by sex</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(sex, edlevel) <span class="sc">%&gt;%</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(sex) <span class="sc">%&gt;%</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">tot_sex =</span> <span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculate total number by sex and ed level</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(sex, edlevel) <span class="sc">%&gt;%</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">tot_sex_edlev =</span> <span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculate total number by sex and age</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(sex, age) <span class="sc">%&gt;%</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">tot_sex_age =</span> <span class="fu">sum</span>(n)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># calculate percentages </span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">level_pct =</span> <span class="fu">round</span>(tot_sex_edlev <span class="sc">/</span> tot_sex, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">level_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Mænd/Men"</span>, level_pct <span class="sc">*-</span><span class="dv">1</span>, level_pct)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">level_pct2 =</span> <span class="fu">round</span>(level_pct <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_level_pct =</span> <span class="fu">round</span>(n <span class="sc">/</span> tot_sex_age, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_level_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Mænd/Men"</span>, age_level_pct <span class="sc">*-</span><span class="dv">1</span>, age_level_pct)) <span class="sc">%&gt;%</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_level_pct2 =</span> <span class="fu">round</span>(age_level_pct <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now let’s make the plot.</p>
+<div class="cell" data-echo="true">
+<details class="code-fold">
+<summary>Show code for making the plot</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>vlines_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">xintercept =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">20</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>edattain1 <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>edlevel <span class="sc">==</span> <span class="st">"Not stated"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(sex, edlevel, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(sex, edlevel<span class="sc">:</span>tot_sex, level_pct, level_pct2 ) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pass this temporary set thru to the ggplot call</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    {. <span class="ot">-&gt;&gt;</span> tmp} <span class="sc">%&gt;%</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">50</span>, <span class="at">y =</span> edlevel), <span class="at">width =</span> <span class="fl">0.75</span>, <span class="at">fill =</span> <span class="st">"#e0e0e0"</span>) <span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">50</span>, <span class="at">y =</span> edlevel), <span class="at">width =</span> <span class="fl">0.75</span>, <span class="at">fill =</span> <span class="st">"#e0e0e0"</span>) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> level_pct2, <span class="at">y =</span> edlevel, <span class="at">fill =</span> sex, <span class="at">color =</span> sex), <span class="at">width =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(x) <span class="fu">abs</span>(x), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">data =</span> vlines_df, <span class="fu">aes</span>(<span class="at">xintercept =</span> xintercept), <span class="at">color =</span> <span class="st">"#FFFFFF"</span>, <span class="at">size =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#C8102E"</span>, <span class="st">"#FFFFFF"</span>)) <span class="sc">+</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#C8102E"</span>, <span class="st">"#C8102E"</span>)) <span class="sc">+</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, sex <span class="sc">==</span> <span class="st">"Mænd/Men"</span>),</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">x =</span> level_pct2, <span class="at">y =</span> edlevel, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">abs</span>(level_pct2), <span class="st">"%"</span>)),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"#C8102E"</span>,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">nudge_x =</span> <span class="sc">-</span>.<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, sex <span class="sc">==</span> <span class="st">"Kvinder/Women"</span>),</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                <span class="fu">aes</span>(<span class="at">x =</span> level_pct2, <span class="at">y =</span> edlevel, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">abs</span>(level_pct2), <span class="st">"%"</span>)),</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"#C8102E"</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">25</span>) <span class="sc">+</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">"In Denmark, &lt;span style = 'color: #C8102E;'&gt;women&lt;/span&gt; more likely than men for highest education</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">             level to be Professional BA (MVU) or Masters.&lt;br&gt;Men more likely to stop at primary level or vocational secondary diploma."</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"*Highest level of education attained by all people in Denmark aged 25-69 as of Sept 30 2023*"</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik via danstat package*"</span>) <span class="sc">+</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), <span class="at">plot.title =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(), <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>                <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="images/prompt5_3-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="images/prompt5_3-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>There it is, a simple, clean chart showing how highest educational attainment differs for women and men in Denmark. I’m definitely interested in exploring differences by age group and by region.</p>
+<p><em>created and posted April 24, 2024</em></p>
 
 
 </section>
@@ -1065,7 +1208,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","loop":false,"descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
