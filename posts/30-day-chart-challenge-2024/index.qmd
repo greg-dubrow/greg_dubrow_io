@@ -591,11 +591,14 @@ oecd1 <- get_dataset(edattdata, edattfilter, start_time = 2020, end_time = 2022)
 
 # get metadata - helpful to create labels for factors.
 # see package documentation on github 
-oecd_metadata <- get_data_structure(edattdata)
+# commented out here to speed up rendering of post html file...this takes a while to download
+   # oecd_metadata <- get_data_structure(edattdata)
 
-# gets labels for country codes
-datalabs_ct <- oecd_metadata$CL_REGIONAL %>%
-	rename(COUNTRY = id)
+# gets labels for country codes...this step commented out, data loading from local file.
+# datalabs_ct <- oecd_metadata$CL_REGIONAL %>%
+# 	rename(COUNTRY = id)
+
+datalabs_ct <- readRDS("~/Data/r/30 Day Chart Challenge/2024/data/oecd_datalabs_ct.rds") 
 
 # keep only necessary vars, change some to factors & add labels
 oecd <- oecd1 %>%
@@ -635,6 +638,7 @@ oecd %>%
 				legend.key.width = unit(1.5, 'cm'), legend.margin=margin(-10, 0, 0, 0),
 				plot.title = element_markdown(), plot.subtitle = element_markdown(),
 				plot.caption = element_markdown(),
+				axis.text.y = element_text(size = 12),
 				panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
 	guides(fill = guide_legend(label.position = "bottom", reverse = TRUE,
 				title = "Education Levels", title.position = "top"))
