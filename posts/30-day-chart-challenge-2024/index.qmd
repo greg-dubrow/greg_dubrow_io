@@ -524,8 +524,9 @@ edattain1 %>%
 				hjust = -.25) +
 	labs(x = "", y = "",
 			 title = "In Denmark, <span style = 'color: #C8102E;'>women</span> more likely than men for highest education
-			 level to be Professional BA (MVU) or Masters.<br>Men more likely to stop at primary level or vocational secondary diploma.",
-			 subtitle = "*Highest level of education attained by all people in Denmark aged 25-69 as of Sept 30 2023*",
+			 level to be <br>Professional BA (MVU) or Masters.<br><br>Men more likely to stop at primary level or vocational secondary diploma.",
+			 subtitle = "<br>*Highest level of education attained by all people in Denmark aged 25-69 as of Sept 30 2023.
+			 <br><span style = 'color: #C8102E;'>Women are red bars</span>, men are white.*",
 			 caption = "*Data from Danmarks Statistik via danstat package*") +
 	theme_minimal() +
 	theme(panel.grid = element_blank(), plot.title = element_markdown(),
@@ -544,3 +545,102 @@ rm(tmp)
 ```
 
 *created and posted April 24, 2024*
+
+## Prompt #6 - OECD {#prompt6}
+
+Staying with the emerging theme of educational attainment, this prompt was a good excuse to try out the [`oecd` package](https://github.com/expersso/OECD). The package wraps functions to access OECD data through their API for their [Data Explorer platform](https://data-explorer.oecd.org/).
+
+It's fairly straight forward to use...look up the table you want, set the filters, copy the API script and parse out as the package documentation shows. In the example they do not show it, but make sure if you set time parameters that you put it in the `start_date` and `end_date` calls. You can of course name the dataset and filters anything you want. I chose my names so they wouldn't conflict with function calls.
+
+For this chart I looked at educational attainment in Nordic countries; Denmark, Finland, Iceland, Norway, & Sweden *(i)*, by sex for all people aged 25 to 64 in 2022. For the sake of expediency, I'll copy the overall format & theme from prompt 1.
+
+*i) let's not get into here the difference between Nordic & Scandinavian, what constitutes Scandinavian & why...*
+
+The code for getting the data and making the chart is below.
+
+```{r prompt6}
+#| fig.width: 9.0
+#| fig.height: 6.0
+#| fig-dpi: 300
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for prompt 6"
+
+## code for 30 Day Chart Challenge 2024, day 6 OECD
+## educational attainment via OECD package
+## nordics, by sex 25 to 64, 2020-2022
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(OECD) # package to get OECD data via api
+library(ggtext) # enhancements for text in ggplot
+
+# table from website
+# https://www.oecd-ilibrary.org/education/data/education-at-a-glance/educational-attainment-and-labour-force-status_889e8641-en
+
+edattdata <- "OECD.CFE.EDS,DSD_REG_EDU@DF_ATTAIN,1.0"
+edattfilter <- "A.CTRY.SWE+NOR+ISL+FIN+DNK...Y25T64.F+M.ISCED11_0T2+ISCED11_5T8+ISCED11_3_4.."
+
+oecd1 <- get_dataset(edattdata, edattfilter, start_time = 2020, end_time = 2022)
+
+# get metadata - helpful to create labels for factors.
+# see package documentation on github 
+oecd_metadata <- get_data_structure(edattdata)
+
+# gets labels for country codes
+datalabs_ct <- oecd_metadata$CL_REGIONAL %>%
+	rename(COUNTRY = id)
+
+# keep only necessary vars, change some to factors & add labels
+oecd <- oecd1 %>%
+	mutate(EDUCATION_LEV =
+		factor(EDUCATION_LEV,
+			levels = c("ISCED11_0T2", "ISCED11_3_4", "ISCED11_5T8"),
+			labels = c("Pre-primary thru lower secondary",
+				 		"Upper secondary and non-degree tertiary", "Tertiary education"))) %>%
+	mutate(SEX = case_when(SEX == "M" ~ "Male", SEX == "F" ~ "Female")) %>%
+	mutate(pct_attain2 = as.numeric(ObsValue)) %>%
+	mutate(pct_attain = pct_attain2 / 100) %>%
+	# join to have labels instead of country abbrvs
+	left_join(datalabs_ct) %>%
+	select(country = label,  year = TIME_PERIOD, SEX, EDUCATION_LEV, pct_attain, pct_attain2) %>%
+	clean_names()
+
+## chart...horizontal stacked bar
+oecd %>%
+	filter(year == "2022") %>%
+	ggplot(aes(pct_attain, fct_rev(country), fill = fct_rev(education_lev))) +
+	geom_bar(stat = "identity") +
+	scale_x_continuous(expand = c(0,0),
+				breaks = c(.01, 0.25, 0.50, 0.75, .97),
+				labels = c("0", "25%", "50%", "75%", "100%")) +
+	facet_wrap(~ sex, nrow = 1) +
+	geom_text(aes(label = scales::percent(round(pct_attain , 2))),
+				position = position_stack(vjust = 0.5),
+				color= "white", vjust = 0.5, size = 5) +
+	labs(title = "In Nordic countries, women age 25-64 more likely than men to complete college.<br><br>
+			 Finns have lowest levels of attainment stopping at lower secondary",
+			 subtitle = "<br>*Educational Attainment in Nordic Countries, by Sex, ages 25-64 combined, 2022*",
+			 caption = "*Data from OECD, via oecd package for r*",
+			 x = "", y = "") +
+	scale_fill_brewer(palette = "Set2") +
+	theme_minimal() +
+	theme(legend.position = "bottom", legend.spacing.x = unit(0, 'cm'),
+				legend.key.width = unit(1.5, 'cm'), legend.margin=margin(-10, 0, 0, 0),
+				plot.title = element_markdown(), plot.subtitle = element_markdown(),
+				plot.caption = element_markdown(),
+				panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+	guides(fill = guide_legend(label.position = "bottom", reverse = TRUE,
+				title = "Education Levels", title.position = "top"))
+
+```
+
+You can see that there are some differences in levels of attainment between countries. I don't know enough context to speculate as to why. Also, as you add more countries to the filter, the education levels and age groups are aggregated into bigger buckets, presumably to facilitate comparisons. Denmark has a good national database where you can drill down more by age and level, so if I wanted to look at differences by smaller age groups and over time, I'd have to dig into the individual countries national statistics databanks and would have to hope that the age groups and attainment levels are similar enough.
+
+*created and posted April 26, 2024*

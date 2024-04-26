@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
-<meta name="dcterms.date" content="2024-04-24">
+<meta name="dcterms.date" content="2024-04-26">
 <meta name="description" content="Let’s make some charts!">
 
 <title>gregers kjerulf dubrow - 30 Day Chart Challenge 2024</title>
@@ -235,7 +235,7 @@ cookieconsent.run({
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 24, 2024</p>
+        <p class="date">April 26, 2024</p>
       </div>
     </div>
     
@@ -256,6 +256,7 @@ cookieconsent.run({
   <li><a href="#prompt2" id="toc-prompt2" class="nav-link" data-scroll-target="#prompt2">Prompt #2 - Neo</a></li>
   <li><a href="#prompts3and4" id="toc-prompts3and4" class="nav-link" data-scroll-target="#prompts3and4">Prompts #3 &amp; 4 - Redo &amp; Waffle</a></li>
   <li><a href="#prompt5" id="toc-prompt5" class="nav-link" data-scroll-target="#prompt5">Prompt #5 - Diverging</a></li>
+  <li><a href="#prompt6" id="toc-prompt6" class="nav-link" data-scroll-target="#prompt6">Prompt #6 - OECD</a></li>
   </ul>
 </nav>
     </div>
@@ -414,7 +415,7 @@ cookieconsent.run({
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> TIME_PERIOD)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>indexed <span class="dv">0</span>B <span class="cf">in</span>  <span class="dv">0</span>s, <span class="dv">0</span>B<span class="sc">/</span>s</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">2.30</span>PB<span class="sc">/</span>s</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">2.51</span>PB<span class="sc">/</span>s</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                                              </span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make the plots</span></span>
@@ -753,14 +754,15 @@ cookieconsent.run({
 <span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">25</span>) <span class="sc">+</span></span>
 <span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
 <span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">"In Denmark, &lt;span style = 'color: #C8102E;'&gt;women&lt;/span&gt; more likely than men for highest education</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">             level to be Professional BA (MVU) or Masters.&lt;br&gt;Men more likely to stop at primary level or vocational secondary diploma."</span>,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"*Highest level of education attained by all people in Denmark aged 25-69 as of Sept 30 2023*"</span>,</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik via danstat package*"</span>) <span class="sc">+</span></span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), <span class="at">plot.title =</span> <span class="fu">element_markdown</span>(),</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(), <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>                <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="st">             level to be &lt;br&gt;Professional BA (MVU) or Masters.&lt;br&gt;&lt;br&gt;Men more likely to stop at primary level or vocational secondary diploma."</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"&lt;br&gt;*Highest level of education attained by all people in Denmark aged 25-69 as of Sept 30 2023.</span></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="st">             &lt;br&gt;&lt;span style = 'color: #C8102E;'&gt;Women are red bars&lt;/span&gt;, men are white.*"</span>,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik via danstat package*"</span>) <span class="sc">+</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), <span class="at">plot.title =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(), <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>                <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -772,6 +774,95 @@ cookieconsent.run({
 </div>
 <p>There it is, a simple, clean chart showing how highest educational attainment differs for women and men in Denmark. I’m definitely interested in exploring differences by age group and by region.</p>
 <p><em>created and posted April 24, 2024</em></p>
+</section>
+<section id="prompt6" class="level2">
+<h2 class="anchored" data-anchor-id="prompt6">Prompt #6 - OECD</h2>
+<p>Staying with the emerging theme of educational attainment, this prompt was a good excuse to try out the <a href="https://github.com/expersso/OECD"><code>oecd</code> package</a>. The package wraps functions to access OECD data through their API for their <a href="https://data-explorer.oecd.org/">Data Explorer platform</a>.</p>
+<p>It’s fairly straight forward to use…look up the table you want, set the filters, copy the API script and parse out as the package documentation shows. In the example they do not show it, but make sure if you set time parameters that you put it in the <code>start_date</code> and <code>end_date</code> calls. You can of course name the dataset and filters anything you want. I chose my names so they wouldn’t conflict with function calls.</p>
+<p>For this chart I looked at educational attainment in Nordic countries; Denmark, Finland, Iceland, Norway, &amp; Sweden <em>(i)</em>, by sex for all people aged 25 to 64 in 2022. For the sake of expediency, I’ll copy the overall format &amp; theme from prompt 1.</p>
+<p><em>i) let’s not get into here the difference between Nordic &amp; Scandinavian, what constitutes Scandinavian &amp; why…</em></p>
+<p>The code for getting the data and making the chart is below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for prompt 6</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## code for 30 Day Chart Challenge 2024, day 6 OECD</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## educational attainment via OECD package</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## nordics, by sex 25 to 64, 2020-2022</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(OECD) <span class="co"># package to get OECD data via api</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext) <span class="co"># enhancements for text in ggplot</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># table from website</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># https://www.oecd-ilibrary.org/education/data/education-at-a-glance/educational-attainment-and-labour-force-status_889e8641-en</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>edattdata <span class="ot">&lt;-</span> <span class="st">"OECD.CFE.EDS,DSD_REG_EDU@DF_ATTAIN,1.0"</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>edattfilter <span class="ot">&lt;-</span> <span class="st">"A.CTRY.SWE+NOR+ISL+FIN+DNK...Y25T64.F+M.ISCED11_0T2+ISCED11_5T8+ISCED11_3_4.."</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>oecd1 <span class="ot">&lt;-</span> <span class="fu">get_dataset</span>(edattdata, edattfilter, <span class="at">start_time =</span> <span class="dv">2020</span>, <span class="at">end_time =</span> <span class="dv">2022</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># get metadata - helpful to create labels for factors.</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co"># see package documentation on github </span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>oecd_metadata <span class="ot">&lt;-</span> <span class="fu">get_data_structure</span>(edattdata)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co"># gets labels for country codes</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>datalabs_ct <span class="ot">&lt;-</span> oecd_metadata<span class="sc">$</span>CL_REGIONAL <span class="sc">%&gt;%</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">COUNTRY =</span> id)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co"># keep only necessary vars, change some to factors &amp; add labels</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>oecd <span class="ot">&lt;-</span> oecd1 <span class="sc">%&gt;%</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">EDUCATION_LEV =</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        <span class="fu">factor</span>(EDUCATION_LEV,</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>            <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"ISCED11_0T2"</span>, <span class="st">"ISCED11_3_4"</span>, <span class="st">"ISCED11_5T8"</span>),</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Pre-primary thru lower secondary"</span>,</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"Upper secondary and non-degree tertiary"</span>, <span class="st">"Tertiary education"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">SEX =</span> <span class="fu">case_when</span>(SEX <span class="sc">==</span> <span class="st">"M"</span> <span class="sc">~</span> <span class="st">"Male"</span>, SEX <span class="sc">==</span> <span class="st">"F"</span> <span class="sc">~</span> <span class="st">"Female"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pct_attain2 =</span> <span class="fu">as.numeric</span>(ObsValue)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pct_attain =</span> pct_attain2 <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># join to have labels instead of country abbrvs</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(datalabs_ct) <span class="sc">%&gt;%</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="at">country =</span> label,  <span class="at">year =</span> TIME_PERIOD, SEX, EDUCATION_LEV, pct_attain, pct_attain2) <span class="sc">%&gt;%</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>()</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="do">## chart...horizontal stacked bar</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>oecd <span class="sc">%&gt;%</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(year <span class="sc">==</span> <span class="st">"2022"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(pct_attain, <span class="fu">fct_rev</span>(country), <span class="at">fill =</span> <span class="fu">fct_rev</span>(education_lev))) <span class="sc">+</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>),</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>                <span class="at">breaks =</span> <span class="fu">c</span>(.<span class="dv">01</span>, <span class="fl">0.25</span>, <span class="fl">0.50</span>, <span class="fl">0.75</span>, .<span class="dv">97</span>),</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"0"</span>, <span class="st">"25%"</span>, <span class="st">"50%"</span>, <span class="st">"75%"</span>, <span class="st">"100%"</span>)) <span class="sc">+</span></span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> sex, <span class="at">nrow =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">percent</span>(<span class="fu">round</span>(pct_attain , <span class="dv">2</span>))),</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>                <span class="at">position =</span> <span class="fu">position_stack</span>(<span class="at">vjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>                <span class="at">color=</span> <span class="st">"white"</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"In Nordic countries, women age 25-64 more likely than men to complete college.&lt;br&gt;&lt;br&gt;</span></span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a><span class="st">             Finns have lowest levels of attainment stopping at lower secondary"</span>,</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> <span class="st">"&lt;br&gt;*Educational Attainment in Nordic Countries, by Sex, ages 25-64 combined, 2022*"</span>,</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"*Data from OECD, via oecd package for r*"</span>,</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>             <span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">'cm'</span>),</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="fl">1.5</span>, <span class="st">'cm'</span>), <span class="at">legend.margin=</span><span class="fu">margin</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.title =</span> <span class="fu">element_markdown</span>(), <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>                <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">label.position =</span> <span class="st">"bottom"</span>, <span class="at">reverse =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>                <span class="at">title =</span> <span class="st">"Education Levels"</span>, <span class="at">title.position =</span> <span class="st">"top"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="images/prompt6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="images/prompt6-1.png" class="img-fluid figure-img" style="width:100.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You can see that there are some differences in levels of attainment between countries. I don’t know enough context to speculate as to why. Also, as you add more countries to the filter, the education levels and age groups are aggregated into bigger buckets, presumably to facilitate comparisons. Denmark has a good national database where you can drill down more by age and level, so if I wanted to look at differences by smaller age groups and over time, I’d have to dig into the individual countries national statistics databanks and would have to hope that the age groups and attainment levels are similar enough.</p>
+<p><em>created and posted April 26, 2024</em></p>
 
 
 </section>
@@ -1208,7 +1299,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","loop":false,"closeEffect":"zoom","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom"});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
