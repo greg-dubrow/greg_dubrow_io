@@ -667,7 +667,7 @@ Why? Well I wanted to use the [province aggregation](https://en.wikipedia.org/wi
 
 But In this first chunk we get the geographic boundary data. For this we'll be using NUTS3 level. What are the NUTS levels? (settle down, Beavis) Well, per the [European Commission and Eurostat](https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Nomenclature_of_territorial_units_for_statistics_(NUTS)) they are:
 
-> Blockquote "The Nomenclature of territorial units for statistics, abbreviated NUTS (from the French version Nomenclature des Unités territoriales statistiques) is a geographical nomenclature subdividing the economic territory of the European Union (EU) into regions at three different levels (NUTS 1, 2 and 3 respectively, moving from larger to smaller territorial units).
+> "The Nomenclature of territorial units for statistics, abbreviated NUTS (from the French version Nomenclature des Unités territoriales statistiques) is a geographical nomenclature subdividing the economic territory of the European Union (EU) into regions at three different levels (NUTS 1, 2 and 3 respectively, moving from larger to smaller territorial units).
 
 In Denmark NUTS1 is the entire country, NUTS2 are the major regions, and NUTS3 are the provinces. The process for doing this comes from one of the excellent tutorials by [Milos Popvic](https://github.com/milos-agathon/how-i-make-eurostat-maps/blob/main/R/main.r) in his *Milos Makes Maps* series of [video](https://www.youtube.com/@milos-makes-maps/videos) and code how-tos.
 

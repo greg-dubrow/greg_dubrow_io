@@ -416,7 +416,7 @@ cookieconsent.run({
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> TIME_PERIOD)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>indexed <span class="dv">0</span>B <span class="cf">in</span>  <span class="dv">0</span>s, <span class="dv">0</span>B<span class="sc">/</span>s</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">1.67</span>PB<span class="sc">/</span>s</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">2.40</span>PB<span class="sc">/</span>s</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                                              </span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make the plots</span></span>
@@ -880,7 +880,7 @@ cookieconsent.run({
 <p>Why? Well I wanted to use the <a href="https://en.wikipedia.org/wiki/Provinces_of_Denmark">province aggregation</a>, the middle level between towns and regions. I wanted to see a bit of nuance in the maps. The problem is, while province data can be pulled from the <a href="https://www.statbank.dk/">StatBank data portal</a> the <a href="https://www.dst.dk/en/Statistik/brug-statistikken/muligheder-i-statistikbanken/api#">API</a> only has cities, regions, and all of Denmark. So loading flat-files it is.</p>
 <p>But In this first chunk we get the geographic boundary data. For this we’ll be using NUTS3 level. What are the NUTS levels? (settle down, Beavis) Well, per the <a href="https://ec.europa.eu/eurostat/statistics-explained/index.php?title=Glossary:Nomenclature_of_territorial_units_for_statistics_(NUTS)">European Commission and Eurostat</a> they are:</p>
 <blockquote class="blockquote">
-<p>Blockquote “The Nomenclature of territorial units for statistics, abbreviated NUTS (from the French version Nomenclature des Unités territoriales statistiques) is a geographical nomenclature subdividing the economic territory of the European Union (EU) into regions at three different levels (NUTS 1, 2 and 3 respectively, moving from larger to smaller territorial units).</p>
+<p>“The Nomenclature of territorial units for statistics, abbreviated NUTS (from the French version Nomenclature des Unités territoriales statistiques) is a geographical nomenclature subdividing the economic territory of the European Union (EU) into regions at three different levels (NUTS 1, 2 and 3 respectively, moving from larger to smaller territorial units).</p>
 </blockquote>
 <p>In Denmark NUTS1 is the entire country, NUTS2 are the major regions, and NUTS3 are the provinces. The process for doing this comes from one of the excellent tutorials by <a href="https://github.com/milos-agathon/how-i-make-eurostat-maps/blob/main/R/main.r">Milos Popvic</a> in his <em>Milos Makes Maps</em> series of <a href="https://www.youtube.com/@milos-makes-maps/videos">video</a> and code how-tos.</p>
 <div class="cell">
@@ -1464,7 +1464,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"descPosition":"bottom","openEffect":"zoom","selector":".lightbox"});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false});
 window.onload = () => {
   lightboxQuarto.on('slide_before_load', (data) => {
     const { slideIndex, slideNode, slideConfig, player, trigger } = data;
