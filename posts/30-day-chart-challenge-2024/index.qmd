@@ -846,3 +846,85 @@ wrap_plots(
 If this were for an official company or organization report or academic publication there are some tweaks I'd want to make...the color palette, maybe writing a function to make the breaks better, spacing of province labels, maybe making it interactive with tool tips that show province name along with other data. I might do an inset or separate plots for Copenhagen. But for the purpose of the chart challenge I'm happy with it because it meets my goal, which was to build a plot function and iterate it over a vector, rather than copy-paste and edit the plot code.
 
 *created and posted April 29, 2024*
+
+## Prompt #8 - Circular {#prompt8}
+
+Because prompt 7 took so much time, I'm cheating a bit with this prompt, and reusing two plots I made for the [bicycle rides post](https://www.gregdubrow.io/posts/my-year-of-riding-danishly/).
+
+I wanted to visualise which hours and minutes I started my rides. The `coord_polar()` function turns a bar chart into a circle. Adding the right breaks and limits, and *voila*, first the hours of the day...
+
+```{r prompt8_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for circular time plots - hour"
+
+strava_data %>%
+	filter(activity_year == 2023) %>%
+	count(ride_type, activity_hour) %>%
+	{. ->> tmp} %>%
+	ggplot(aes(activity_hour, y = n, fill = ride_type)) +
+	geom_bar(stat = "identity") +
+	scale_x_continuous(limits = c(0, 24), breaks = seq(0, 24)) +
+	geom_text(data = subset(tmp, ride_type == "Commute/Studieskolen" & n > 20),
+		aes(label= n), color = "white", size = 4) +
+	coord_polar(start = 0) +
+	theme_minimal() +
+	scale_fill_manual(values = c("#0072B2", "#E69F00", "#CC79A7"),
+										labels = c("Commute/<br>Studieskolen", "Other", "Workout")) +
+	labs(x = "", y = "",
+			 title = "Most Rides During Morning and Evening Commuting Hours",
+			 subtitle = "*Numbers Correspond to Hour of Day on a 24 hr clock*") +
+	theme(legend.text = element_markdown(),
+				axis.text.y = element_blank(),
+				legend.title = element_blank(),
+				plot.title = element_text(size = 10, hjust = 0.5),
+				plot.subtitle = element_markdown(hjust = 0.5, size = 9))
+rm(tmp)
+```
+
+![](images/circular_hour.png){fig-alt="circular bar plot representing a clock"}
+
+...and the minutes.
+
+```{r prompt8_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for circular time plots - minute"
+
+activty_ampm %>%
+	ggplot(aes(activity_min, y = activity_min_n, fill = ampm)) +
+	geom_col(position = position_stack(reverse = TRUE)) +
+	scale_x_continuous(limits = c(-1, 60), breaks = seq(0, 59), labels = seq(0, 59)) +
+	geom_text(data = subset(activty_ampm, activity_min_n > 5),
+						aes(label= activity_min_n), color = "white", size = 4, position = position_nudge(y = -1)) +
+	coord_polar(start = 0) +
+	theme_minimal() +
+	scale_fill_manual(values = c("#E57A77", "#7CA1CC"),
+										labels = c("AM", "PM")) +
+	labs(x = "", y = "",
+			 title = "Most Morning Rides Started Between 12 & 30 Past the Hour <br>
+			 Evening Rides More Evenly Spaced Through the Hour",
+			 subtitle = "*Numbers Correspond to  Minutes of the Hour*") +
+	theme(legend.text = element_markdown(),
+				axis.text.y = element_blank(),
+				legend.title = element_blank(),
+				plot.title = element_markdown(size = 10, hjust = 0.5),
+				plot.subtitle = element_markdown(hjust = 0.5, size = 9))
+
+```
+
+![](images/circular_minute.png){fig-alt="circular bar plot representing a clock"}
+
+They aren't perfect but they're close enough and visualised what I wanted them to show...what time of the day did I start my bike rides in 2023. For more detail and context, read the [bike rides post](https://www.gregdubrow.io/posts/my-year-of-riding-danishly/).
+
+*created and posted April 29, 2024*
