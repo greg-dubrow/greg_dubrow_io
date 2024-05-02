@@ -928,3 +928,355 @@ activty_ampm %>%
 They aren't perfect but they're close enough and visualised what I wanted them to show...what time of the day did I start my bike rides in 2023. For more detail and context, read the [bike rides post](https://www.gregdubrow.io/posts/my-year-of-riding-danishly/).
 
 *created and posted April 29, 2024*
+
+## Prompt #9 - Major/Minor {#prompt9}
+
+The very first thing that came to mind for this plot prompt was to look at differences in music between major and minor keys. That provided me with the perfect excuse to use the [`spotifyr`](https://github.com/charlie86/spotifyr) package again, as I did in my post [analyzing the music](https://www.gregdubrow.io/posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/) from my band [Gosta Berling](https://gostaberling.bandcamp.com/).
+
+As I already had the code I needed to authorize API access through the package, I figued it would be easy, and this would be at most a couple of hours of work.
+
+Not so much.
+
+Sparing the detail, let's leave it by noting in order to get access to the playlist endpoint I had to redo the access code and that took a while. Then I had to figure out a way to overcome the rate limit for getting audio features. That took some time. But it's all done, so let's get some data and build some charts.
+
+In my other Spotify-based post I addressed the ethical issues with using the platform, so I won't rehash here except to say it's a great tool for listening to and discovering music, but please, actually buy music from the artists you like or discover on the platform, **especially** independent artists.
+
+Anyway, Spotify grants access to the API and gives you an id and secret code. The code below shows how to store and access the credentials.
+
+```{r prompt9_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting playlist data - pt1"
+
+library(tidyverse)
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(spotifyr) # functions to access spotify API
+
+
+# if you need to add spotify API keys
+# usethis::edit_r_environ()
+# as SPOTIFY_CLIENT_ID = 'xxxxxxxxxxxxxxxxxxxxx'
+# as SPOTIFY_CLIENT_SECRET = 'xxxxxxxxxxxxxxxxxxxxx'
+
+# identify the scopes, or end-points, that you want.
+# read the spotify api documentation to decide on scopes
+# for playlists we need these
+scopes = c(
+	"user-library-read",
+	"user-read-recently-played",
+	"playlist-read-private",
+	"playlist-read-collaborative",
+	"user-read-private")
+
+# uses the scopes and credentials to authorise the session.
+auth <- spotifyr::get_spotify_authorization_code(
+	Sys.getenv("SPOTIFY_CLIENT_ID"),
+	Sys.getenv("SPOTIFY_CLIENT_SECRET"),
+	scopes)
+
+# pulls a list of your playlists..default is 20, you can get up to 50
+playlists <- spotifyr::get_user_playlists('dannebrog13', limit = 20,
+	offset = 0, authorization = auth)
+
+# alternately, go to spotify and get the link to the playlist (click on the ... and select share)
+# https://open.spotify.com/playlist/6mlrhYRlFv3Ji5xwzqFWwQ?si=966ddb877c414599
+
+# The playlist code you need is after "playlist/" and goes up to the ?
+
+# set the playlist code as an object
+likeddid <- "6mlrhYRlFv3Ji5xwzqFWwQ"
+```
+
+Ok, we have the info we need to get the list of songs in the playlist. To do that I amended code I found in [this post](https://www.rpubs.com/womeimingzi11/how_my_spotify_looks_like), and changed the function options for the `get_playlist_tracks` call.
+
+```{r prompt9_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting playlist data - pt2"
+
+all_liked_tracks <-
+	ceiling(get_playlist_tracks("6mlrhYRlFv3Ji5xwzqFWwQ", include_meta_info = TRUE)[['total']] / 50) %>%
+	seq() %>%
+	map(function(x) {
+		get_playlist_tracks("6mlrhYRlFv3Ji5xwzqFWwQ",
+		fields = NULL,
+		limit = 50, offset = (x - 1) * 50,
+		market = NULL,
+		authorization = get_spotify_access_token(),
+		include_meta_info = FALSE)
+	}) %>% reduce(rbind)
+```
+
+I would recommend saving successful pulls as local `rds` files. You run the risk of hitting your rate limit if you call the API too many times.
+
+Now that we have a list of songs, we want to get the audio features. These are measures that Spotify has attached to tracks to indicate things like "danceability", "energy", "valence" (essentially happiness) & other items. Read the [Spotify developers' guide](https://developer.spotify.com/documentation/web-api/reference/get-audio-features) for more detail.
+
+Getting the audio features for a long list like this one, 1900+ entries, poses a challenge when the rate limit per call is 100 tracks. I was trying to figure out a way to loop over chunks of 100 with `Sys.sleep()` call but couldn't get it to work. Luckily, someone figured out the solution to get around the rate limit that takes hardly any time. I won't copy the code here, you can find it on the package's repo on the [issues tab](https://github.com/charlie86/spotifyr/issues/130#issuecomment-885076286).
+
+What I'll show below is the code to merge the track details with the audio features into a nice tidy dataframe. Read the comments in the code to see the process.
+
+```{r prompt9_3}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting playlist data - pt3"
+
+# initial version of df. contains a couple of nested lists that need unpacking. easier to do in stages.
+liked_songs1 <- liked_track_features %>%
+# assign key number values to character values.
+	mutate(key_name = case_when(key == 0 ~ "C", key == 1 ~ "C#/Db", key == 2 ~ "D",
+			key == 3 ~ "D#/Eb", key == 4 ~ "E", key == 5 ~ "F",
+			key == 6 ~ "F#/Gb", key == 7 ~ "G", key == 8 ~ "G#/Ab",
+			key == 9 ~ "A", key == 10 ~ "A#/Bb", key == 11 ~ "B")) %>%
+	mutate(mode_name = case_when(mode == 0 ~ "Minor", mode == 1 ~ "Major")) %>%
+	mutate(key_mode = paste(key_name, mode_name, sep = " ")) %>%
+	select(track.id = id, key_name:key_mode, time_signature, tempo, duration_ms,
+				 danceability, energy, loudness, speechiness:valence,
+				 key, mode, type, uri, track_href, analysis_url) %>%
+	# join to playlist track information
+	left_join(all_liked_tracks) %>%
+	#remove a few variables we won't need
+	select(-video_thumbnail.url, -track.episode, -added_by.href:-added_by.external_urls.spotify) 
+
+# unnest some columns
+liked_songs <- unnest_wider(liked_songs1, track.artists, names_sep = "_") %>%
+	select(-track.artists_external_urls.spotify, -track.artists_uri, -track.artists_type, -track.artists_href) %>%
+	mutate(track.artist_names = map_chr(track.artists_name, toString)) %>%
+	separate(track.artist_names, paste0('track.artist', c(1:6)), sep = ',', remove = F) %>%
+	mutate(across(56:60, str_trim)) %>%
+	select(track.id:track.artists_id, track.artist_names:track.artist6, everything(), -track.artists_name)
+
+## At this point, save the file as an rds!!
+
+```
+
+BTW, the playlist in question is my "liked songs", those I starred or hearted or whatever. To make it a list I could access via API I had to copy from the static list Spotify makes (but isn't in the API) into a user list. You can find it [here](https://open.spotify.com/playlist/6mlrhYRlFv3Ji5xwzqFWwQ?si=966ddb877c414599). There is of course some selection bias in the list...is the track on Spotify, have I either come across it & liked it or remembered to because I wanted a list like this for comfort listening...etc. It's not perfectly representative of the music I like the most, but close enough.
+
+My most liked songs are from artists like R.E.M., The National, The Hold Steady, Superchunk, Replacements, Paul Kelly, The Feelies, Teenage Fanclub, Yo La Tengo, Robyn Hitchcock...so you get the idea of sounds for when we look at the plots of audio features.
+
+Now it's time to make a chart. I decided to visualise the differences in audio feature values between major and minor key songs. So first I created a dataframe with all the summary stats.
+
+```{r prompt9_4}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting visualisation data ready"
+
+liked_songs_summary <-
+liked_songs %>%
+	rename(duration.ms = duration_ms) %>%
+	# change loudness to abs value for better scaling in plots
+	mutate(loudness = abs(loudness)) %>%
+	group_by(mode_name) %>%
+	summarise_at(vars(tempo:valence),
+		list(mean = mean,
+		q25 = ~quantile(., 0.25),
+		med = median,
+		q75 = ~quantile(., 0.75),
+		min = min, max = max)) %>%
+ 	pivot_longer(-mode_name,
+ 		names_to = "var_measure",
+ 		values_to = "value") %>%
+	separate_wider_delim(var_measure, "_", names = c("var", "measure")) %>%
+	#mutate(value = round(value, 2)) %>%
+	# change duration to seconds for easier explanation
+	mutate(value = ifelse(var == "duration.ms", value / 1000, value)) %>%
+	mutate(value = round(value, 2)) %>%
+	mutate(var = ifelse(var == "duration.ms", "duration_sec", var))
+```
+
+Now to make charts. I decided on lollipop charts to show the min and max values at either end, and the mean value along the lollipop stem. I thought I'd be able to write the basic chart as a function or put them all in one faceted cahart, but the audio features have different scales. Most are 0-1, but tempo (beats per minute) gets up to the 200s, loudness (in decibels) goes -60-0.
+
+Then I tried to make a function for the axis scale to respond to the audio feature, but it wasn't working so in the end it was easier to copy and amend the code as needed for the features. First up, we do all the 0-1 scale features as a faceted plot.
+
+Click on the chart to enlarge it.
+
+```{r}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: false
+#| eval: true
+
+library(tidyverse)
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+
+# quietly load data into environment
+liked_songs <- readRDS(file = "~/Data/r/spotify-analysis/data/liked_songs.rds")
+
+# create summary df
+liked_songs_summary <-
+liked_songs %>%
+	rename(duration.ms = duration_ms) %>%
+	# change loudness to abs value for better scaling in plots
+	mutate(loudness = abs(loudness)) %>%
+	group_by(mode_name) %>%
+	summarise_at(vars(tempo:valence),
+		list(mean = mean,
+		q25 = ~quantile(., 0.25),
+		med = median,
+		q75 = ~quantile(., 0.75),
+		min = min, max = max)) %>%
+ 	pivot_longer(-mode_name,
+ 		names_to = "var_measure",
+ 		values_to = "value") %>%
+	separate_wider_delim(var_measure, "_", names = c("var", "measure")) %>%
+	#mutate(value = round(value, 2)) %>%
+	# change duration to seconds for easier explanation
+	mutate(value = ifelse(var == "duration.ms", value / 1000, value)) %>%
+	mutate(value = round(value, 2)) %>%
+	mutate(var = ifelse(var == "duration.ms", "duration_sec", var))
+```
+
+```{r prompt9_5}
+#| fig.width: 9.0
+#| fig.height: 6.0
+#| fig-dpi: 300
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for audio features plot 1"
+
+library(ggtext) # enhancements for text in ggplot
+
+liked_songs_summary %>%
+	filter(var %in% c("acousticness", "danceability", "energy", "instrumentalness",
+									 "liveness", "speechiness", "valence")) %>%
+	pivot_wider(names_from = measure, values_from = value) %>%
+	ggplot() +
+	geom_segment(aes(x= min, xend=max, y=fct_rev(mode_name), yend=fct_rev(mode_name)), color="grey") +
+	geom_point( aes(x=min, y=mode_name), color="#4E79A7", size=3 ) +
+	geom_point( aes(x=max, y=mode_name), color="#79A74E", size=3 ) +
+	geom_point( aes(x=mean, y=mode_name), color="#A74E79", size=3 ) +
+	scale_x_continuous(limits = c(0, 1), breaks = scales::pretty_breaks(4)) +
+	labs(x = "", y = "", title = "Spotify defined audio feature values for Liked Songs playlist by major & minor key tracks",
+			 subtitle = "<span style='color: #4E79A7;'>Min</span> \n<span style='color: #A74E79;'>Mean</span> \n<span style='color: #79A74E;'>Max</span>",
+			 caption = "*Data from Spotify API via spotifyr package*") +
+	theme_minimal() +
+	theme(panel.grid = element_blank(),
+				plot.subtitle = element_markdown(size = 12),
+				plot.caption = element_markdown(),
+				strip.text.x = element_text(size = 10 )) +
+	facet_wrap(~ var, ncol = 2, scales = "free_y")
+```
+
+There's not a ton of difference between major and minor key songs, only for liveness, which tries to measure the presence of an audience, and speechiness, or is the singing more talky or not. I was a bit surprised that valence (Spotify's happiness measure) was the same for both.
+
+Let's now do tempo *(beats per minute)*, duration *(in seconds)*, and loudness *(in decibels, "the quality of a sound that is the primary psychological correlate of physical strength \[amplitude\]")*.
+
+```{r prompt9_6}
+#| fig.width: 8.0
+#| fig.height: 5.0
+#| fig-dpi: 300
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for audio features plot2-4"
+
+# var == "tempo" ~ c(60, 210),
+liked_songs_summary %>%
+	filter(var == "tempo") %>%
+	select(-var) %>%
+	pivot_wider(names_from = measure, values_from = value) %>%
+	ggplot() +
+	geom_segment(aes(x= min, xend=max, y=fct_rev(mode_name), yend=fct_rev(mode_name)), color="grey") +
+	geom_point( aes(x=min, y=mode_name), color="#4E79A7", size=3 ) +
+	geom_point( aes(x=max, y=mode_name), color="#79A74E", size=3 ) +
+	geom_point( aes(x=mean, y=mode_name), color="#A74E79", size=3 ) +
+	scale_x_continuous(limits = c(0, 220), breaks = scales::pretty_breaks(4)) +
+	labs(x = "", y = "", title = "Minimal difference in tempo values between major & minor key songs",
+			 subtitle = "*Audio feature: tempo (beats per minute) <br>
+			 x axis scale reflects min & max values for playlist.*",
+			 caption = "*Data from Spotify API via spotifyr package*") +
+	annotate(geom = "richtext",
+					 label = "<span style='color: #4E79A7;'>Min</span> \n<span style='color: #A74E79;'>Mean</span> \n<span style='color: #79A74E;'>Max</span>",
+					 x = 150, y = 1.5) +
+	theme_minimal() +
+	theme(panel.grid = element_blank(),
+				plot.subtitle = element_markdown(size = 12),
+				plot.caption = element_markdown(),
+				axis.text.y = element_text(size = 12))
+
+# var == "duration" ~ c(60, 1100))
+#duration <-
+liked_songs_summary %>%
+	filter(var == "duration_sec") %>%
+	select(-var) %>%
+	pivot_wider(names_from = measure, values_from = value) %>%
+	ggplot() +
+	geom_segment(aes(x= min, xend=max, y=fct_rev(mode_name), yend=fct_rev(mode_name)), color="grey") +
+	geom_point( aes(x=min, y=mode_name), color="#4E79A7", size=3 ) +
+	geom_point( aes(x=max, y=mode_name), color="#79A74E", size=3 ) +
+	geom_point( aes(x=mean, y=mode_name), color="#A74E79", size=3 ) +
+	scale_x_continuous(limits = c(0, 1100), breaks = scales::pretty_breaks(5)) +
+	labs(x = "", y = "", title = "Minimal difference in average length, though longest song is major key.",
+			 subtitle = "*Audio feature: duration (in seconds)*",
+			 caption = "*Data from Spotify API via spotifyr package*") +
+	annotate(geom = "richtext",
+					 label = "<span style='color: #4E79A7;'>Min</span> \n<span style='color: #A74E79;'>Mean</span> \n<span style='color: #79A74E;'>Max</span>",
+					 x = 700, y = 1.5) +
+	theme_minimal() +
+	theme(panel.grid = element_blank(),
+				plot.subtitle = element_markdown(size = 12),
+				plot.caption = element_markdown(),
+				axis.text.y = element_text(size = 12))
+
+# var == "loudness" ~ c(0, 30),
+#loud <-
+liked_songs_summary %>%
+	filter(var == "loudness") %>%
+	select(-var) %>%
+	pivot_wider(names_from = measure, values_from = value) %>%
+	ggplot() +
+	geom_segment(aes(x= min, xend=max, y=fct_rev(mode_name), yend=fct_rev(mode_name)), color="grey") +
+	geom_point( aes(x=min, y=mode_name), color="#4E79A7", size=3 ) +
+	geom_point( aes(x=max, y=mode_name), color="#79A74E", size=3 ) +
+	geom_point( aes(x=mean, y=mode_name), color="#A74E79", size=3 ) +
+	scale_x_continuous(limits = c(0, 60)) +
+	labs(x = "", y = "", title = "Minimal difference in loudness profile between major & minor key songs",
+			 subtitle = "*Audio feature: loudness. <br>Original values are -60db-0db (decibels). Absolute value use for scaling.*",
+			 caption = "*Data from Spotify API via spotifyr package*") +
+	annotate(geom = "richtext",
+					 label = "<span style='color: #4E79A7;'>Min</span> \n<span style='color: #A74E79;'>Mean</span> \n<span style='color: #79A74E;'>Max</span>",
+					 x = 30, y = 1.5) +
+	theme_minimal() +
+	theme(panel.grid = element_blank(),
+				plot.subtitle = element_markdown(size = 12),
+				plot.caption = element_markdown(),
+				axis.text.y = element_text(size = 12))
+
+```
+
+So there you have it. An approach to visualising audio features. There's more to do here, but that will have to wait for an even more in-depth post. This turned out to be longer than I planned.
+
+*p.s. - yes, I know I'm now posting these after the chart challenge is officially over. but they are good exercises for me to keep learning and creating. and i'm enjoying it, so...*
+
+*created and posted May 2, 2024*
