@@ -3,7 +3,8 @@ title: "30 Day Chart Challenge 2024"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
 date: "today"
-categories: [post, rstats, ggplot, dataviz, chartchallenge, tidytuesday, eurostat]
+categories: [post, rstats, ggplot, dataviz, chartchallenge, tidytuesday, eurostat, oecd, spotify, denmark, crime,
+births]
 image: "prompts.png"
 toc: true
 lightbox: true

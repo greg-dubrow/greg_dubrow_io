@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="gregers kjerulf dubrow">
+<meta name="dcterms.date" content="2024-10-23">
+<meta name="description" content="Examining football attendance data">
+
+<title>If You Sell It, Will They Come? – gregers kjerulf dubrow</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/cookie-consent/cookie-consent.js"></script>
+<link href="../../site_libs/cookie-consent/cookie-consent.css" rel="stylesheet">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-09CSH6M61C"></script>
+
+<script type="text/plain" cookie-consent="tracking">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-09CSH6M61C', { 'anonymize_ip': false});
+</script>
+
+<script type="text/javascript" charset="UTF-8">
+document.addEventListener('DOMContentLoaded', function () {
+cookieconsent.run({
+  "notice_banner_type":"simple",
+  "consent_type":"express",
+  "palette":"light",
+  "language":"en",
+  "page_load_consent_levels":["strictly-necessary"],
+  "notice_banner_reject_button_hide":false,
+  "preferences_center_close_button_hide":false,
+  "website_name":""
+  ,
+"language":"en"
+  });
+});
+</script> 
+  
+<script src="../../site_libs/core-js-2.5.3/shim.min.js"></script>
+<script src="../../site_libs/react-18.2.0/react.min.js"></script>
+<script src="../../site_libs/react-18.2.0/react-dom.min.js"></script>
+<script src="../../site_libs/reactwidget-2.0.0/react-tools.js"></script>
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="../../site_libs/reactable-0.4.4/reactable.css" rel="stylesheet">
+<script src="../../site_libs/reactable-binding-0.4.4/reactable.js"></script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="If You Sell It, Will They Come? – gregers kjerulf dubrow">
+<meta property="og:description" content="Examining football attendance data">
+<meta property="og:image" content="https://www.gregdubrow.io/posts/if-you-sell-it-will-they-come/groupamastadium_nov2022.jpg">
+<meta property="og:site_name" content="gregers kjerulf dubrow">
+<meta name="twitter:title" content="If You Sell It, Will They Come? – gregers kjerulf dubrow">
+<meta name="twitter:description" content="Examining football attendance data">
+<meta name="twitter:image" content="https://www.gregdubrow.io/posts/if-you-sell-it-will-they-come/groupamastadium_nov2022.jpg">
+<meta name="twitter:creator" content="@greg_dubrow">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">gregers kjerulf dubrow</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About me</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/greg-dubrow"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/dubrowg/"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/greg_dubrow"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">If You Sell It, Will They Come?</h1>
+                  <div>
+        <div class="description">
+          Examining football attendance data
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">post</div>
+                <div class="quarto-category">rstats</div>
+                <div class="quarto-category">ggplot</div>
+                <div class="quarto-category">football</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>gregers kjerulf dubrow </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 23, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#meta-preamble" id="toc-meta-preamble" class="nav-link active" data-scroll-target="#meta-preamble"><em>meta preamble</em></a></li>
+  <li><a href="#intro" id="toc-intro" class="nav-link" data-scroll-target="#intro">Introduction</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The Data</a></li>
+  <li><a href="#plan" id="toc-plan" class="nav-link" data-scroll-target="#plan">Outline</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a></li>
+  <li><a href="#stadium" id="toc-stadium" class="nav-link" data-scroll-target="#stadium">Getting the stadium data</a></li>
+  <li><a href="#attendance" id="toc-attendance" class="nav-link" data-scroll-target="#attendance">Getting the attendance figures</a></li>
+  <li><a href="#average-match-capacity-by-league" id="toc-average-match-capacity-by-league" class="nav-link" data-scroll-target="#average-match-capacity-by-league">Average match capacity by league</a></li>
+  <li><a href="#club-attendance-figures-for-top-5-european-leagues-mls" id="toc-club-attendance-figures-for-top-5-european-leagues-mls" class="nav-link" data-scroll-target="#club-attendance-figures-for-top-5-european-leagues-mls">Club attendance figures for Top 5 European leagues &amp; MLS</a></li>
+  <li><a href="#club-attendance-figures-for-other-european-leagues" id="toc-club-attendance-figures-for-other-european-leagues" class="nav-link" data-scroll-target="#club-attendance-figures-for-other-european-leagues">Club attendance figures for other European leagues</a></li>
+  <li><a href="#what-does-it-all-mean" id="toc-what-does-it-all-mean" class="nav-link" data-scroll-target="#what-does-it-all-mean">What does it all mean?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<div class="quarto-figure quarto-figure-left">
+<figure class="figure">
+<p><a href="groupamastadium_nov2022.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="An almost sold-out Groupama Stadium, Lyon v Nice, November 2022. Photo by author."><img src="groupamastadium_nov2022.jpg" class="img-fluid quarto-figure quarto-figure-left figure-img" alt="wide angle shot from the upper deck of groupama stadium in lyon france, for a sold-out match featuring lyon v nice in november 2022."></a></p>
+</figure>
+</div>
+<figcaption>An almost sold-out Groupama Stadium, Lyon v Nice, November 2022. Photo by author.</figcaption>
+</figure>
+</div>
+<section id="meta-preamble" class="level3">
+<h3 class="anchored" data-anchor-id="meta-preamble"><em>meta preamble</em></h3>
+<p>This was supposed to be just a chart and table or two but ended up a longer post than planned. One of those projects that started as a simple idea to compare league averages on percent of stadium capacity but then grew into drilling down to the club level. The subject is not something I feel strongly about or spend much time thinking about, but once I started the project I wanted to see it though.</p>
+<p>As it happens, along the way I learned a few new coding tricks. But the most important lesson I learned, and the one that extended the completion timeline for the project, was about the role of trial and error in creating effective data visualizations.</p>
+<p>The way I tend to work is, even with a design phase where I sketch out charts by hand, I often don’t know exactly what I want as the final product until I’ve prototyped and iterated. I’m a visual and experiential learner and doer.</p>
+<p>For this project, the original by-league-and-club visualization I did was ok, but I realized after I’d created almost all of them it wasn’t telling the story I’d set out to tell. I was burying the lede on capacity, relegating it to secondary status behind stadium size. You can see what I mean <a href="https://github.com/greg-dubrow/football-attendance/blob/main/plot_attendance_23_bundes.jpg">in this example</a>.</p>
+<p>So despite doing these for almost every league, I went back to the drawing board to the version you see below. Then <strong>twice</strong> I realized the by-league and club scatterplots needed fine tuning after I’d run them all.</p>
+<center>
+<em>sigh</em>
+</center>
+<p><br> The moral of this data visualization story is trust your instincts if you think your visualization isn’t telling the story you are hoping you’re telling. Go back to the drawing board and get it right.</p>
+<p>Regarding coding tricks, I’m getting better at writing functions for anything from small operations to complicated charts. I also have a nice one to read in files from a directory, iterate over them to pull out just the columns I want, and <code>rbind</code> them together. Hooray for the efficiency of functional programming.</p>
+<p>One thing I couldn’t make work was getting interactive charts made with the <code>ggiraph</code> or <code>plotly</code> packages to load nicely as html widgets in Quarto. They weren’t sizing up well on the page. If anyone reading this has tips, let me know.</p>
+<p>If you wonder why I spend so much time explaining this and explaining my process in the post, what I’m trying to do with this blog &amp; portfolio is not just showcase my work but contribute to the <code>#rstats</code> “how-to” community that’s helped me so much. If you’re an experienced r user it may seem simplistic. If you’re learning, I hope it helps.</p>
+<p>And now, on with the show…</p>
+</section>
+<section id="intro" class="level2">
+<h2 class="anchored" data-anchor-id="intro">Introduction</h2>
+<p>Reading a post on a football blog comparing average attendance rates across leagues in Europe with Major League Soccer (MLS) in the US, I thought that the analysis needed a bit more than averages. Looking at stadium capacity raised more interesting questions, including:</p>
+<ul>
+<li>What percentage of available tickets were accounted for, or to flip the question, how much of the stadium was full?</li>
+<li>Are there differences between leagues? By clubs within each league?</li>
+</ul>
+<p>Why does capacity matter? To start with it’s a measure of demand based on supply. How many of your supply of seats do people want to purchase?</p>
+<p>Also, as anyone who’s performed on stage can tell you, it’s better to play a room that’s too small and have a happening sold-out vibe than to play a room that’s too large where the impression is left that you’re not a strong draw. When MLS started in the mid-1990s, almost every team was playing in their city’s American football stadium. These stadiums could hold upwards of 50,000 people and MLS clubs were maybe drawing 10,000. A dead vibe that looked bad on television and felt inert if you were at a match.</p>
+<p>Watch a European match at a sold-out ground, or an MLS match now from Portland, Philadelphia, Columbus, or any other smaller soccer-specific ground. Electric vibes. You want to be there and be part of a happening.</p>
+</section>
+<section id="the-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-data">The Data</h2>
+<p>To do the analysis I needed match attendance and stadium capacity. Match attendance comes from <a href="https://fbref.com/">FBRef</a> via the <code>worldfootballR</code> package. Stadium data was scraped from from Wikipedia pages. I’ve pulled data for MLS and eleven 1st division leagues in Europe: the 5 major top flights in England, France, Germany, Italy &amp; Spain; along with Belgium, Denmark (of course), Netherlands, Portugal, Scotland, Sweden, and Switzerland. Attendance figures are only for league matches. Champions League &amp; other UEFA tournaments, and league cup matches (e.g.&nbsp;FA Cup, Coppa Italia, etc) are not included. Promotion and relegation playoff matches are included if the home team is in the top-flight league.</p>
+<p>Because Sweden, like MLS, runs a spring-fall schedule I’m using the 2022-23 season figures for better comparison, even though the 2023-24 season just ended in all other Euro leagues. I’d hoped to add football-mad Turkey but 90% of the matches did not have any attendance numbers listed on FBRef.</p>
+<p>It’s worth noting a big caveat about attendance figures; in the US it’s generally reported as tickets accounted for (sold, given away, etc), not the turnstile count. Most Premier League clubs also use that method. I’m not sure how attendance is counted in other leagues. So if you wonder why your favorite team shows a higher average capacity than the eyeball test of vacant seats, that’s why.</p>
+<p>It’s also worth noting that the FBRef data may not be 100% accurate. In putting together the France data for instance, I noticed that some stadiums listed as venues were incorrect. For Denmark they transposed the 2nd stage groups, championship and relegation. In each case I let them know and they say they are correcting the problem matches. I only spotted those errors, though, because I know the leagues well enough having lived in France for a bit and living now in Denmark.</p>
+<p>The stadium data from Wikipedia also needed edits, as stadium capacity can fluctuate, especially for stadiums undergoing renovation. I knew of a few reduced capacities (e.g.&nbsp;at Real Madrid in 2022-23) but I’m sure I missed some in other leagues. If you see any issues there, let me know.</p>
+<p>Another data challenge was inconsistent naming of stadiums between FBRef and Wikipedia. I could only fix the names after doing the initial join, seeing what didn’t match, and correcting from there. Thanks to naming rights deals, stadium names can change. In general I defaulted to the traditional name of the stadium rather than the current sponsored name, for example the Borussia Dortmund stadium is currently <em>Signal Iduna Park</em> but I’ve standardized the name to the original <em>Westfalenstadion</em>.</p>
+</section>
+<section id="plan" class="level2">
+<h2 class="anchored" data-anchor-id="plan">Outline</h2>
+<p>The plan for this post is to:</p>
+<ul>
+<li><p>Show how I got the stadium information and match data, cleaned &amp; joined the sets, and created functions to prep the data for visualization and for the plots. It’s always better to write a function if you know you’ll be repeating a process.</p></li>
+<li><p>Display the top-line figures for all leagues - average attendance, stadium capacity, and average percent capacity for the season.</p></li>
+<li><p>After that we’ll look at each league individually by way of visualizations displaying by-team numbers compared to the league average.</p></li>
+<li><p>For the individual league snapshots there will be two sets of tabsets, the top 5 Euro leagues and MLS in one tabset, and the smaller Euro leagues in the other.</p></li>
+</ul>
+<p>I’ll show code along the way where it makes sense. If you’re more interested in the results than the process, use the table of contents to the right to skip ahead to the charts. Code is mostly folded up, to see it click where it reads “Show code for (process)”. If you want to see all of the code, head over to the <a href="https://github.com/greg-dubrow/football-attendance">github repo</a>.</p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<p>Yes, it’s a bit of a long post, so here are the highlights:</p>
+<ul>
+<li><p>The Premier League &amp; Bundesliga have the strongest overall demand, with most clubs exceeding 90% capacity.</p></li>
+<li><p>Most MLS clubs are around around 85%, with many clubs above that level.</p></li>
+<li><p>The top clubs in France, Italy, &amp; Spain are around 80%-90% capacity but many clubs struggle to reach even 70% capacity.</p></li>
+<li><p>In the smaller leagues, there is generally lower average capacity, but much more variance between clubs. Some clubs are above 80%, some below 50%.</p></li>
+<li><p>Overall then, demand for MLS tickets compares favorably with European leagues. It’s not as strong league-wide as the Premier League or Bundesliga, but it’s close. And MLS does better on average than the other major European leagues.</p></li>
+</ul>
+</section>
+<section id="stadium" class="level2">
+<h2 class="anchored" data-anchor-id="stadium">Getting the stadium data</h2>
+<p>One good outcome of this project is that I now have my wikipedia table scraping process sorted. It’s fairly easy, using the <code>httr</code>, <code>rvest</code>, and `polite packages. I found stadium info for each country by searching “list of football stadiums in {country name}”. The data wasn’t consistent across country pages, and some pages had separate tables for larger and smaller stadiums. I’ll show the code for Germany, which was two tables. I used <a href="https://ivelasq.rbind.io/blog/politely-scraping/index.html">this post</a> from Isabella Velásquez as a guide.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for wikipedia scraping</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rvest)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(polite)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># esp for clean_names() function</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># set the url object</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>ger_url <span class="ot">&lt;-</span> <span class="st">"https://en.wikipedia.org/wiki/List_of_football_stadiums_in_Germany"</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># politely say hello, make sure we adhere to polite scraping rules</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>ger_url_bow <span class="ot">&lt;-</span> polite<span class="sc">::</span><span class="fu">bow</span>(ger_url)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>ger_url_bow</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># get the data into a list, and pull out the html nodes </span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># (see Isabella's post for the how-to)</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ger_stad_html <span class="ot">&lt;-</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    polite<span class="sc">::</span><span class="fu">scrape</span>(ger_url_bow) <span class="sc">%&gt;%</span>  <span class="co"># scrape web page</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_nodes</span>(<span class="st">"table.wikitable.sortable"</span>) <span class="sc">%&gt;%</span> <span class="co"># pull out specific table</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    rvest<span class="sc">::</span><span class="fu">html_table</span>(<span class="at">fill =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># pull the 1st table we want, change capacity to numeric, save the columns we'll need</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>ger_stad_df1 <span class="ot">&lt;-</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    ger_stad_html[[<span class="dv">1</span>]] <span class="sc">%&gt;%</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">str_split</span>(capacity, <span class="st">"</span><span class="sc">\\</span><span class="st">["</span>, <span class="at">simplify=</span>T)[,<span class="dv">1</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, <span class="fu">as.character</span>(capacity)))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(stadium, city, state, capacity, <span class="at">team =</span> tenants, opened)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># pull the second table, same cleaning functions. </span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>ger_stad_df2 <span class="ot">&lt;-</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    ger_stad_html[[<span class="dv">2</span>]] <span class="sc">%&gt;%</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">str_split</span>(capacity, <span class="st">"</span><span class="sc">\\</span><span class="st">["</span>, <span class="at">simplify=</span>T)[,<span class="dv">1</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">as.numeric</span>(<span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, <span class="fu">as.character</span>(capacity)))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_column</span>(<span class="at">state =</span> <span class="st">""</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_column</span>(<span class="at">opened =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">opened =</span> <span class="fu">as.integer</span>(opened)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(stadium, <span class="at">city =</span> location, state, capacity, <span class="at">team =</span> tenants, opened)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co"># join the tables, fix some names. </span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>ger_stad_df <span class="ot">&lt;-</span> ger_stad_df1 <span class="sc">%&gt;%</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rbind</span>(ger_stad_df2) <span class="sc">%&gt;%</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">stadium =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>        stadium <span class="sc">==</span> <span class="st">"Deutsche Bank Park  (Waldstadion)"</span>, <span class="st">"Waldstadion"</span>, stadium)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">stadium =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        stadium <span class="sc">==</span> <span class="st">"Borussia-Park"</span>, <span class="st">"Stadion im Borussia-Park"</span>, stadium)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">stadium =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        stadium <span class="sc">==</span> <span class="st">"Signal Iduna Park  (Westfalenstadion)"</span>, <span class="st">"Westfalenstadion"</span>, stadium)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">stadium =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        stadium <span class="sc">==</span> <span class="st">"MHPArena  (Neckarstadion)"</span>, <span class="st">"Neckarstadion"</span>, stadium)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">stadium =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        stadium <span class="sc">==</span> <span class="st">"RheinEnergieStadion  (Müngersdorfer Stadion)"</span>, <span class="st">"Müngersdorfer Stadion"</span>, stadium)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">stadium =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>        stadium <span class="sc">==</span> <span class="st">"Veltins-Arena  (Arena AufSchalke)"</span>, <span class="st">"Arena AufSchalke"</span>, stadium)) <span class="sc">%&gt;%</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">stadium =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>        stadium <span class="sc">==</span> <span class="st">"PreZero Arena  (Rhein-Neckar-Arena)"</span>, <span class="st">"Rhein-Neckar-Arena"</span>, stadium))</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="do">## repeat for all other countries</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="attendance" class="level2">
+<h2 class="anchored" data-anchor-id="attendance">Getting the attendance figures</h2>
+<p>Now that we have the stadium data we’ll get the FBRef data via <code>worldfootballR</code> and join the datasets. It’s just one line of code to get the data:</p>
+<p><code>ger_match_2023 &lt;- fb_match_results(country = "GER", gender = "M", season_end_year = 2023, tier = "1st")</code></p>
+<p>Repeat for all other countries.</p>
+<p>As I mentioned, the join step necessitated lots of data cleaning on stadium names, which took some detective work. I needed to track down stadium names free of current naming rights holders, and change FBRef’s use of shorthand team names. We’ll look at Germany for an example. If you want to see how I handled other leagues, look at the individual scripts in the <a href="https://github.com/greg-dubrow/football-attendance">Github repo</a>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for data join</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ger_match_2023  <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># remove hamburg's relegation playoff match</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>Home <span class="sc">==</span> <span class="st">"Hamburger SV"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">wk_n =</span> <span class="fu">as.numeric</span>(Wk)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">match_week =</span> <span class="fu">ifelse</span>(<span class="fu">between</span>(wk_n, <span class="dv">1</span>, <span class="dv">9</span>), <span class="fu">paste0</span>(<span class="st">"0"</span>, Wk), Wk)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Competition_Name<span class="sc">:</span>Round, match_week, Wk, Day<span class="sc">:</span>Referee) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># cleaning of team and stadium names after initial join, seeing what didn't match</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Eint Frankfurt"</span>, <span class="st">"Eintracht Frankfurt"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Eint Frankfurt"</span>, <span class="st">"Eintracht Frankfurt"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"M'Gladbach"</span>, <span class="st">"Borussia Mönchengladbach"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"M'Gladbach"</span>, <span class="st">"Borussia Mönchengladbach"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Dortmund"</span>, <span class="st">"Borussia Dortmund"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Dortmund"</span>, <span class="st">"Borussia Dortmund"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Stuttgart"</span>, <span class="st">"VfB Stuttgart"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Stuttgart"</span>, <span class="st">"VfB Stuttgart"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Köln"</span>, <span class="st">"FC Köln"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Köln"</span>, <span class="st">"FC Köln"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Hoffenheim"</span>, <span class="st">"TSG 1899 Hoffenheim"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Hoffenheim"</span>, <span class="st">"TSG 1899 Hoffenheim"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Leverkusen"</span>, <span class="st">"Bayer 04 Leverkusen"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Leverkusen"</span>, <span class="st">"Bayer 04 Leverkusen"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Wolfsburg"</span>, <span class="st">"VfL Wolfsburg"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Wolfsburg"</span>, <span class="st">"VfL Wolfsburg"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Bochum"</span>, <span class="st">"VfL Bochum"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Bochum"</span>, <span class="st">"VfL Bochum"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Mainz 05"</span>, <span class="st">"FSV Mainz 05"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Mainz 05"</span>, <span class="st">"FSV Mainz 05"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Home =</span> <span class="fu">ifelse</span>(Home <span class="sc">==</span> <span class="st">"Freiburg"</span>, <span class="st">"SC Freiburg"</span>, Home)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Away =</span> <span class="fu">ifelse</span>(Away <span class="sc">==</span> <span class="st">"Freiburg"</span>, <span class="st">"SC Freiburg"</span>, Away)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Venue =</span> <span class="fu">ifelse</span>(Venue <span class="sc">==</span> <span class="st">"Deutsche Bank Park"</span>, <span class="st">"Waldstadion"</span>, Venue)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Venue =</span> <span class="fu">ifelse</span>(Venue <span class="sc">==</span> <span class="st">"Signal Iduna Park"</span>, <span class="st">"Westfalenstadion"</span>, Venue)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Venue =</span> <span class="fu">ifelse</span>(Venue <span class="sc">==</span> <span class="st">"Mercedes-Benz Arena"</span>, <span class="st">"Neckarstadion"</span>, Venue)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Venue =</span> <span class="fu">ifelse</span>(Venue <span class="sc">==</span> <span class="st">"RheinEnergieSTADION"</span>, <span class="st">"Müngersdorfer Stadion"</span>, Venue)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Venue =</span> <span class="fu">ifelse</span>(Venue <span class="sc">==</span> <span class="st">"Veltins-Arena"</span>, <span class="st">"Arena AufSchalke"</span>, Venue)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">Venue =</span> <span class="fu">ifelse</span>(Venue <span class="sc">==</span> <span class="st">"PreZero Arena"</span>, <span class="st">"Rhein-Neckar-Arena"</span>, Venue)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a> <span class="co"># order and name the data columns for next steps</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="at">league =</span> Competition_Name, <span class="at">season =</span> Season_End_Year, <span class="at">round =</span> Round,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>                 <span class="at">match_date =</span> Date, <span class="at">match_day =</span> Day, <span class="at">match_time =</span> Time,</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>                 <span class="at">match_home =</span> Home, <span class="at">match_away =</span> Away,</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>                 <span class="at">match_stadium =</span> Venue, <span class="at">match_attendance =</span> Attendance,</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>                 HomeGoals, Home_xG, AwayGoals, Away_xG, Referee) <span class="sc">%&gt;%</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># join on stadium data</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(ger_stad_df, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"match_stadium"</span> <span class="ot">=</span> <span class="st">"stadium"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># fix some other issues that came up after 1st pass at visualization</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">ifelse</span>(match_stadium <span class="sc">==</span> <span class="st">"Neckarstadion"</span>, <span class="dv">50000</span>, capacity)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">ifelse</span>(match_stadium <span class="sc">==</span> <span class="st">"Waldstadion"</span>, <span class="dv">51500</span>, capacity)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">ifelse</span>(match_stadium <span class="sc">==</span> <span class="st">"Mewa Arena"</span>, <span class="dv">33305</span>, capacity)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create the capacity percent for each match</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">match_pct_cap =</span> match_attendance <span class="sc">/</span> capacity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Ok, now that we have some clean data to work with, it’s time to make a chart. The first step is to create a tidy summary dataset. Since I would be doing the same thing multiple times, I created a function. The code below includes some commented-out fields that I didn’t end up needing for this analysis, but I left the code in there for future use.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for summary function</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>attend_sum <span class="ot">&lt;-</span> <span class="cf">function</span>(input_df, <span class="at">dfname =</span> <span class="st">"NA"</span>) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    dfout <span class="ot">&lt;-</span> input_df <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(match_home, match_stadium) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">attend_avg_team =</span> <span class="fu">round</span>(<span class="fu">mean</span>(match_attendance), <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">attend_min_team =</span> <span class="fu">min</span>(match_attendance)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">attend_max_team =</span> <span class="fu">max</span>(match_attendance)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">attend_tot_team =</span> <span class="fu">sum</span>(match_attendance)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity_tot_team =</span> <span class="fu">sum</span>(capacity)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity_pct_team =</span> attend_tot_team <span class="sc">/</span> capacity_tot_team) <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># league figures</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">add_row</span>(<span class="fu">tibble_row</span>(<span class="at">match_home =</span> <span class="st">"League Average"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">attend_tot_league =</span> <span class="fu">sum</span>(match_attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity_tot_league =</span> <span class="fu">sum</span>(capacity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity_pct_league =</span> attend_tot_league <span class="sc">/</span> capacity_tot_league) <span class="sc">%&gt;%</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">attend_avg_league =</span> <span class="fu">round</span>(<span class="fu">mean</span>(match_attendance, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity_avg_league =</span> <span class="fu">round</span>(<span class="fu">mean</span>(capacity, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">attend_avg_team =</span> <span class="fu">ifelse</span>(match_home <span class="sc">==</span> <span class="st">"League Average"</span>, attend_avg_league, attend_avg_team)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity_pct_team =</span> <span class="fu">ifelse</span>(match_home <span class="sc">==</span> <span class="st">"League Average"</span>, capacity_pct_league, capacity_pct_team)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity =</span> <span class="fu">ifelse</span>(match_home <span class="sc">==</span> <span class="st">"League Average"</span>, capacity_avg_league, capacity)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(attend_med_league = round(median(match_attendance), 0)) %&gt;%</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(attend_min_league = min(match_attendance)) %&gt;%</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(attend_max_league = max(match_attendance)) %&gt;%</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(capacity_med_league = round(median(capacity), 0)) %&gt;%</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(capacity_min_league = min(capacity)) %&gt;%</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">capacity_max_league =</span> <span class="fu">max</span>(capacity)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># group_by(match_home) %&gt;%</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(capacity_tot2 = sum(capacity)) %&gt;%</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(attendance_tot2 = sum(match_attendance)) %&gt;%</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mutate(capacity_pct_team = attendance_tot2 / capacity_tot2) %&gt;%</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ungroup() %&gt;%</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">select</span>(<span class="at">team_name =</span> match_home, <span class="at">stadium_name =</span> match_stadium, <span class="at">stadium_capacity =</span> capacity,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>        attend_avg_team, attend_min_team, attend_max_team,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        attend_tot_team, capacity_tot_team, capacity_pct_team,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        attend_avg_league,</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># attend_med_league, attend_min_league, attend_max_league,</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        capacity_avg_league,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># capacity_med_league, capacity_min_league,</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        capacity_max_league,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        attend_tot_league,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>        capacity_tot_league, capacity_pct_league, league) <span class="sc">%&gt;%</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        <span class="co">#, capacity_pct_team) %&gt;%</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">distinct</span>(team_name, stadium_name, <span class="at">.keep_all =</span> T)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">str_c</span>(dfname, <span class="st">"_sum"</span>), dfout, <span class="at">envir=</span>.GlobalEnv)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Creating the summary dataframe was thus reduced to one line of code.</p>
+<p><code>attend_sum(bundes_att_23, "bundes_att_23")</code></p>
+<p>The first part of the function call is the match data. The text in quotes will come before the “_sum” suiffix in the output dataframe, e.g.&nbsp;<code>bundes_att_23_sum</code>. This is accomplished via the <code>assign()</code> command in the function code. I did that to have easily identifiable dataframe objects to call, given I’d be working with multiple countries in the same session.</p>
+<p>Remember…</p>
+<p><strong>Good data management is consistent naming for objects that do the same thing.</strong></p>
+<p>Now that we have a nice tidy dataframe to plot, let’s make the plot. Again, since I’m making multiples of the same plot, I wrote a function.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for plot function</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## highlight function for plot labels</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># from https://stackoverflow.com/questions/61733297/apply-bold-font-on-specific-axis-ticks</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>highlight <span class="ot">=</span> <span class="cf">function</span>(x, pat, <span class="at">color=</span><span class="st">"black"</span>, <span class="at">family=</span><span class="st">""</span>) {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">grepl</span>(pat, x), glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"&lt;b style='font-family:{family}; color:{color}'&gt;{x}&lt;/b&gt;"</span>), x)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="do">## plotting function. run against plotting df, output as object, then add title</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>attend_plot1 <span class="ot">&lt;-</span> <span class="cf">function</span>(plotdf) {</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    plotdf <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(<span class="fu">aes</span>(stadium_capacity, <span class="fu">reorder</span>(team_name, stadium_capacity))) <span class="sc">+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># points for avg attendace &amp; capacity</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>stadium_capacity, <span class="at">y=</span> <span class="fu">reorder</span>(team_name, stadium_capacity)),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">color=</span><span class="st">"#4E79A7"</span>, <span class="at">size=</span><span class="dv">10</span>, <span class="at">alpha =</span> .<span class="dv">5</span> ) <span class="sc">+</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>attend_avg_team, <span class="at">y=</span> <span class="fu">reorder</span>(team_name, stadium_capacity)),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">color=</span><span class="st">"#A74E79"</span>, <span class="at">size=</span><span class="dv">10</span>, <span class="at">alpha =</span> .<span class="dv">5</span> ) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># data labels for points</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_text</span>(<span class="at">data =</span> plotdf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(capacity_pct_team <span class="sc">&lt;</span> .<span class="dv">95</span>),</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> attend_avg_team,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">label =</span> <span class="fu">format</span>(<span class="fu">round</span>(attend_avg_team, <span class="at">digits =</span> <span class="dv">0</span>),<span class="at">big.mark=</span><span class="st">","</span>,<span class="at">scientific=</span><span class="cn">FALSE</span>)),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_text</span>(<span class="at">data =</span> plotdf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(capacity_pct_team <span class="sc">&gt;=</span> .<span class="dv">95</span>),</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> attend_avg_team,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">label =</span> <span class="fu">format</span>(<span class="fu">round</span>(attend_avg_team, <span class="at">digits =</span> <span class="dv">0</span>),<span class="at">big.mark=</span><span class="st">","</span>,<span class="at">scientific=</span><span class="cn">FALSE</span>)),</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">hjust =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> stadium_capacity,</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                <span class="at">label =</span> <span class="fu">format</span>(<span class="fu">round</span>(stadium_capacity, <span class="at">digits =</span> <span class="dv">0</span>),<span class="at">big.mark=</span><span class="st">","</span>,<span class="at">scientific=</span><span class="cn">FALSE</span>)),</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>                <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># line connecting the points.</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_segment</span>(<span class="fu">aes</span>(<span class="at">x=</span>attend_avg_team <span class="sc">+</span> <span class="dv">900</span> , <span class="at">xend=</span>stadium_capacity <span class="sc">-</span> <span class="dv">900</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                <span class="at">y=</span>team_name, <span class="at">yend=</span>team_name), <span class="at">color=</span><span class="st">"lightgrey"</span>) <span class="sc">+</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># sets league average in bold</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_discrete</span>(<span class="at">labels=</span> <span class="cf">function</span>(x) <span class="fu">highlight</span>(x, <span class="st">"League Average"</span>, <span class="st">"black"</span>)) <span class="sc">+</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># text for avg season capacity</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_text</span>(<span class="at">data =</span> plotdf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(stadium_capacity <span class="sc">&lt;</span> capacity_max_league <span class="sc">&amp;</span> team_name <span class="sc">!=</span> <span class="st">"League Average"</span>),</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> stadium_capacity <span class="sc">+</span> <span class="dv">1100</span>, <span class="at">y =</span> team_name,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>                <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Pct of capacity for season = "</span>, <span class="fu">round</span>(capacity_pct_team <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>),</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>                <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">02</span>)) <span class="sc">+</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_text</span>(<span class="at">data =</span> plotdf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(team_name <span class="sc">==</span> <span class="st">"League Average"</span>),</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes</span>(<span class="at">x =</span> stadium_capacity <span class="sc">+</span> <span class="dv">1100</span>, <span class="at">y =</span> team_name,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>                <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Pct of capacity for season = "</span>, <span class="fu">round</span>(capacity_pct_team <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%"</span>),</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>                <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">02</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>)) <span class="sc">+</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> </span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>            <span class="fu">c</span>(<span class="fu">min</span>(plotdf<span class="sc">$</span>attend_avg_team), <span class="fu">max</span>(plotdf<span class="sc">$</span>stadium_capacity <span class="sc">+</span> <span class="dv">3000</span>)),</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>                <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(<span class="dv">6</span>),</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">big.mark =</span> <span class="st">','</span>)) <span class="sc">+</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Stadium capacity"</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>                 <span class="at">subtitle =</span> <span class="st">"*The further the red dot is to the left of the blue dot, the more average attendance is less than stadium capacity. Teams sorted by stadium capacity.*"</span>,</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>                 <span class="at">caption =</span> <span class="st">"*Match attendance data from FBRef using worldfootballr package. Stadium capacity data from Wikipedia*"</span>) <span class="sc">+</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.title.position =</span> <span class="st">"plot"</span>,</span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.title =</span> ggtext<span class="sc">::</span><span class="fu">element_textbox_simple</span>(</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>            <span class="at">size =</span> <span class="dv">12</span>, <span class="at">fill =</span> <span class="st">"cornsilk"</span>,</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>            <span class="at">lineheight =</span> <span class="fl">1.5</span>,</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>            <span class="at">padding =</span> <span class="fu">margin</span>(<span class="fl">5.5</span>, <span class="fl">5.5</span>, <span class="fl">5.5</span>, <span class="dv">2</span>),</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>            <span class="at">margin =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">5.5</span>, <span class="dv">0</span>)),</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.subtitle =</span> ggtext<span class="sc">::</span><span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.caption =</span> ggtext<span class="sc">::</span><span class="fu">element_markdown</span>(),</span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.text.x =</span> ggtext<span class="sc">::</span><span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">10</span>),</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.text.y =</span> ggtext<span class="sc">::</span><span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">11</span>))</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>So now we can create the base plot with just one line of code:</p>
+<p><code>bundes_attplot &lt;- attend_plot1(bundes_att_23_sum)</code></p>
+<p>The title and some other elements will be added individually for each league plot. But but writing the function cut down the overall amount of code for each league script by a significant amount, not to mention eliminating a lot of copy-paste.</p>
+<p>I also did a scatterplot of stadium capacity on the x axis and average match capacity by team on the y axes. The code for the function is here:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for scatterplot function</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>attend_scatter <span class="ot">&lt;-</span> <span class="cf">function</span>(plotdf) {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  plotdf <span class="sc">%&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> stadium_capacity, <span class="at">y =</span> capacity_pct_team)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>() <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> team_name)) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">big.mark =</span> <span class="st">','</span>)) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>()) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Stadium Capacity"</span>, <span class="at">y =</span> <span class="st">"Avg % of Capacity"</span>) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Getting the scatterplot thus requires just one line of code:</p>
+<p><code>bundes_scatter &lt;- attend_scatter(bundes_att_23_sum)</code></p>
+<p>To run the summary and plot functions I put them in a separate script in this project and used the <code>source()</code> command, in this case: <code>source("attend_functions.R")</code>. Using <code>source()</code> keeps that job in a separate file, making it easier to edit and keeping the analytical files focused on their jobs.</p>
+<p>Before we get to the individual league plots I want to run a few tables to show the top-line analysis across leagues. To do that we’ll need to join the summary tables together, create a table in <code>gt</code> and write a slightly different plot.</p>
+</section>
+<section id="average-match-capacity-by-league" class="level2">
+<h2 class="anchored" data-anchor-id="average-match-capacity-by-league">Average match capacity by league</h2>
+<p>To do the table below I combined the individual league attendance files into a single dataframe. I created a function to read them in, select only the necessary columns and bind them. I include the function below in case you encounter a similar need…to read in a bunch of files, clean, and join them. All you need to do is change the file type and the regex for the filename pattern.</p>
+<p>To run the function, it’s one line of code:</p>
+<p><code>attdfs &lt;- combine_rds_files("file-path-here")</code></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for rds function</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## read in and rbind attendance files</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>combine_rds_files <span class="ot">&lt;-</span> <span class="cf">function</span>(directory) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># List all RDS files in the specified directory</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  rds_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(directory, <span class="at">pattern =</span> <span class="st">"^att_2023.*</span><span class="sc">\\</span><span class="st">.rds"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Initialize an empty list to store dataframes</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  df_list <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loop through each RDS file, read it, select columns, and store in the list</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (file <span class="cf">in</span> rds_files) {</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(file)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select the desired columns</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    selected_data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(league, match_date, match_home, match_away, match_stadium, capacity, match_attendance)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    df_list[[file]] <span class="ot">&lt;-</span> selected_data</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Combine all dataframes in the list into one dataframe</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  combined_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df_list)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(combined_df)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>What does the table tell us?</p>
+<p>Premier League and Bundesliga are in very high demand, and Dutch Eredivisie demand is not much further behind. And MLS is right up there, 4th highest in comparison to the major European leagues.</p>
+<p>The scatterplots below the table display the percentage capacity (y axis) by overall stadium capacity and then average attendace. They show that except for the English Premier League and the Bundesliga, a larger average stadium size or attendance doesn’t mean that a league’s clubs are doing better at filling their grounds. Scottish and Dutch clubs, along with MLS, have relatively smaller grounds on average, but they’re well-matched to demand so they are playing to crowds above 80% capacity.</p>
+<p>The bottom line is, if you’re a football tourist and not fixated on a Premier League or Budnesliga match, tickets are easier to come by in Belgium, Portugal (Primeira Liga), Denmark (Superliga), and Sweden (Allsvenskan). The by-league charts below will show you which clubs in even the more in-demand leagues might offer you a better chance at getting a ticket.</p>
+<div style="font-size: 80%;">
+<p><em>table is sortable - click on column headers</em></p>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for interactive gt table</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>att23_all <span class="sc">%&gt;%</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(capacity_pct_league)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(league, capacity_avg_league, attend_avg_league, capacity_pct_league) <span class="sc">%&gt;%</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">c</span>(attend_avg_league, capacity_avg_league), <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_percent</span>(<span class="at">columns =</span> <span class="fu">c</span>(capacity_pct_league), <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="at">attend_avg_league =</span> <span class="fu">md</span>(<span class="st">"&lt;span style=color:white&gt;League Average&lt;br&gt;Attendance&lt;/span&gt;"</span>), </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">capacity_avg_league =</span> <span class="fu">md</span>(<span class="st">"&lt;span style=color:white&gt;League Average&lt;br&gt; Stadium Capacity&lt;/span&gt;"</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">capacity_pct_league =</span> <span class="fu">md</span>(<span class="st">"&lt;span style=color:white&gt;League Average&lt;br&gt; Match Capacity&lt;/span&gt;"</span>), </span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">league =</span> <span class="fu">md</span>(<span class="st">"&lt;span style=color:white&gt;League&lt;/span&gt;"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">"right"</span>, <span class="at">columns =</span> <span class="fu">everything</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">"left"</span>, <span class="at">columns =</span> <span class="fu">c</span>(league)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">6</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">align =</span> <span class="st">"center"</span>),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> <span class="fu">cells_column_labels</span>(</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">columns =</span> <span class="fu">c</span>(attend_avg_league, capacity_avg_league, capacity_pct_league))) <span class="sc">%&gt;%</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tab_style</span>(</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="fu">list</span>(<span class="fu">cell_text</span>(<span class="at">weight =</span> <span class="st">"bold"</span>)),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>      <span class="at">columns =</span> <span class="fu">c</span>(league, attend_avg_league, capacity_avg_league, capacity_pct_league),</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>      <span class="at">rows =</span> league <span class="sc">==</span> <span class="st">"Average all leagues"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># function to make table sortable</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">opt_interactive</span>(<span class="at">use_sorting =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                  <span class="at">use_pagination =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>                  <span class="at">use_compact_mode =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="adiyzsjpns" class=".gt_table" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#adiyzsjpns table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#adiyzsjpns thead, #adiyzsjpns tbody, #adiyzsjpns tfoot, #adiyzsjpns tr, #adiyzsjpns td, #adiyzsjpns th {
+  border-style: none;
+}
+
+#adiyzsjpns p {
+  margin: 0;
+  padding: 0;
+}
+
+#adiyzsjpns .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#adiyzsjpns .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#adiyzsjpns .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#adiyzsjpns .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#adiyzsjpns .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#adiyzsjpns .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#adiyzsjpns .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#adiyzsjpns .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #0076BA;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#adiyzsjpns .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #0076BA;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#adiyzsjpns .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#adiyzsjpns .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#adiyzsjpns .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#adiyzsjpns .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#adiyzsjpns .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#adiyzsjpns .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+  vertical-align: middle;
+}
+
+#adiyzsjpns .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#adiyzsjpns .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#adiyzsjpns .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: none;
+  border-top-width: 1px;
+  border-top-color: #D5D5D5;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D5D5D5;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D5D5D5;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#adiyzsjpns .gt_stub {
+  color: #333333;
+  background-color: #89D3FE;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D5D5D5;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#adiyzsjpns .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#adiyzsjpns .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#adiyzsjpns .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#adiyzsjpns .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#adiyzsjpns .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #5F5F5F;
+}
+
+#adiyzsjpns .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#adiyzsjpns .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#adiyzsjpns .gt_grand_summary_row {
+  color: #333333;
+  background-color: #D5D5D5;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#adiyzsjpns .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #5F5F5F;
+}
+
+#adiyzsjpns .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #5F5F5F;
+}
+
+#adiyzsjpns .gt_striped {
+  background-color: #EDF7FC;
+}
+
+#adiyzsjpns .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #5F5F5F;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #5F5F5F;
+}
+
+#adiyzsjpns .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#adiyzsjpns .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#adiyzsjpns .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#adiyzsjpns .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#adiyzsjpns .gt_left {
+  text-align: left;
+}
+
+#adiyzsjpns .gt_center {
+  text-align: center;
+}
+
+#adiyzsjpns .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#adiyzsjpns .gt_font_normal {
+  font-weight: normal;
+}
+
+#adiyzsjpns .gt_font_bold {
+  font-weight: bold;
+}
+
+#adiyzsjpns .gt_font_italic {
+  font-style: italic;
+}
+
+#adiyzsjpns .gt_super {
+  font-size: 65%;
+}
+
+#adiyzsjpns .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#adiyzsjpns .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#adiyzsjpns .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#adiyzsjpns .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#adiyzsjpns .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#adiyzsjpns .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#adiyzsjpns .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#adiyzsjpns .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#adiyzsjpns div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<div id="adiyzsjpns" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="adiyzsjpns">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"league":["Premier League","Bundesliga","MLS","Eredivisie","Scottish Premiership","Average all leagues","La Liga","Ligue 1","Serie A","Superliga","Allsvenskan","Primeira Liga","Belgian Pro League","Swiss Super League"],"capacity_avg_league":[40834.3,45940.3778501629,24868.6545105566,21190.2093862816,18106.249070632,28060,38148.8578947368,30991.85,38904.5695538058,15786.2901554404,19126.0833333333,19444.0423452769,16365.5727272727,22023.8950276243],"attend_avg_league":[40228.9815789474,43031.1465798046,22182.7332053743,18760.5920577617,14893.4349442379,22570,29570.9552631579,23693.0710526316,29370.9081364829,10307.7772020725,12280.2166666667,11640.4299674267,9788.65454545455,13148.182320442],"capacity_pct_league":[0.985176226332945,0.936673762678946,0.891995712753893,0.885342457725181,0.822557719499994,0.804350177394956,0.775146541601646,0.764493602435207,0.754947515763217,0.65295754104204,0.642066462466178,0.59866306402353,0.59812477745689,0.596996230864267]},"columns":[{"id":"league","name":"<span data-qmd-base64=\"PHNwYW4gc3R5bGU9Y29sb3I6d2hpdGU+TGVhZ3VlPC9zcGFuPg==\"><span class='gt_from_md'><span style=color:white>League<\/span><\/span><\/span>","type":"character","na":"NA","minWidth":125,"style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'attend_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_pct_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\n}","html":true,"align":"left"},{"id":"capacity_avg_league","name":"<span data-qmd-base64=\"PHNwYW4gc3R5bGU9Y29sb3I6d2hpdGU+TGVhZ3VlIEF2ZXJhZ2U8YnI+IFN0YWRpdW0gQ2FwYWNpdHk8L3NwYW4+\"><span class='gt_from_md'><span style=color:white>League Average<br> Stadium Capacity<\/span><\/span><\/span>","type":"numeric","na":"NA","minWidth":125,"style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'attend_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_pct_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["40,834","45,940","24,869","21,190","18,106","28,060","38,149","30,992","38,905","15,786","19,126","19,444","16,366","22,024"],"html":true,"align":"right"},{"id":"attend_avg_league","name":"<span data-qmd-base64=\"PHNwYW4gc3R5bGU9Y29sb3I6d2hpdGU+TGVhZ3VlIEF2ZXJhZ2U8YnI+QXR0ZW5kYW5jZTwvc3Bhbj4=\"><span class='gt_from_md'><span style=color:white>League Average<br>Attendance<\/span><\/span><\/span>","type":"numeric","na":"NA","minWidth":125,"style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'attend_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_pct_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["40,229","43,031","22,183","18,761","14,893","22,570","29,571","23,693","29,371","10,308","12,280","11,640","9,789","13,148"],"html":true,"align":"right"},{"id":"capacity_pct_league","name":"<span data-qmd-base64=\"PHNwYW4gc3R5bGU9Y29sb3I6d2hpdGU+TGVhZ3VlIEF2ZXJhZ2U8YnI+IE1hdGNoIENhcGFjaXR5PC9zcGFuPg==\"><span class='gt_from_md'><span style=color:white>League Average<br> Match Capacity<\/span><\/span><\/span>","type":"numeric","na":"NA","minWidth":125,"style":"function(rowInfo, colInfo) {\nconst rowIndex = rowInfo.index + 1\nif (colInfo.id === 'league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'attend_avg_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\nif (colInfo.id === 'capacity_pct_league' & rowIndex === 6) {\n  return { fontWeight: 'bold' }\n}\n\n}","cell":["98.5%","93.7%","89.2%","88.5%","82.3%","80.4%","77.5%","76.4%","75.5%","65.3%","64.2%","59.9%","59.8%","59.7%"],"html":true,"align":"right"}],"pagination":false,"defaultPageSize":10,"showPageSizeOptions":false,"pageSizeOptions":[10,25,50,100],"paginationType":"numbers","showPagination":false,"showPageInfo":true,"minRows":1,"borderless":true,"striped":true,"compact":true,"height":"auto","theme":{"color":"#333333","backgroundColor":"#FFFFFF","stripedColor":"#EDF7FC","style":{"font-family":"system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif","fontSize":"16px"},"tableStyle":{"borderTopStyle":"solid","borderTopWidth":"2px","borderTopColor":"#5F5F5F"},"headerStyle":{"fontWeight":"normal","backgroundColor":"#0076BA","borderBottomStyle":"solid","borderBottomWidth":"2px","borderBottomColor":"#5F5F5F"},"groupHeaderStyle":{"fontWeight":"normal","backgroundColor":"#0076BA","borderBottomStyle":"solid","borderBottomWidth":"2px","borderBottomColor":"#5F5F5F"},"cellStyle":{"fontWeight":"normal"}},"elementId":"adiyzsjpns","dataKey":"e6b38d6753b9f594820c1fb2bb2ebd78"},"children":[]},"class":"reactR_markup"},"evals":["tag.attribs.columns.0.style","tag.attribs.columns.1.style","tag.attribs.columns.2.style","tag.attribs.columns.3.style"],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+<p><br> <img src="images/plot_attendance_23_all_scatter1.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by league for the 2022-23 season"></p>
+<p><a href="images/plot_attendance_23_all_scatter2.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="images/plot_attendance_23_all_scatter2.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and average attendance by league for the  2022-23 season"></a></p>
+</section>
+<section id="club-attendance-figures-for-top-5-european-leagues-mls" class="level2">
+<h2 class="anchored" data-anchor-id="club-attendance-figures-for-top-5-european-leagues-mls">Club attendance figures for Top 5 European leagues &amp; MLS</h2>
+<p>Among the top 5 European leagues, the Premier League and Bundesliga had the highest demand, with almost every club in those two leagues well above 90% capacity. The main outlier was Hertha Berlin, at 72% capacity. They were relegated that season, after a few very bad years that saw already shaky fan support dwindle. They also play in Berlin’s Olympic Stadium, which is arguably too big for them regardless of how successul they are.</p>
+<p>Capacity in France, Italy, and Spain was much more varied, with some clubs over 90% and some clubs at less than half capacity. The bigger, more successful clubs had higher capacities relative to the rest of their leagues. Think Real Madrid, Barcelona, the Milan clubs, Juventus, Paris Saint Germain, Marseille. But even in Spain no club was above 90%, Real Madrid just at 90%. In France some less world-renowned clubs like Lens and Stade Rennais did very well, thanks to good seasons on the pitch and generally strong support.</p>
+<p>The MLS situation was mostly strong, with most teams playing to stadiums at at least 85% capacity. But the MLS data is odd, with some teams showing capacity at more than 100%. I understand that to be selling standing-room tickets in excess of seated capacity. And remember that MLS definitely reports tickets sold/given away, not turnstile counts.</p>
+<p>But still you can argue that MLS is a good draw compared to the major European leagues. The capacity figures for teams have improved as many have moved into smaller soccer-specific stadia, no longer playing in NFL stadiums that they would never hope to fill. Those still playing in NFL stadia often reduce capacity by not making all sections available for sale.</p>
+<p>As you look at the attendance figures, what do you see?</p>
+<p>Notes: <br> <em>Plot images expand “lightbox” style when clicked.</em> <br> <em>The France tab has a code example showing customization for Ligue 1.</em></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">England</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">France</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Germany</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Italy</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Spain</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">MLS</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>You might look at the bubble chart on the right and wonder why I kept it in given that you can’t distinguish the blue stadium capacity bubbles from the orange average attendance bubbles.</p>
+<p>Well, as the bar chart on the left shows, the demand and thus the overlap is the story. Demand for EPL tickets is so high, that there’s no daylight between how many people EPL stadiums can hold and the average number of people turning up on match day.</p>
+<p><a href="images/plot_attendance_23_epl.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="images/plot_attendance_23_epl.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in English Premier League 2023-23 season"></a></p>
+<p>And same with the scatterplot. Why not set the y-axis to like a 50%-100% range? Well again, the story is the high demand, meaning all clubs are in the narrow 90%+ range, many above 95%. I wanted to visually highlight that all EPL clubs are playing to mostly full houses.</p>
+<p><a href="images/plot_att_scatter_23_epl.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="images/plot_att_scatter_23_epl.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by club in English Premier League 2022-23 season"></a></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>The stadium capacity story in France is that a couple of the top clubs, PSG and Marseille, are doing very well, as are medium-sized clubs like Stade Rennais (Rennes) and Lens. France doesn’t have a uniformly strong football culture. In some areas rugby is much more popular and football is still viewed as the hooligan’s sport. And to be honest the behaviour of some club ultras doesn’t help that perception. The clubs struggling to attract crowds are mainly those at the bottom of the table or those like Monaco where the football culture just isn’t as strong. Lyon have been struggling for a few years and could do better than 3/4 capacity if they were a bit more successful on the pitch.</p>
+<p>As for the process of making and annotating the plot…</p>
+<p>First I run the data thru the summary function to create the set used for plotting. It’s now this one line of code: <code>attend_sum(att_2023_ligue1, "fra_att_23")</code></p>
+<p>After looking at the basic plot, I then decide on title text that describes the insight from the visualization and add it via <code>patchwork</code>’s <code>plot_annotation()</code> call.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for plotting</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run the basic plot from the function:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fra_attplot <span class="ot">&lt;-</span> <span class="fu">attend_plot1</span>(fra_att_23_sum)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># final plot - adjust max geom_text (DATA SET), title (LEAGUE)</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>fra_attplot <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">title =</span> <span class="st">"&lt;b&gt;Ligue 1</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">  &lt;span style='color: #8DA0CB;'&gt;Average percent of capacity for season&lt;/span&gt;&lt;/b&gt;&lt;i&gt; (left bar chart)&lt;/i&gt;,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="st">  &lt;b&gt;&lt;span style='color: #FF7F00;'&gt;Average attendance&lt;/span&gt;&lt;/b&gt; and</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="st">  &lt;b&gt;&lt;span style='color: #1F78B4;'&gt;Stadium capacity&lt;/span&gt;&lt;/b&gt; (right bubble chart), by club, 2022-23 season.&lt;br&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="st">                There is a lot of variance in demand for tickets relative to stadium capacity in Ligue 1.</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="st">            Some clubs are well above 90% capacity, some play to less-than half full houses.&lt;br&gt;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="st">      See scatterplot below for stadium capacity numbers obscured by overlapping bubbles."</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                  <span class="at">theme =</span> <span class="fu">theme</span>(<span class="at">plot.title =</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                                  ggtext<span class="sc">::</span><span class="fu">element_textbox_simple</span>(</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">size =</span> <span class="dv">12</span>, <span class="at">fill =</span> <span class="st">"cornsilk"</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">lineheight =</span> <span class="fl">1.5</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">padding =</span> <span class="fu">margin</span>(<span class="fl">5.5</span>, <span class="fl">5.5</span>, <span class="fl">5.5</span>, <span class="dv">2</span>),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">margin =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">5.5</span>, <span class="dv">0</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="images/plot_attendance_23_ligue1.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="images/plot_attendance_23_ligue1.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in Ligue 1 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_ligue1.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="images/plot_att_scatter_23_ligue1.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by club in Ligue 1 2022-23 season"></a></p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>Demand for tickets in German is very strong. All but three teams are regularly playing to 90%+ full stadiums. The Bundesliga is a tough ticket. I mentioned in the intro the issues with Hertha, and why they are the outlier here.</p>
+<p><a href="images/plot_attendance_23_bundes.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="images/plot_attendance_23_bundes.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in Bundesliga 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_bundes.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="images/plot_att_scatter_23_bundes.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by club in Bundesliga 2022-23 season"></a></p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p>The top clubs in Italy are playing to almost full stadiums, but overall from what I’ve read many stadiums in Italy are older and run-down, so not the most inviting experience for the casual match-goer. Spezia is an example of a team where the size of the stadium accurately reflects demand…in this season it was the smallest in Serie A but was regularly 90% full. And this in a season where they were relegated, finishing 18th.</p>
+<p><a href="images/plot_attendance_23_seriea.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="images/plot_attendance_23_seriea.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in laliga 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_seriea.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="images/plot_att_scatter_23_seriea.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by club in Serie A 2022-23 season"></a></p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p>While I’m not surprised that Real Madrid and Rayo are playing at close to 90% capacity, I was surprised to see Athletic Club only at 80%. Seems whenever I watch them on television, San Mamés is full. Maybe there’s an issue with the attendance or capacity numbers? Not surprised as well that Getafe, Cadiz &amp; Espanyol were as low as they were. In another post I do want to see if these clubs are negatively impacted by playing often on Friday or Monday nights.</p>
+<p><a href="images/plot_attendance_23_laliga.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="images/plot_attendance_23_laliga.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in La Liga 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_laliga.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="images/plot_att_scatter_23_laliga.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by club in La Liga 2022-23 season"></a></p>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<p>MLS was a tough one to do. Teams were flexible with stadium capacity or even venue depending on the opponent, for example if Miami &amp; Messi came to town. The San Jose Earthquakes sometimes play in larger venues if one of the LA teams come up north. This required a bit of bespoke coding to get the capacity numbers correct and to visualize the effect. The bar &amp; bubble chart shows alternate venues, even for one-off matches.</p>
+<p>The good news is that in general an MLS ticket is in high demand at many clubs.</p>
+<p>Chicago Fire stand out for their generally low capacity, but the club’s been a mess for a while now. NY Red Bulls have also been struggling with results in recent years, so attendance has suffered. New England and Vancouver are also in that 70% band.</p>
+<p>The other low-capacity numbers are for one-off matches played at a different venue than the usual home field, like NYCFC needing to play across the river at Red Bull Arena in New Jersey, or Montreal having to play indoors in the Olympic Stadium.</p>
+<p><a href="images/plot_attendance_23_mls.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="images/plot_attendance_23_mls.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in MLS 2023 season"></a></p>
+<p>Because MLS as a) too many clubs and b) lots of clubs with similar sized soccer-specific grounds (a good thing!) the stadium capacity by average percent capacity scatterplot is a bit cluttered at the lower end. Plus the one-off matches and two significantly larger venues distort the smoothing line.</p>
+<p><a href="images/plot_att_scatter_23_mls1.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="images/plot_att_scatter_23_mls1.jpg" class="img-fluid" alt="scatterplot showing average percent capacity and stadium capacity by club in MLS 2023 season"></a></p>
+<p>So that’s why this 2nd scatterplot, with one-offs and the two largest stadiums removed, shows slightly more clear look at the relationship between stadium capacity and ticket demand. And what we see are a couple of clubs, NYCFC in particular, who might be playing in stadiums that are too large, or at least not reducing capacity enough to avoid killing the vibe with empty seats. NYCFC at least is taking steps to get their own stadium with a capacity more appropriate to demand.</p>
+<p><a href="images/plot_att_scatter_23_mls2.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img src="images/plot_att_scatter_23_mls2.jpg" class="img-fluid" alt="scatterplot showing average percent capacity and stadium capacity by club in MLS 2022-23 season"></a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="club-attendance-figures-for-other-european-leagues" class="level2">
+<h2 class="anchored" data-anchor-id="club-attendance-figures-for-other-european-leagues">Club attendance figures for other European leagues</h2>
+<p>What about the other European leagues, those in Belgium, Denmark, the Netherlands, Portugal, Scotland, Sweden, and Switzerland? It’s a mixed bag, with the Dutch Eredivisie and Scottish Premiership clubs playing to 80%+ full arenas. Meanwhile the Swiss, Belgian, and Portuguese clubs on average are under 60% full. As with the larger leagues, the capacity picture varies by club. <br><br></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Belgium</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Denmark</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Netherlands</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Portugal</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">Scotland</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false">Sweden</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-7" role="tab" aria-controls="tabset-2-7" aria-selected="false">Switzerland</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>Club Brugge may have the highest average attendance, but Antwerp have the highest percent of capacity number, at near 90%. Cercle Brugge are not even at 20% capacity, playing in the same arena as Club Brugge. Though to be honest, something about a number that low makes me wonder if there’s a data quality issue. But I can only display what’s being reported.</p>
+<p><a href="images/plot_attendance_23_belgium.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="images/plot_attendance_23_belgium.jpg" class="img-fluid" alt="bar chart on the left and connected dot plot on the right showing average attendance and stadium capacity by club in Belgian Jupiler League 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_belgium.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img src="images/plot_att_scatter_23_belgium.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by club in Belgian Jupiler League 2022-23 season"></a></p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>FC Copenhagen (FCK) are by far the biggest team in Denmark. They play in Parken, the national team stadium, and regularly draw almost 29,000 people per match. Danes do love football, but winters can be cold and damp, and in Jutland handball is also a big winter sport, so demand isn’t strong enough to fill arenas. But the vibes are still great, and the quality of play is good. If you want a fun football experience, come to Denmark, and don’t just go to FCK. Visit some of the smaller grounds.</p>
+<p><a href="images/plot_attendance_23_superligadk.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img src="images/plot_attendance_23_superligadk.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in Danish Superliga 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_superligadk.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-19"><img src="images/plot_att_scatter_23_superligadk.jpg" class="img-fluid" alt="scatterplot showing average percent capacity and stadium capacity by club in Danish Superliga 2022-23 season"></a></p>
+<p>Because Denmark splits the club season into two parts, a regular league-wide round-robin home-away round and a round where the top and bottom halves compete separately for separate honors or relegation ignominy, it’s worth looking quickly to see if attendances increase or decrease depending on if a team is in the championship or relegation group.</p>
+<p>The plot below shows that teams with something real on the line, either the league title or avoiding relegation, tend to see an increase in the 2nd stage of competition relative to their attendance from the regualr season. So FC Copenhagen, going for the title, saw bigger crowds in the spring. So did Aalborg and Lyngby, battling hard to avoid relegation. Aalborg went down, Lyngby stayed up. The outlier in this respect is Horsens, who were in a tight relegation battle but saw a decrease in attendance for the 2nd stage.</p>
+<p>Of course one factor in 2nd stage attendance bumps could be nice spring weather after the cold, wet, dark Danish winter and handball season ending, meaning less competition for the sporting entertainment kroner.</p>
+<p><a href="images/plot_attendance_23_byrounds_superligadk.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-20"><img src="images/plot_attendance_23_byrounds_superligadk.jpg" class="img-fluid" alt="slope graph showing average attendance and between season rounds by club in Danish Superliga 2022-23 season"></a></p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>The Dutch also love their football, and Eredivisie tickets are generally in high demand. Passions run so deep that there’s a slight ultras problem with violence, flares, pitch invaders, and objects being thrown onto the pitch. So some matches have been played at reduced capacity or behind closed doors, dperessing the overall capacity percentages a bit.</p>
+<p><a href="images/plot_attendance_23_eredivisie.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-21"><img src="images/plot_attendance_23_eredivisie.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in Belgian Jupiler League 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_eredivisie.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-22"><img src="images/plot_att_scatter_23_eredivisie.jpg" class="img-fluid" alt="connected dot plot showing average percent capacity and stadium capacity by club in Belgian Jupiler League 2022-23 season"></a></p>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<p>Like Ligue 1 and the Eredivisie, the Portuguese league features a steady pipeline of players who go on to feature at clubs who play in the Champions League. Does the transient nature of club stars play a part in depressed demand in Portugal? Is it economic? Some clubs are barely filling 30% of their seats. I don’t know enough about how the economy or match-going culture affects attenance in Portugal.</p>
+<p><a href="images/plot_attendance_23_portugal.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-23"><img src="images/plot_attendance_23_portugal.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in Portugese Premiera 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_portugal.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-24"><img src="images/plot_att_scatter_23_portugal.jpg" class="img-fluid" alt="scatterplot showing average percent capacity and stadium capacity by club in Portugese Premiera 2022-23 season"></a></p>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<p>“Fitba” is big in Scotland, especially at the Old Firm (Celtic &amp; Rangers) and the big Edinburgh clubs (Hibs &amp; Hearts). Those are hard tickets to come by. Clubs lower down the league ladder are having trouble filling seats. That might have to do with the fact that it’s not a very competitive league. Either Celtic or Rangers will almost always win the title.</p>
+<p><a href="images/plot_attendance_23_sco.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-25"><img src="images/plot_attendance_23_sco.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in the Scottish Premiership 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_sco.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-26"><img src="images/plot_att_scatter_23_sco.jpg" class="img-fluid" alt="scatterplot showing average percent capacity and stadium capacity by club in the Scottish Premiership 2022-23 season"></a></p>
+</div>
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
+<p>The big clubs in Sweden do well in terms of filling seats. AIK Stockholm’s capacity number is perhaps hindered by them playing in the national team’s stadium. While football is somewhat popular in Sweden, the league does run in the summer, and Swedes take their summer vacation seriously. Does that mean fewer people go during July and August? Something I might check out in a deeper dive post.</p>
+<p><a href="images/plot_attendance_23_swe.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-27"><img src="images/plot_attendance_23_swe.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in the Swedish Allsvenskan 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_swe.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-28"><img src="images/plot_att_scatter_23_swe.jpg" class="img-fluid" alt="scatterplot showing average percent capacity and stadium capacity by club in the Swedish Allsvenskan 2022-23 season"></a></p>
+</div>
+<div id="tabset-2-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-7-tab">
+<p>I honestly don’t know enough about football culture and demand in Switzerland to offer much insight. We do see from the capacity percentage number that FC Winterthur play in an appropriately-sized arena. Almost every match is sold out. Young Boys are the most perennially successful team, so it makes sense there’s demand for their matches. But why are Grasshopper and Servette not even at 30% capacity?</p>
+<p><a href="images/plot_attendance_23_sui.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-29"><img src="images/plot_attendance_23_sui.jpg" class="img-fluid" alt="connected dot plot showing average attendance and stadium capacity by club in the Swiss Super League 2022-23 season"></a></p>
+<p><a href="images/plot_att_scatter_23_sui.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-30"><img src="images/plot_att_scatter_23_sui.jpg" class="img-fluid" alt="scatterplot showing average percent capacity and stadium capacity by club in the Swiss Super League 2022-23 season"></a></p>
+</div>
+</div>
+</div>
+</section>
+<section id="what-does-it-all-mean" class="level2">
+<h2 class="anchored" data-anchor-id="what-does-it-all-mean">What does it all mean?</h2>
+<p>Coming back to the origin point for the post, MLS has relatively good demand for live matches relative to the top European leagues. League-wide more than 85% of tickets are taken. Whatever one thinks of the quality of play, that too many teams make the playoffs, that perhaps there’s too many teams in the league, that there should be promotion-relegation, and other issues, enough people think an MLS match is good entertainment value for the money.</p>
+<p>In terms of average attendances across all leagues, it’s worth keeping in mind that the 2022-23 season was the first since 2018-19 to not be interrupted and/or disrupted by COVID. Stadiums were open to full crowds, and teams and leagues were reporting higher demand than the pre-COVID seasons, especially the 2nd through 4th tier EFL leagues in England, and even non-league football there. People were happy to be able to go out and do things again after partial or full lockdowns. There was pent up demand for entertainment.</p>
+<p>I do want to see which leagues sustained their momentum. It’s too much work, but it would also be interesting to pull data from 2018-19 to compare to 2022-23 and see what the COVID lockdown effect might have been, if what some teams were reporting held up across leagues.</p>
+<p>What else to explore? In addition to tracking the numbers season-to-season, I would like to look a bit more closely at league position and ticket demand; what teams bring crowds in spite of league position, what teams are most affected? I would love to look at the relationship between ticket prices and demand, but price data is not easy to find, especially across all these leagues. Even just looking at 2 or 3 leagues would entail a lot of work.</p>
+<p>I have started another post that will look at MLS a bit more, specifically if there was a “Messi effect” on attendance, and if there’s a lull in mid-season attendance. A criticism of the MLS structure is that there are too many teams in general, and too many teams make the playoffs thus reducing the impact of individual matches. I also want to compare the 2022-23 season with the next two seasons to see if the move, starting in 2023-24, to a standard Saturday 7:30pm (local time) match time had an effect.</p>
+<p>I’ll also look a bit deeper into Spain, and see if Friday &amp; Monday matches hurt attendance. I might also see if the summer vacation in Sweden has an effect on attendance in June through August.</p>
+<p>But that’s enough for now. If you’ve made it this far, I’d love to know what you think.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/www\.gregdubrow\.io");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+          // target, if specified
+          link.setAttribute("target", "_blank");
+          if (link.getAttribute("rel") === null) {
+            link.setAttribute("rel", "noopener");
+          }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://www.quarto.org">
+<p>Built with Quarto</p>
+</a>
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+
+<div class="cookie-consent-footer"><a href="#" id="open_preferences_center">Cookie Preferences</a></div></div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="../../license.html">
+<p>License</p>
+</a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","loop":false,"openEffect":"zoom","descPosition":"bottom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>

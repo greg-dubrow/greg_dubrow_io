@@ -1,0 +1,772 @@
+---
+title: "If You Sell It, Will They Come?"
+description: "Examining football attendance data"
+author: "gregers kjerulf dubrow"
+date: '2024-10-23'
+categories: [post, rstats, ggplot, football]
+image: "groupamastadium_nov2022.jpg"
+format: 
+  html:
+    link-external-newwindow: true
+toc: true
+lightbox: true
+editor: 
+  mode: source
+---
+
+```{r setup}
+#| include: false
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "images/",
+  out.width = "100%") 
+```
+
+![An almost sold-out Groupama Stadium, Lyon v Nice, November 2022. Photo by author.](groupamastadium_nov2022.jpg){fig-align="left" fig-alt="wide angle shot from the upper deck of groupama stadium in lyon france, for a sold-out match featuring lyon v nice in november 2022."}
+
+```{r dataload}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: false
+#| eval: true
+
+# load packages and functions
+library(tidyverse)
+library(tidylog)
+library(janitor)
+library(glue)
+library(ggtext)
+library(ggrepel)
+library(gt)
+
+source("~/Data/r/basic functions.R")
+options(scipen=10000)
+
+# functions for summary df and plots
+source("~/Data/r/football data projects/football-attendance/attend_functions.R")
+
+# load data, run thru summary and plot functions
+att23_all <- readRDS("~/Data/r/football data projects/data/att23_all.rds") 
+
+# att_2023_ligue1 <- readRDS("~/Data/r/football data projects/data/att_2023_fra.rds") %>%
+# 	select(-region)
+# 
+# attend_sum(att_2023_ligue1, "fra_att_23")
+
+```
+
+### *meta preamble*
+
+This was supposed to be just a chart and table or two but ended up a longer post than planned. One of those projects that started as a simple idea to compare league averages on percent of stadium capacity but then grew into drilling down to the club level. The subject is not something I feel strongly about or spend much time thinking about, but once I started the project I wanted to see it though.
+
+As it happens, along the way I learned a few new coding tricks. But the most important lesson I learned, and the one that extended the completion timeline for the project, was about the role of trial and error in creating effective data visualizations.
+
+The way I tend to work is, even with a design phase where I sketch out charts by hand, I often don't know exactly what I want as the final product until I've prototyped and iterated. I'm a visual and experiential learner and doer.
+
+For this project, the original by-league-and-club visualization I did was ok, but I realized after I'd created almost all of them it wasn't telling the story I'd set out to tell. I was burying the lede on capacity, relegating it to secondary status behind stadium size. You can see what I mean [in this example](https://github.com/greg-dubrow/football-attendance/blob/main/plot_attendance_23_bundes.jpg).
+
+So despite doing these for almost every league, I went back to the drawing board to the version you see below. Then **twice** I realized the by-league and club scatterplots needed fine tuning after I'd run them all.
+
+<center>*sigh*</center>
+
+<br> The moral of this data visualization story is trust your instincts if you think your visualization isn't telling the story you are hoping you're telling. Go back to the drawing board and get it right.
+
+Regarding coding tricks, I'm getting better at writing functions for anything from small operations to complicated charts. I also have a nice one to read in files from a directory, iterate over them to pull out just the columns I want, and `rbind` them together. Hooray for the efficiency of functional programming.
+
+One thing I couldn't make work was getting interactive charts made with the `ggiraph` or `plotly` packages to load nicely as html widgets in Quarto. They weren't sizing up well on the page. If anyone reading this has tips, let me know.
+
+If you wonder why I spend so much time explaining this and explaining my process in the post, what I'm trying to do with this blog & portfolio is not just showcase my work but contribute to the `#rstats` "how-to" community that's helped me so much. If you're an experienced r user it may seem simplistic. If you're learning, I hope it helps.
+
+And now, on with the show...
+
+## Introduction {#intro}
+
+Reading a post on a football blog comparing average attendance rates across leagues in Europe with Major League Soccer (MLS) in the US, I thought that the analysis needed a bit more than averages. Looking at stadium capacity raised more interesting questions, including:
+
+-   What percentage of available tickets were accounted for, or to flip the question, how much of the stadium was full?
+-   Are there differences between leagues? By clubs within each league?
+
+Why does capacity matter? To start with it's a measure of demand based on supply. How many of your supply of seats do people want to purchase?
+
+Also, as anyone who's performed on stage can tell you, it's better to play a room that's too small and have a happening sold-out vibe than to play a room that's too large where the impression is left that you're not a strong draw. When MLS started in the mid-1990s, almost every team was playing in their city's American football stadium. These stadiums could hold upwards of 50,000 people and MLS clubs were maybe drawing 10,000. A dead vibe that looked bad on television and felt inert if you were at a match.
+
+Watch a European match at a sold-out ground, or an MLS match now from Portland, Philadelphia, Columbus, or any other smaller soccer-specific ground. Electric vibes. You want to be there and be part of a happening.
+
+## The Data
+
+To do the analysis I needed match attendance and stadium capacity. Match attendance comes from [FBRef](https://fbref.com/) via the `worldfootballR` package. Stadium data was scraped from from Wikipedia pages. I've pulled data for MLS and eleven 1st division leagues in Europe: the 5 major top flights in England, France, Germany, Italy & Spain; along with Belgium, Denmark (of course), Netherlands, Portugal, Scotland, Sweden, and Switzerland. Attendance figures are only for league matches. Champions League & other UEFA tournaments, and league cup matches (e.g. FA Cup, Coppa Italia, etc) are not included. Promotion and relegation playoff matches are included if the home team is in the top-flight league.
+
+Because Sweden, like MLS, runs a spring-fall schedule I'm using the 2022-23 season figures for better comparison, even though the 2023-24 season just ended in all other Euro leagues. I'd hoped to add football-mad Turkey but 90% of the matches did not have any attendance numbers listed on FBRef.
+
+It's worth noting a big caveat about attendance figures; in the US it's generally reported as tickets accounted for (sold, given away, etc), not the turnstile count. Most Premier League clubs also use that method. I'm not sure how attendance is counted in other leagues. So if you wonder why your favorite team shows a higher average capacity than the eyeball test of vacant seats, that's why.
+
+It's also worth noting that the FBRef data may not be 100% accurate. In putting together the France data for instance, I noticed that some stadiums listed as venues were incorrect. For Denmark they transposed the 2nd stage groups, championship and relegation. In each case I let them know and they say they are correcting the problem matches. I only spotted those errors, though, because I know the leagues well enough having lived in France for a bit and living now in Denmark.
+
+The stadium data from Wikipedia also needed edits, as stadium capacity can fluctuate, especially for stadiums undergoing renovation. I knew of a few reduced capacities (e.g. at Real Madrid in 2022-23) but I'm sure I missed some in other leagues. If you see any issues there, let me know.
+
+Another data challenge was inconsistent naming of stadiums between FBRef and Wikipedia. I could only fix the names after doing the initial join, seeing what didn't match, and correcting from there. Thanks to naming rights deals, stadium names can change. In general I defaulted to the traditional name of the stadium rather than the current sponsored name, for example the Borussia Dortmund stadium is currently *Signal Iduna Park* but I've standardized the name to the original *Westfalenstadion*.
+
+## Outline {#plan}
+
+The plan for this post is to:
+
+-   Show how I got the stadium information and match data, cleaned & joined the sets, and created functions to prep the data for visualization and for the plots. It's always better to write a function if you know you'll be repeating a process.
+
+-   Display the top-line figures for all leagues - average attendance, stadium capacity, and average percent capacity for the season.
+
+-   After that we'll look at each league individually by way of visualizations displaying by-team numbers compared to the league average.
+
+-   For the individual league snapshots there will be two sets of tabsets, the top 5 Euro leagues and MLS in one tabset, and the smaller Euro leagues in the other.
+
+I'll show code along the way where it makes sense. If you're more interested in the results than the process, use the table of contents to the right to skip ahead to the charts. Code is mostly folded up, to see it click where it reads "Show code for (process)". If you want to see all of the code, head over to the [github repo](https://github.com/greg-dubrow/football-attendance).
+
+## Summary
+
+Yes, it's a bit of a long post, so here are the highlights:
+
+-   The Premier League & Bundesliga have the strongest overall demand, with most clubs exceeding 90% capacity.
+
+-   Most MLS clubs are around around 85%, with many clubs above that level.
+
+-   The top clubs in France, Italy, & Spain are around 80%-90% capacity but many clubs struggle to reach even 70% capacity.
+
+-   In the smaller leagues, there is generally lower average capacity, but much more variance between clubs. Some clubs are above 80%, some below 50%.
+
+-   Overall then, demand for MLS tickets compares favorably with European leagues. It's not as strong league-wide as the Premier League or Bundesliga, but it's close. And MLS does better on average than the other major European leagues.
+
+## Getting the stadium data {#stadium}
+
+One good outcome of this project is that I now have my wikipedia table scraping process sorted. It's fairly easy, using the `httr`, `rvest`, and \`polite packages. I found stadium info for each country by searching "list of football stadiums in {country name}". The data wasn't consistent across country pages, and some pages had separate tables for larger and smaller stadiums. I'll show the code for Germany, which was two tables. I used [this post](https://ivelasq.rbind.io/blog/politely-scraping/index.html) from Isabella Velásquez as a guide.
+
+```{r stadia}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for wikipedia scraping"
+
+# load the packages
+library(rvest)
+library(httr)
+library(polite)
+library(tidyverse)
+library(janitor) # esp for clean_names() function
+
+# set the url object
+ger_url <- "https://en.wikipedia.org/wiki/List_of_football_stadiums_in_Germany"
+
+# politely say hello, make sure we adhere to polite scraping rules
+ger_url_bow <- polite::bow(ger_url)
+ger_url_bow
+
+# get the data into a list, and pull out the html nodes 
+# (see Isabella's post for the how-to)
+ger_stad_html <-
+	polite::scrape(ger_url_bow) %>%  # scrape web page
+	rvest::html_nodes("table.wikitable.sortable") %>% # pull out specific table
+	rvest::html_table(fill = TRUE)
+
+# pull the 1st table we want, change capacity to numeric, save the columns we'll need
+ger_stad_df1 <-
+	ger_stad_html[[1]] %>%
+	clean_names() %>%
+	mutate(capacity = str_split(capacity, "\\[", simplify=T)[,1]) %>%
+	mutate(capacity = as.numeric(gsub(",", "", as.character(capacity)))) %>%
+	select(stadium, city, state, capacity, team = tenants, opened)
+
+# pull the second table, same cleaning functions. 
+ger_stad_df2 <-
+	ger_stad_html[[2]] %>%
+	clean_names() %>%
+	mutate(capacity = str_split(capacity, "\\[", simplify=T)[,1]) %>%
+	mutate(capacity = as.numeric(gsub(",", "", as.character(capacity)))) %>%
+	add_column(state = "") %>%
+	add_column(opened = 0) %>%
+	mutate(opened = as.integer(opened)) %>%
+	select(stadium, city = location, state, capacity, team = tenants, opened)
+
+# join the tables, fix some names. 
+ger_stad_df <- ger_stad_df1 %>%
+	rbind(ger_stad_df2) %>%
+	mutate(stadium = ifelse(
+		stadium == "Deutsche Bank Park  (Waldstadion)", "Waldstadion", stadium)) %>%
+	mutate(stadium = ifelse(
+		stadium == "Borussia-Park", "Stadion im Borussia-Park", stadium)) %>%
+	mutate(stadium = ifelse(
+		stadium == "Signal Iduna Park  (Westfalenstadion)", "Westfalenstadion", stadium)) %>%
+	mutate(stadium = ifelse(
+		stadium == "MHPArena  (Neckarstadion)", "Neckarstadion", stadium)) %>%
+	mutate(stadium = ifelse(
+		stadium == "RheinEnergieStadion  (Müngersdorfer Stadion)", "Müngersdorfer Stadion", stadium)) %>%
+	mutate(stadium = ifelse(
+		stadium == "Veltins-Arena  (Arena AufSchalke)", "Arena AufSchalke", stadium)) %>%
+	mutate(stadium = ifelse(
+		stadium == "PreZero Arena  (Rhein-Neckar-Arena)", "Rhein-Neckar-Arena", stadium))
+
+## repeat for all other countries
+```
+
+## Getting the attendance figures {#attendance}
+
+Now that we have the stadium data we'll get the FBRef data via `worldfootballR` and join the datasets. It's just one line of code to get the data:
+
+`ger_match_2023 <- fb_match_results(country = "GER", gender = "M", season_end_year = 2023, tier = "1st")`
+
+Repeat for all other countries.
+
+As I mentioned, the join step necessitated lots of data cleaning on stadium names, which took some detective work. I needed to track down stadium names free of current naming rights holders, and change FBRef's use of shorthand team names. We'll look at Germany for an example. If you want to see how I handled other leagues, look at the individual scripts in the [Github repo](https://github.com/greg-dubrow/football-attendance).
+
+```{r joindata}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for data join"
+
+ger_match_2023  %>%
+	# remove hamburg's relegation playoff match
+	filter(!Home == "Hamburger SV") %>%
+	mutate(wk_n = as.numeric(Wk)) %>%
+	mutate(match_week = ifelse(between(wk_n, 1, 9), paste0("0", Wk), Wk)) %>%
+	select(Competition_Name:Round, match_week, Wk, Day:Referee) %>%
+	# cleaning of team and stadium names after initial join, seeing what didn't match
+	mutate(Home = ifelse(Home == "Eint Frankfurt", "Eintracht Frankfurt", Home)) %>%
+	mutate(Away = ifelse(Away == "Eint Frankfurt", "Eintracht Frankfurt", Away)) %>%
+	mutate(Home = ifelse(Home == "M'Gladbach", "Borussia Mönchengladbach", Home)) %>%
+	mutate(Away = ifelse(Away == "M'Gladbach", "Borussia Mönchengladbach", Away)) %>%
+	mutate(Home = ifelse(Home == "Dortmund", "Borussia Dortmund", Home)) %>%
+	mutate(Away = ifelse(Away == "Dortmund", "Borussia Dortmund", Away)) %>%
+	mutate(Home = ifelse(Home == "Stuttgart", "VfB Stuttgart", Home)) %>%
+	mutate(Away = ifelse(Away == "Stuttgart", "VfB Stuttgart", Away)) %>%
+	mutate(Home = ifelse(Home == "Köln", "FC Köln", Home)) %>%
+	mutate(Away = ifelse(Away == "Köln", "FC Köln", Away)) %>%
+	mutate(Home = ifelse(Home == "Hoffenheim", "TSG 1899 Hoffenheim", Home)) %>%
+	mutate(Away = ifelse(Away == "Hoffenheim", "TSG 1899 Hoffenheim", Away)) %>%
+	mutate(Home = ifelse(Home == "Leverkusen", "Bayer 04 Leverkusen", Home)) %>%
+	mutate(Away = ifelse(Away == "Leverkusen", "Bayer 04 Leverkusen", Away)) %>%
+	mutate(Home = ifelse(Home == "Wolfsburg", "VfL Wolfsburg", Home)) %>%
+	mutate(Away = ifelse(Away == "Wolfsburg", "VfL Wolfsburg", Away)) %>%
+	mutate(Home = ifelse(Home == "Bochum", "VfL Bochum", Home)) %>%
+	mutate(Away = ifelse(Away == "Bochum", "VfL Bochum", Away)) %>%
+	mutate(Home = ifelse(Home == "Mainz 05", "FSV Mainz 05", Home)) %>%
+	mutate(Away = ifelse(Away == "Mainz 05", "FSV Mainz 05", Away)) %>%
+	mutate(Home = ifelse(Home == "Freiburg", "SC Freiburg", Home)) %>%
+	mutate(Away = ifelse(Away == "Freiburg", "SC Freiburg", Away)) %>%
+
+	mutate(Venue = ifelse(Venue == "Deutsche Bank Park", "Waldstadion", Venue)) %>%
+	mutate(Venue = ifelse(Venue == "Signal Iduna Park", "Westfalenstadion", Venue)) %>%
+	mutate(Venue = ifelse(Venue == "Mercedes-Benz Arena", "Neckarstadion", Venue)) %>%
+	mutate(Venue = ifelse(Venue == "RheinEnergieSTADION", "Müngersdorfer Stadion", Venue)) %>%
+	mutate(Venue = ifelse(Venue == "Veltins-Arena", "Arena AufSchalke", Venue)) %>%
+	mutate(Venue = ifelse(Venue == "PreZero Arena", "Rhein-Neckar-Arena", Venue)) %>%
+ # order and name the data columns for next steps
+	select(league = Competition_Name, season = Season_End_Year, round = Round,
+				 match_date = Date, match_day = Day, match_time = Time,
+				 match_home = Home, match_away = Away,
+				 match_stadium = Venue, match_attendance = Attendance,
+				 HomeGoals, Home_xG, AwayGoals, Away_xG, Referee) %>%
+	# join on stadium data
+	left_join(ger_stad_df, by = c("match_stadium" = "stadium")) %>%
+	# fix some other issues that came up after 1st pass at visualization
+	mutate(capacity = ifelse(match_stadium == "Neckarstadion", 50000, capacity)) %>%
+	mutate(capacity = ifelse(match_stadium == "Waldstadion", 51500, capacity)) %>%
+	mutate(capacity = ifelse(match_stadium == "Mewa Arena", 33305, capacity)) %>%
+	# create the capacity percent for each match
+	mutate(match_pct_cap = match_attendance / capacity)
+```
+
+Ok, now that we have some clean data to work with, it's time to make a chart. The first step is to create a tidy summary dataset. Since I would be doing the same thing multiple times, I created a function. The code below includes some commented-out fields that I didn't end up needing for this analysis, but I left the code in there for future use.
+
+```{r function1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for summary function"
+
+attend_sum <- function(input_df, dfname = "NA") {
+	dfout <- input_df %>%
+		group_by(match_home, match_stadium) %>%
+		mutate(attend_avg_team = round(mean(match_attendance), 0)) %>%
+		mutate(attend_min_team = min(match_attendance)) %>%
+		mutate(attend_max_team = max(match_attendance)) %>%
+		mutate(attend_tot_team = sum(match_attendance)) %>%
+		mutate(capacity_tot_team = sum(capacity)) %>%
+		mutate(capacity_pct_team = attend_tot_team / capacity_tot_team) %>%
+		ungroup() %>%
+		# league figures
+		add_row(tibble_row(match_home = "League Average")) %>%
+		mutate(attend_tot_league = sum(match_attendance, na.rm = TRUE)) %>%
+		mutate(capacity_tot_league = sum(capacity, na.rm = TRUE)) %>%
+		mutate(capacity_pct_league = attend_tot_league / capacity_tot_league) %>%
+		mutate(attend_avg_league = round(mean(match_attendance, na.rm = TRUE), 0)) %>%
+		mutate(capacity_avg_league = round(mean(capacity, na.rm = TRUE), 0)) %>%
+		mutate(attend_avg_team = ifelse(match_home == "League Average", attend_avg_league, attend_avg_team)) %>%
+		mutate(capacity_pct_team = ifelse(match_home == "League Average", capacity_pct_league, capacity_pct_team)) %>%
+		mutate(capacity = ifelse(match_home == "League Average", capacity_avg_league, capacity)) %>%
+		# mutate(attend_med_league = round(median(match_attendance), 0)) %>%
+		# mutate(attend_min_league = min(match_attendance)) %>%
+		# mutate(attend_max_league = max(match_attendance)) %>%
+		# mutate(capacity_med_league = round(median(capacity), 0)) %>%
+		# mutate(capacity_min_league = min(capacity)) %>%
+		mutate(capacity_max_league = max(capacity)) %>%
+		# group_by(match_home) %>%
+		# mutate(capacity_tot2 = sum(capacity)) %>%
+		# mutate(attendance_tot2 = sum(match_attendance)) %>%
+		# mutate(capacity_pct_team = attendance_tot2 / capacity_tot2) %>%
+		# ungroup() %>%
+		select(team_name = match_home, stadium_name = match_stadium, stadium_capacity = capacity,
+		attend_avg_team, attend_min_team, attend_max_team,
+		attend_tot_team, capacity_tot_team, capacity_pct_team,
+		attend_avg_league,
+		# attend_med_league, attend_min_league, attend_max_league,
+		capacity_avg_league,
+		# capacity_med_league, capacity_min_league,
+		capacity_max_league,
+		attend_tot_league,
+		capacity_tot_league, capacity_pct_league, league) %>%
+		#, capacity_pct_team) %>%
+		distinct(team_name, stadium_name, .keep_all = T)
+	assign(str_c(dfname, "_sum"), dfout, envir=.GlobalEnv)
+}
+```
+
+Creating the summary dataframe was thus reduced to one line of code.
+
+`attend_sum(bundes_att_23, "bundes_att_23")`
+
+The first part of the function call is the match data. The text in quotes will come before the "\_sum" suiffix in the output dataframe, e.g. `bundes_att_23_sum`. This is accomplished via the `assign()` command in the function code. I did that to have easily identifiable dataframe objects to call, given I'd be working with multiple countries in the same session.
+
+Remember...
+
+**Good data management is consistent naming for objects that do the same thing.**
+
+Now that we have a nice tidy dataframe to plot, let's make the plot. Again, since I'm making multiples of the same plot, I wrote a function.
+
+```{r plot1function}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for plot function"
+
+## highlight function for plot labels
+# from https://stackoverflow.com/questions/61733297/apply-bold-font-on-specific-axis-ticks
+highlight = function(x, pat, color="black", family="") {
+	ifelse(grepl(pat, x), glue::glue("<b style='font-family:{family}; color:{color}'>{x}</b>"), x)
+}
+
+## plotting function. run against plotting df, output as object, then add title
+attend_plot1 <- function(plotdf) {
+	plotdf %>%
+		ggplot(aes(stadium_capacity, reorder(team_name, stadium_capacity))) +
+		# points for avg attendace & capacity
+		geom_point(aes(x=stadium_capacity, y= reorder(team_name, stadium_capacity)),
+			color="#4E79A7", size=10, alpha = .5 ) +
+		geom_point(aes(x=attend_avg_team, y= reorder(team_name, stadium_capacity)),
+			color="#A74E79", size=10, alpha = .5 ) +
+		# data labels for points
+		geom_text(data = plotdf %>% filter(capacity_pct_team < .95),
+			aes(x = attend_avg_team,
+				label = format(round(attend_avg_team, digits = 0),big.mark=",",scientific=FALSE)),
+				color = "black", size = 2.5) +
+		geom_text(data = plotdf %>% filter(capacity_pct_team >= .95),
+			aes(x = attend_avg_team,
+				label = format(round(attend_avg_team, digits = 0),big.mark=",",scientific=FALSE)),
+				color = "black", size = 2.5, hjust = 1.5) +
+		geom_text(aes(x = stadium_capacity,
+				label = format(round(stadium_capacity, digits = 0),big.mark=",",scientific=FALSE)),
+				color = "black", size = 2.5) +
+		# line connecting the points.
+		geom_segment(aes(x=attend_avg_team + 900 , xend=stadium_capacity - 900,
+				y=team_name, yend=team_name), color="lightgrey") +
+		# sets league average in bold
+		scale_y_discrete(labels= function(x) highlight(x, "League Average", "black")) +
+		# text for avg season capacity
+		geom_text(data = plotdf %>% filter(stadium_capacity < capacity_max_league & team_name != "League Average"),
+			aes(x = stadium_capacity + 1100, y = team_name,
+				label = paste0("Pct of capacity for season = ", round(capacity_pct_team * 100, 1), "%"),
+				hjust = -.02)) +
+		geom_text(data = plotdf %>% filter(team_name == "League Average"),
+			aes(x = stadium_capacity + 1100, y = team_name,
+				label = paste0("Pct of capacity for season = ", round(capacity_pct_team * 100, 1), "%"),
+				hjust = -.02, fontface = "bold")) +
+		scale_x_continuous(limits = 
+			c(min(plotdf$attend_avg_team), max(plotdf$stadium_capacity + 3000)),
+				breaks = scales::pretty_breaks(6),
+				labels = scales::comma_format(big.mark = ',')) +
+		labs(x = "Stadium capacity", y = "",
+				 subtitle = "*The further the red dot is to the left of the blue dot, the more average attendance is less than stadium capacity. Teams sorted by stadium capacity.*",
+				 caption = "*Match attendance data from FBRef using worldfootballr package. Stadium capacity data from Wikipedia*") +
+		theme_minimal() +
+		theme(panel.grid = element_blank(),
+			plot.title.position = "plot",
+			plot.title = ggtext::element_textbox_simple(
+			size = 12, fill = "cornsilk",
+			lineheight = 1.5,
+			padding = margin(5.5, 5.5, 5.5, 2),
+			margin = margin(0, 0, 5.5, 0)),
+			plot.subtitle = ggtext::element_markdown(size = 10),
+			plot.caption = ggtext::element_markdown(),
+			axis.text.x = ggtext::element_markdown(size = 10),
+			axis.text.y = ggtext::element_markdown(size = 11))
+}
+```
+
+So now we can create the base plot with just one line of code:
+
+`bundes_attplot <- attend_plot1(bundes_att_23_sum)`
+
+The title and some other elements will be added individually for each league plot. But but writing the function cut down the overall amount of code for each league script by a significant amount, not to mention eliminating a lot of copy-paste.
+
+I also did a scatterplot of stadium capacity on the x axis and average match capacity by team on the y axes. The code for the function is here:
+
+```{r plot2function}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for scatterplot function"
+
+
+attend_scatter <- function(plotdf) {
+  plotdf %>%
+  ggplot(aes(x = stadium_capacity, y = capacity_pct_team)) +
+  geom_point() +
+  geom_smooth() +
+  geom_text_repel(aes(label = team_name)) +
+  scale_x_continuous(labels = scales::comma_format(big.mark = ',')) +
+  scale_y_continuous(limits = c(0,1), labels = scales::percent_format()) +
+  labs(x = "Stadium Capacity", y = "Avg % of Capacity") +
+  theme_minimal() +
+  theme_minimal()
+}
+```
+
+Getting the scatterplot thus requires just one line of code:
+
+`bundes_scatter <- attend_scatter(bundes_att_23_sum)`
+
+To run the summary and plot functions I put them in a separate script in this project and used the `source()` command, in this case: `source("attend_functions.R")`. Using `source()` keeps that job in a separate file, making it easier to edit and keeping the analytical files focused on their jobs.
+
+Before we get to the individual league plots I want to run a few tables to show the top-line analysis across leagues. To do that we'll need to join the summary tables together, create a table in `gt` and write a slightly different plot.
+
+## Average match capacity by league
+
+To do the table below I combined the individual league attendance files into a single dataframe. I created a function to read them in, select only the necessary columns and bind them. I include the function below in case you encounter a similar need...to read in a bunch of files, clean, and join them. All you need to do is change the file type and the regex for the filename pattern.
+
+To run the function, it's one line of code:
+
+`attdfs <- combine_rds_files("file-path-here")`
+
+```{r rdsfunction}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for rds function"
+
+## read in and rbind attendance files
+combine_rds_files <- function(directory) {
+  # List all RDS files in the specified directory
+  rds_files <- list.files(directory, pattern = "^att_2023.*\\.rds", full.names = TRUE)
+
+  # Initialize an empty list to store dataframes
+  df_list <- list()
+
+  # Loop through each RDS file, read it, select columns, and store in the list
+  for (file in rds_files) {
+    data <- readRDS(file)
+    # Select the desired columns
+    selected_data <- data %>%
+      select(league, match_date, match_home, match_away, match_stadium, capacity, match_attendance)
+    df_list[[file]] <- selected_data
+  }
+
+  # Combine all dataframes in the list into one dataframe
+  combined_df <- bind_rows(df_list)
+
+  return(combined_df)
+}
+
+```
+
+What does the table tell us?
+
+Premier League and Bundesliga are in very high demand, and Dutch Eredivisie demand is not much further behind. And MLS is right up there, 4th highest in comparison to the major European leagues.
+
+The scatterplots below the table display the percentage capacity (y axis) by overall stadium capacity and then average attendace. They show that except for the English Premier League and the Bundesliga, a larger average stadium size or attendance doesn't mean that a league's clubs are doing better at filling their grounds. Scottish and Dutch clubs, along with MLS, have relatively smaller grounds on average, but they're well-matched to demand so they are playing to crowds above 80% capacity.
+
+The bottom line is, if you're a football tourist and not fixated on a Premier League or Budnesliga match, tickets are easier to come by in Belgium, Portugal (Primeira Liga), Denmark (Superliga), and Sweden (Allsvenskan). The by-league charts below will show you which clubs in even the more in-demand leagues might offer you a better chance at getting a ticket.
+
+::: {style="font-size: 80%;"}
+*table is sortable - click on column headers*
+:::
+
+```{r gt}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for interactive gt table"
+
+att23_all %>%
+  arrange(desc(capacity_pct_league)) %>%
+  select(league, capacity_avg_league, attend_avg_league, capacity_pct_league) %>%
+  gt() %>%
+	fmt_number(columns = c(attend_avg_league, capacity_avg_league), decimals = 0) %>%
+  fmt_percent(columns = c(capacity_pct_league), decimals = 1) %>%
+	cols_label(attend_avg_league = md("<span style=color:white>League Average<br>Attendance</span>"), 
+	           capacity_avg_league = md("<span style=color:white>League Average<br> Stadium Capacity</span>"),
+	           capacity_pct_league = md("<span style=color:white>League Average<br> Match Capacity</span>"), 
+	           league = md("<span style=color:white>League</span>")) %>%
+	cols_align(align = "right", columns = everything()) %>%
+  cols_align(align = "left", columns = c(league)) %>%
+  opt_stylize(style = 6) %>%
+	tab_style(
+		style = cell_text(align = "center"),
+		locations = cells_column_labels(
+			columns = c(attend_avg_league, capacity_avg_league, capacity_pct_league))) %>%
+    tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(
+      columns = c(league, attend_avg_league, capacity_avg_league, capacity_pct_league),
+      rows = league == "Average all leagues")) %>%
+  # function to make table sortable
+  opt_interactive(use_sorting = TRUE,
+                  use_pagination = FALSE,
+                  use_compact_mode = TRUE)
+
+```
+
+<br> ![](images/plot_attendance_23_all_scatter1.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by league for the 2022-23 season"}
+
+![](images/plot_attendance_23_all_scatter2.jpg){fig-alt="connected dot plot showing average percent capacity and average attendance by league for the  2022-23 season"}
+
+## Club attendance figures for Top 5 European leagues & MLS
+
+Among the top 5 European leagues, the Premier League and Bundesliga had the highest demand, with almost every club in those two leagues well above 90% capacity. The main outlier was Hertha Berlin, at 72% capacity. They were relegated that season, after a few very bad years that saw already shaky fan support dwindle. They also play in Berlin's Olympic Stadium, which is arguably too big for them regardless of how successul they are.
+
+Capacity in France, Italy, and Spain was much more varied, with some clubs over 90% and some clubs at less than half capacity. The bigger, more successful clubs had higher capacities relative to the rest of their leagues. Think Real Madrid, Barcelona, the Milan clubs, Juventus, Paris Saint Germain, Marseille. But even in Spain no club was above 90%, Real Madrid just at 90%. In France some less world-renowned clubs like Lens and Stade Rennais did very well, thanks to good seasons on the pitch and generally strong support.
+
+The MLS situation was mostly strong, with most teams playing to stadiums at at least 85% capacity. But the MLS data is odd, with some teams showing capacity at more than 100%. I understand that to be selling standing-room tickets in excess of seated capacity. And remember that MLS definitely reports tickets sold/given away, not turnstile counts.
+
+But still you can argue that MLS is a good draw compared to the major European leagues. The capacity figures for teams have improved as many have moved into smaller soccer-specific stadia, no longer playing in NFL stadiums that they would never hope to fill. Those still playing in NFL stadia often reduce capacity by not making all sections available for sale.
+
+As you look at the attendance figures, what do you see?
+
+Notes: <br> *Plot images expand "lightbox" style when clicked.* <br> *The France tab has a code example showing customization for Ligue 1.*
+
+::: panel-tabset
+## England
+
+You might look at the bubble chart on the right and wonder why I kept it in given that you can't distinguish the blue stadium capacity bubbles from the orange average attendance bubbles.
+
+Well, as the bar chart on the left shows, the demand and thus the overlap is the story. Demand for EPL tickets is so high, that there's no daylight between how many people EPL stadiums can hold and the average number of people turning up on match day.
+
+![](images/plot_attendance_23_epl.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in English Premier League 2023-23 season"}
+
+And same with the scatterplot. Why not set the y-axis to like a 50%-100% range? Well again, the story is the high demand, meaning all clubs are in the narrow 90%+ range, many above 95%. I wanted to visually highlight that all EPL clubs are playing to mostly full houses.
+
+![](images/plot_att_scatter_23_epl.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by club in English Premier League 2022-23 season"}
+
+## France
+
+The stadium capacity story in France is that a couple of the top clubs, PSG and Marseille, are doing very well, as are medium-sized clubs like Stade Rennais (Rennes) and Lens. France doesn't have a uniformly strong football culture. In some areas rugby is much more popular and football is still viewed as the hooligan's sport. And to be honest the behaviour of some club ultras doesn't help that perception. The clubs struggling to attract crowds are mainly those at the bottom of the table or those like Monaco where the football culture just isn't as strong. Lyon have been struggling for a few years and could do better than 3/4 capacity if they were a bit more successful on the pitch.
+
+As for the process of making and annotating the plot...
+
+First I run the data thru the summary function to create the set used for plotting. It's now this one line of code: `attend_sum(att_2023_ligue1, "fra_att_23")`
+
+After looking at the basic plot, I then decide on title text that describes the insight from the visualization and add it via `patchwork`'s `plot_annotation()` call.
+
+```{r franceplot}
+#| fig.width: 14.0
+#| fig.height: 8.0
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for plotting"
+
+# run the basic plot from the function:
+fra_attplot <- attend_plot1(fra_att_23_sum)
+
+# final plot - adjust max geom_text (DATA SET), title (LEAGUE)
+fra_attplot +
+  plot_annotation(title = "<b>Ligue 1
+  <span style='color: #8DA0CB;'>Average percent of capacity for season</span></b><i> (left bar chart)</i>,
+  <b><span style='color: #FF7F00;'>Average attendance</span></b> and
+  <b><span style='color: #1F78B4;'>Stadium capacity</span></b> (right bubble chart), by club, 2022-23 season.<br>
+				There is a lot of variance in demand for tickets relative to stadium capacity in Ligue 1.
+			Some clubs are well above 90% capacity, some play to less-than half full houses.<br>
+      See scatterplot below for stadium capacity numbers obscured by overlapping bubbles.",
+                  theme = theme(plot.title =
+                                  ggtext::element_textbox_simple(
+                                    size = 12, fill = "cornsilk",
+                                    lineheight = 1.5,
+                                    padding = margin(5.5, 5.5, 5.5, 2),
+                                    margin = margin(0, 0, 5.5, 0))))
+
+```
+
+![](images/plot_attendance_23_ligue1.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in Ligue 1 2022-23 season"}
+
+![](images/plot_att_scatter_23_ligue1.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by club in Ligue 1 2022-23 season"}
+
+## Germany
+
+Demand for tickets in German is very strong. All but three teams are regularly playing to 90%+ full stadiums. The Bundesliga is a tough ticket. I mentioned in the intro the issues with Hertha, and why they are the outlier here.
+
+![](images/plot_attendance_23_bundes.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in Bundesliga 2022-23 season"}
+
+![](images/plot_att_scatter_23_bundes.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by club in Bundesliga 2022-23 season"}
+
+## Italy
+
+The top clubs in Italy are playing to almost full stadiums, but overall from what I've read many stadiums in Italy are older and run-down, so not the most inviting experience for the casual match-goer. Spezia is an example of a team where the size of the stadium accurately reflects demand...in this season it was the smallest in Serie A but was regularly 90% full. And this in a season where they were relegated, finishing 18th.
+
+![](images/plot_attendance_23_seriea.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in laliga 2022-23 season"}
+
+![](images/plot_att_scatter_23_seriea.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by club in Serie A 2022-23 season"}
+
+## Spain
+
+While I'm not surprised that Real Madrid and Rayo are playing at close to 90% capacity, I was surprised to see Athletic Club only at 80%. Seems whenever I watch them on television, San Mamés is full. Maybe there's an issue with the attendance or capacity numbers? Not surprised as well that Getafe, Cadiz & Espanyol were as low as they were. In another post I do want to see if these clubs are negatively impacted by playing often on Friday or Monday nights.
+
+![](images/plot_attendance_23_laliga.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in La Liga 2022-23 season"}
+
+![](images/plot_att_scatter_23_laliga.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by club in La Liga 2022-23 season"}
+
+## MLS
+
+MLS was a tough one to do. Teams were flexible with stadium capacity or even venue depending on the opponent, for example if Miami & Messi came to town. The San Jose Earthquakes sometimes play in larger venues if one of the LA teams come up north. This required a bit of bespoke coding to get the capacity numbers correct and to visualize the effect. The bar & bubble chart shows alternate venues, even for one-off matches.
+
+The good news is that in general an MLS ticket is in high demand at many clubs.
+
+Chicago Fire stand out for their generally low capacity, but the club's been a mess for a while now. NY Red Bulls have also been struggling with results in recent years, so attendance has suffered. New England and Vancouver are also in that 70% band.
+
+The other low-capacity numbers are for one-off matches played at a different venue than the usual home field, like NYCFC needing to play across the river at Red Bull Arena in New Jersey, or Montreal having to play indoors in the Olympic Stadium.
+
+![](images/plot_attendance_23_mls.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in MLS 2023 season"}
+
+Because MLS as a) too many clubs and b) lots of clubs with similar sized soccer-specific grounds (a good thing!) the stadium capacity by average percent capacity scatterplot is a bit cluttered at the lower end. Plus the one-off matches and two significantly larger venues distort the smoothing line.
+
+![](images/plot_att_scatter_23_mls1.jpg){fig-alt="scatterplot showing average percent capacity and stadium capacity by club in MLS 2023 season"}
+
+So that's why this 2nd scatterplot, with one-offs and the two largest stadiums removed, shows slightly more clear look at the relationship between stadium capacity and ticket demand. And what we see are a couple of clubs, NYCFC in particular, who might be playing in stadiums that are too large, or at least not reducing capacity enough to avoid killing the vibe with empty seats. NYCFC at least is taking steps to get their own stadium with a capacity more appropriate to demand.
+
+![](images/plot_att_scatter_23_mls2.jpg){fig-alt="scatterplot showing average percent capacity and stadium capacity by club in MLS 2022-23 season"}
+:::
+
+## Club attendance figures for other European leagues
+
+What about the other European leagues, those in Belgium, Denmark, the Netherlands, Portugal, Scotland, Sweden, and Switzerland? It's a mixed bag, with the Dutch Eredivisie and Scottish Premiership clubs playing to 80%+ full arenas. Meanwhile the Swiss, Belgian, and Portuguese clubs on average are under 60% full. As with the larger leagues, the capacity picture varies by club. <br><br>
+
+::: panel-tabset
+## Belgium
+
+Club Brugge may have the highest average attendance, but Antwerp have the highest percent of capacity number, at near 90%. Cercle Brugge are not even at 20% capacity, playing in the same arena as Club Brugge. Though to be honest, something about a number that low makes me wonder if there's a data quality issue. But I can only display what's being reported.
+
+![](images/plot_attendance_23_belgium.jpg){fig-alt="bar chart on the left and connected dot plot on the right showing average attendance and stadium capacity by club in Belgian Jupiler League 2022-23 season"}
+
+![](images/plot_att_scatter_23_belgium.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by club in Belgian Jupiler League 2022-23 season"}
+
+## Denmark
+
+FC Copenhagen (FCK) are by far the biggest team in Denmark. They play in Parken, the national team stadium, and regularly draw almost 29,000 people per match. Danes do love football, but winters can be cold and damp, and in Jutland handball is also a big winter sport, so demand isn't strong enough to fill arenas. But the vibes are still great, and the quality of play is good. If you want a fun football experience, come to Denmark, and don't just go to FCK. Visit some of the smaller grounds.
+
+![](images/plot_attendance_23_superligadk.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in Danish Superliga 2022-23 season"}
+
+![](images/plot_att_scatter_23_superligadk.jpg){fig-alt="scatterplot showing average percent capacity and stadium capacity by club in Danish Superliga 2022-23 season"}
+
+Because Denmark splits the club season into two parts, a regular league-wide round-robin home-away round and a round where the top and bottom halves compete separately for separate honors or relegation ignominy, it's worth looking quickly to see if attendances increase or decrease depending on if a team is in the championship or relegation group.
+
+The plot below shows that teams with something real on the line, either the league title or avoiding relegation, tend to see an increase in the 2nd stage of competition relative to their attendance from the regualr season. So FC Copenhagen, going for the title, saw bigger crowds in the spring. So did Aalborg and Lyngby, battling hard to avoid relegation. Aalborg went down, Lyngby stayed up. The outlier in this respect is Horsens, who were in a tight relegation battle but saw a decrease in attendance for the 2nd stage.
+
+Of course one factor in 2nd stage attendance bumps could be nice spring weather after the cold, wet, dark Danish winter and handball season ending, meaning less competition for the sporting entertainment kroner.
+
+![](images/plot_attendance_23_byrounds_superligadk.jpg){fig-alt="slope graph showing average attendance and between season rounds by club in Danish Superliga 2022-23 season"}
+
+## Netherlands
+
+The Dutch also love their football, and Eredivisie tickets are generally in high demand. Passions run so deep that there's a slight ultras problem with violence, flares, pitch invaders, and objects being thrown onto the pitch. So some matches have been played at reduced capacity or behind closed doors, dperessing the overall capacity percentages a bit.
+
+![](images/plot_attendance_23_eredivisie.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in Belgian Jupiler League 2022-23 season"}
+
+![](images/plot_att_scatter_23_eredivisie.jpg){fig-alt="connected dot plot showing average percent capacity and stadium capacity by club in Belgian Jupiler League 2022-23 season"}
+
+## Portugal
+
+Like Ligue 1 and the Eredivisie, the Portuguese league features a steady pipeline of players who go on to feature at clubs who play in the Champions League. Does the transient nature of club stars play a part in depressed demand in Portugal? Is it economic? Some clubs are barely filling 30% of their seats. I don't know enough about how the economy or match-going culture affects attenance in Portugal.
+
+![](images/plot_attendance_23_portugal.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in Portugese Premiera 2022-23 season"}
+
+![](images/plot_att_scatter_23_portugal.jpg){fig-alt="scatterplot showing average percent capacity and stadium capacity by club in Portugese Premiera 2022-23 season"}
+
+## Scotland
+
+"Fitba" is big in Scotland, especially at the Old Firm (Celtic & Rangers) and the big Edinburgh clubs (Hibs & Hearts). Those are hard tickets to come by. Clubs lower down the league ladder are having trouble filling seats. That might have to do with the fact that it's not a very competitive league. Either Celtic or Rangers will almost always win the title.
+
+![](images/plot_attendance_23_sco.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in the Scottish Premiership 2022-23 season"}
+
+![](images/plot_att_scatter_23_sco.jpg){fig-alt="scatterplot showing average percent capacity and stadium capacity by club in the Scottish Premiership 2022-23 season"}
+
+## Sweden
+
+The big clubs in Sweden do well in terms of filling seats. AIK Stockholm's capacity number is perhaps hindered by them playing in the national team's stadium. While football is somewhat popular in Sweden, the league does run in the summer, and Swedes take their summer vacation seriously. Does that mean fewer people go during July and August? Something I might check out in a deeper dive post.
+
+![](images/plot_attendance_23_swe.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in the Swedish Allsvenskan 2022-23 season"}
+
+![](images/plot_att_scatter_23_swe.jpg){fig-alt="scatterplot showing average percent capacity and stadium capacity by club in the Swedish Allsvenskan 2022-23 season"}
+
+## Switzerland
+
+I honestly don't know enough about football culture and demand in Switzerland to offer much insight. We do see from the capacity percentage number that FC Winterthur play in an appropriately-sized arena. Almost every match is sold out. Young Boys are the most perennially successful team, so it makes sense there's demand for their matches. But why are Grasshopper and Servette not even at 30% capacity?
+
+![](images/plot_attendance_23_sui.jpg){fig-alt="connected dot plot showing average attendance and stadium capacity by club in the Swiss Super League 2022-23 season"}
+
+![](images/plot_att_scatter_23_sui.jpg){fig-alt="scatterplot showing average percent capacity and stadium capacity by club in the Swiss Super League 2022-23 season"}
+:::
+
+## What does it all mean?
+
+Coming back to the origin point for the post, MLS has relatively good demand for live matches relative to the top European leagues. League-wide more than 85% of tickets are taken. Whatever one thinks of the quality of play, that too many teams make the playoffs, that perhaps there's too many teams in the league, that there should be promotion-relegation, and other issues, enough people think an MLS match is good entertainment value for the money.
+
+In terms of average attendances across all leagues, it's worth keeping in mind that the 2022-23 season was the first since 2018-19 to not be interrupted and/or disrupted by COVID. Stadiums were open to full crowds, and teams and leagues were reporting higher demand than the pre-COVID seasons, especially the 2nd through 4th tier EFL leagues in England, and even non-league football there. People were happy to be able to go out and do things again after partial or full lockdowns. There was pent up demand for entertainment.
+
+I do want to see which leagues sustained their momentum. It's too much work, but it would also be interesting to pull data from 2018-19 to compare to 2022-23 and see what the COVID lockdown effect might have been, if what some teams were reporting held up across leagues.
+
+What else to explore? In addition to tracking the numbers season-to-season, I would like to look a bit more closely at league position and ticket demand; what teams bring crowds in spite of league position, what teams are most affected? I would love to look at the relationship between ticket prices and demand, but price data is not easy to find, especially across all these leagues. Even just looking at 2 or 3 leagues would entail a lot of work.
+
+I have started another post that will look at MLS a bit more, specifically if there was a "Messi effect" on attendance, and if there's a lull in mid-season attendance. A criticism of the MLS structure is that there are too many teams in general, and too many teams make the playoffs thus reducing the impact of individual matches. I also want to compare the 2022-23 season with the next two seasons to see if the move, starting in 2023-24, to a standard Saturday 7:30pm (local time) match time had an effect.
+
+I'll also look a bit deeper into Spain, and see if Friday & Monday matches hurt attendance. I might also see if the summer vacation in Sweden has an effect on attendance in June through August.
+
+But that's enough for now. If you've made it this far, I'd love to know what you think.
