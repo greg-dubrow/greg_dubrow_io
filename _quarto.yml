@@ -11,8 +11,6 @@ website:
     tracking-id: "G-09CSH6M61C"
     anonymize-ip: false
   repo-url: https://github.com/greg-dubrow/greg_dubrow_io
-  twitter-card:
-    creator: "@greg_dubrow"
   open-graph: true
   navbar:
     pinned: true
