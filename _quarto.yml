@@ -21,6 +21,7 @@ website:
         file: consulting.qmd
       - icon: github
         href: https://github.com/greg-dubrow
+        target: _blank
       - icon: linkedin
         href: https://linkedin.com/in/dubrowg/
       - icon: bluesky
