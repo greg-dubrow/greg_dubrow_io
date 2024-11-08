@@ -19,12 +19,14 @@ website:
     right:
       - text: "About me"
         file: about.qmd
+      - text: "Consulting"
+        file: consulting.qmd
       - icon: github
         href: https://github.com/greg-dubrow
       - icon: linkedin
         href: https://linkedin.com/in/dubrowg/
-      - icon: twitter
-        href: https://twitter.com/greg_dubrow
+      - icon: bluesky
+        href: https://bsky.app/profile/gregerskjerulf.bsky.social
       - icon: rss
         href: index.xml
   page-footer:

@@ -14,12 +14,6 @@ about:
     - icon: bluesky
       text: Bluesky
       href: https://bsky.app/profile/gregerskjerulf.bsky.social
-    - icon: mastodon
-      text: Fosstodon
-      href: https://fosstodon.org/@Greg_Dubrow
-    - icon: twitter
-      text: Twitter
-      href: https://twitter.com/greg_dubrow
 editor: 
   mode: source
 ---
