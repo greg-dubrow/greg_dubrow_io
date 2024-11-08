@@ -12,7 +12,7 @@ about:
       text: LinkedIn
       href: https://linkedin.com/in/dubrowg/
     - icon: bluesky
-      text: "{{< iconify simple-icons bluesky >}}"
+      text: Bluesky
       href: https://bsky.app/profile/gregerskjerulf.bsky.social
 editor: 
   mode: source
