@@ -24,8 +24,10 @@ website:
         target: _blank
       - icon: linkedin
         href: https://linkedin.com/in/dubrowg/
+        target: _blank
       - icon: bluesky
         href: https://bsky.app/profile/gregerskjerulf.bsky.social
+        target: _blank
       - icon: rss
         href: index.xml
   page-footer:
