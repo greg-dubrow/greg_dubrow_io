@@ -26,6 +26,7 @@ website:
         href: https://linkedin.com/in/dubrowg/
         target: _blank
       - icon: bluesky
+        text: "Bluesky"
         href: https://bsky.app/profile/gregerskjerulf.bsky.social
         target: _blank
       - icon: rss
