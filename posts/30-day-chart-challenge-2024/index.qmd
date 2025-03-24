@@ -2,7 +2,7 @@
 title: "30 Day Chart Challenge 2024"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
-date: "today"
+date: '2024-04-30'
 categories: [post, rstats, ggplot, dataviz, chartchallenge, tidytuesday, eurostat, oecd, spotify, denmark, crime,
 births]
 image: "prompts.png"
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 
 ## My Plan for the Challenge {#plan}
 
-If you regularly scroll through dataviz social media you probably see lots of posts in April where people show off their work for the [30 Day Chart Challenge](https://github.com/30DayChartChallenge/Edition2024). I never participate in these chart or map challenges because usually they take me by surprise and it's alreayd a week in before I notice and then I figure I'm too late.
+If you regularly scroll through dataviz social media you probably see lots of posts in April where people show off their work for the [30 Day Chart Challenge](https://github.com/30DayChartChallenge/Edition2024). I never participate in these chart or map challenges because usually they take me by surprise and it's already a week in before I notice and then I figure I'm too late.
 
 Well not this year. Even though I'm (checks calendar) *three weeks* late to the party, I'm going to try and add a few charts to the challenge. I figure it's a good way to keep me consistently creating new visualisations, using the prompts to spur me to think about different data sources and dataviz approaches. My plan is to:
 
