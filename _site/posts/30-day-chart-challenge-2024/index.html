@@ -419,7 +419,7 @@ cookieconsent.run({
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">year =</span> TIME_PERIOD)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>indexed <span class="dv">0</span>B <span class="cf">in</span>  <span class="dv">0</span>s, <span class="dv">0</span>B<span class="sc">/</span>s</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">1.49</span>PB<span class="sc">/</span>s</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>indexed <span class="fl">1.00</span>TB <span class="cf">in</span>  <span class="dv">0</span>s, <span class="fl">1.18</span>PB<span class="sc">/</span>s</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                                              </span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make the plots</span></span>
@@ -1093,6 +1093,7 @@ cookieconsent.run({
 </section>
 <section id="prompt9" class="level2">
 <h2 class="anchored" data-anchor-id="prompt9">Prompt #9 - Major/Minor</h2>
+<p><em>Please note that in November 2024 Spotify deactivated many API end points, including the ones I demo in this post and in the <a href="https://www.gregdubrow.io/posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/">Spotify post from February 2021</a>. They are still dead as of late March 2025, and I have no idea when or if they will reactivate the API end points.</em></p>
 <p>The very first thing that came to mind for this plot prompt was to look at differences in music between major and minor keys. That provided me with the perfect excuse to use the <a href="https://github.com/charlie86/spotifyr"><code>spotifyr</code></a> package again, as I did in my post <a href="https://www.gregdubrow.io/posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/">analyzing the music</a> from my band <a href="https://gostaberling.bandcamp.com/">Gosta Berling</a>.</p>
 <p>As I already had the code I needed to authorize API access through the package, I figued it would be easy, and this would be at most a couple of hours of work.</p>
 <p>Not so much.</p>
@@ -1823,7 +1824,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

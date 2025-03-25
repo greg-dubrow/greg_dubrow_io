@@ -932,6 +932,8 @@ They aren't perfect but they're close enough and visualised what I wanted them t
 
 ## Prompt #9 - Major/Minor {#prompt9}
 
+*Please note that in November 2024 Spotify deactivated many API end points, including the ones I demo in this post and in the [Spotify post from February 2021](https://www.gregdubrow.io/posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/). They are still dead as of late March 2025, and I have no idea when or if they will reactivate the API end points.*
+
 The very first thing that came to mind for this plot prompt was to look at differences in music between major and minor keys. That provided me with the perfect excuse to use the [`spotifyr`](https://github.com/charlie86/spotifyr) package again, as I did in my post [analyzing the music](https://www.gregdubrow.io/posts/sad-songs-pretty-charts-a-gosta-berling-music-data-visualization/) from my band [Gosta Berling](https://gostaberling.bandcamp.com/).
 
 As I already had the code I needed to authorize API access through the package, I figued it would be easy, and this would be at most a couple of hours of work.
