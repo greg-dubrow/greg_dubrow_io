@@ -3,8 +3,7 @@ title: "30 Day Chart Challenge 2025"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
 date: '2025-04-01'
-categories: [post, rstats, ggplot, dataviz, chartchallenge, tidytuesday, eurostat, oecd, spotify, denmark, crime,
-births]
+categories: [post, rstats, ggplot, dataviz, chartchallenge, denmark, education, higher education]
 image: "prompts_2025.png"
 toc: true
 lightbox: true
@@ -309,7 +308,141 @@ In the US public higher education affordability models vary from state to state.
 
 ## Prompt #3 - Circular {#prompt3}
 
-For this post I'll make a simple circle packing chart, sort of a heat map or tree map but with circles, the size of the circles corresponding to the variable value. I'm using the code-through from the [R Graph Gallery](https://r-graph-gallery.com/308-interactive-circle-packing.html) to get going, as I've never done this type of chart before. The [`packcircles` package](https://github.com/mbedward/packcircles) does the computational work to create the circle objects.
+Went wild with the circles here, sixty of them altogether. I took inspiration from this [Albert Rapp post](https://albert-rapp.de/posts/ggplot2-tips/14_scaled_heatmaps/14_scaled_heatmaps.html) on using a bubble chart in place of a heat map.
+
+We are still pulling data from from Danmarks Statistik via the `danstat` package. This time we'll use the "Labour & income" domain to look at earnings by employment sector and highest level of education attained, the LONS11 table; løn is the Danish word for wage or salary. Of the twenty-five available earnings indicators, we're using the `MDRSNIT` field, which is standardized monthly earnings. I couldn't easily find the documentation on exactly how it was imputed, but given the analysis is across sectors, I thought it made the most sense. We'll also pull in whether the employee was salaried or hourly *(spoiler alert...it matters)*.
+
+Let's first get and clean the data.
+
+```{r prompt3_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting and cleaning data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(danstat) # package to get Danish statistics via api
+library(ggtext) # enhancements for text in ggplot
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+# lons11
+table_meta <- danstat::get_table_metadata(table_id = "lons11", variables_only = TRUE)
+
+# create variable list using the ID value in the variable
+variables_ed <- list(
+	list(code = "uddannelse", values = c("H10", "H20", "H30", "H40", "H50", "H60", "H70", "H80")),
+	list(code = "sektor", values = c(1016, 1020, 1025, 1046)),
+	list(code = "lønmål", values = "MDRSNIT"), # avg monthly
+#	list(code = "køn", values = c("M", "K")),
+  list(code = "afloen", values = c("TIME", "FAST")),
+	list(code = "tid", values = 2023))
+
+sal1 <- get_data("lons11", variables_ed, language = "en") %>%
+	as_tibble() %>%
+	clean_names()
+
+# earnings came in character form, so changing to numeric and rounding up to whole numbers
+# group the ed levels and change the names, and change names on sector. make them factors with orders.
+sal2 <- sal1 %>%
+	mutate(income = as.numeric(indhold)) %>%
+	mutate(income = round(income, 2)) %>%
+	mutate(sector = case_when(
+		sektor == "Corporations and organizations" ~ "Private sector",
+		sektor == "Government including social security funds" ~ "Gov't - National",
+		sektor == "Municipal government" ~ "Gov't - Municipal",
+		sektor == "Regional government" ~ "Gov't - Regional")) %>%
+	mutate(sector =
+		factor(sector,
+		levels = c("Gov't - Municipal", "Gov't - Regional",
+		"Gov't - National", "Private sector"))) %>%
+	mutate(ed_level =
+		case_when(uddannelse == "H10 Primary education" ~ "Primary",
+		uddannelse == "H20 Upper secondary education" ~ "HS-Academic",
+		uddannelse == "H30 Vocational Education and Training (VET)" ~
+		"HS-Vocational",
+		uddannelse == "H40 Short cycle higher education" ~
+		"Short-cycle college",
+		uddannelse == "H50 Vocational bachelors educations" ~
+		"Bachelor-Vocational",
+		uddannelse == "H60 Bachelors programs" ~ "Bachelor-Academic",
+		uddannelse == "H70 Masters programs" ~ "Masters",
+		uddannelse == "H80 PhD programs" ~ "PhD")) %>%
+	mutate(ed_level =
+		factor(ed_level,
+		levels = c("Primary", "HS-Academic", "HS-Vocational",
+		"Short-cycle college", "Bachelor-Vocational", 
+		"Bachelor-Academic", "Masters", "PhD")))
+
+```
+
+Ok, we have the data, onto making the circles. Again, we're doing a bubble chart that functions as a heat map by pegging the bubble size to the value of the earnings. I also added text labels next to the bubbles.
+
+```{r prompt3_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the chart"
+
+sal2 %>%
+	ggplot(aes(x = sector, y = ed_level)) +
+	geom_point(aes(col = income, fill = income, size = income), shape = 21) +
+	theme_minimal() +
+	scale_size_area(max_size = 15) +
+	labs(x = "", y = "",
+			 title = "More education = higher monthly earnings across all sectors. Larger effect for salaried vs hourly workers",
+			 subtitle = "Monthly standardized earnings by education level & earner category",
+			 caption = "*Data from Danmarks Statistik via danstat package*") +
+	facet_wrap(~ afloen) +
+	theme(legend.position = 'top',
+				legend.justification = c(.95,0),
+				plot.title = element_text(size = 20),
+				plot.subtitle = element_text(size = 16),
+				plot.caption = element_markdown(size = 12, face = "italic")) +
+	guides(
+		col = guide_none(),
+		size = guide_none(),
+		fill = guide_colorbar(
+			barheight = unit(0.5, 'cm'),
+			barwidth = unit(10, 'cm'),
+			title.position = 'top',
+			title = "Standardized Monthly Earnings (Danish Kroner)")) +
+	scale_fill_continuous(limit = c(25000, 80000),
+		breaks = c(30000, 40000, 50000, 60000, 70000, 80000)) +
+	geom_text(data = subset(sal2, !is.na(income)),
+		aes(label =
+					paste0(round(income, 0), " DKK")), nudge_x = 0.35, size = 3)
+
+```
+
+I see the story here being that education level matters when it comes to how much Danish workers earn in a month. If you work in the private sector, having a Masters 8,000 to 10,000 more DKK per month than Bachelor's degrees. The difference is even greater working for regional government agencies. Also, hourly workers with the same education earn less per month than salaried workers. But without the component parts of the total earnings I can't explain exactly why.
+
+The bottom line is, as we're seeing so far in the charts, there's both an increase in the number of people earning college and post-bacc degrees, and the payoff seems to be there for the extra year of school it takes for most programs.
+
+But again, given that education is socialized and subsidized through taxes, the opportunity cost for that extra year is nothing, because the basic higher education coverage is for five years, for tuition and living stipend. And higher wage earners pay more taxes, helping to boost everyone's opportunity to earn the degrees they desire, without being worried about cost.
+
+It's worth mentioning here, that there's discussion ongoing in the Danish government to squeeze education spending and spots available in the gymnasiums (essentially high school) that feed university programs. I need to read up on that a bit more as I tell this Danish education story while doing the chart challenge.
+
+*Oh, the exchange rate is usually around 6.5 or so DKK to USD. So while it may seem amazing to earn 50000 per month, and while that's not bad in this market, adjust your bearings if you're thinking in USD or EURO.*
+
+![](images/prompt3_2025.jpg){fig-alt="bubble chart displaying monthly earnings by educational attainment and employment sector"}
+
+*created and posted April 2, 2025*
+
+## Prompt #4 - Big or Small {#prompt4}
+
+For this post I'll stay with a circle theme and make a simple circle packing chart, sort of a heat map or tree map but with circles, the size of the circles corresponding to the variable value. I'm using the code-through from the [R Graph Gallery](https://r-graph-gallery.com/308-interactive-circle-packing.html) to get going, as I've never done this type of chart before. The [`packcircles` package](https://github.com/mbedward/packcircles) does the computational work to create the circle objects.
 
 Keeping with the thematic constraint I've set, I'll once again be using Danish education data from Danmarks Statistik via the `danstat` package.
 
@@ -317,7 +450,7 @@ This chart will display Bachelor's degrees awarded in 2023, by top-line degree f
 
 To start, let's get the data. It's from a different table than the last chart, so I'll show the work.
 
-```{r prompt3_1}
+```{r prompt4_1}
 #| warning: false
 #| message: false 
 #| error: false
@@ -379,7 +512,7 @@ degs.gg <- circleLayoutVertices(degs_packing, npoints=50)
 
 Ok, we now have a nice clean tibble, time for the plot. What took the most time here was working on the labels...getting them to the correct size, adjusting for circle size. You'll notice one label set off to the side thanks to the [`ggrepel` package](https://cran.r-project.org/web/packages/ggrepel/vignettes/ggrepel.html).
 
-```{r prompt3_2}
+```{r prompt4_2}
 #| warning: false
 #| message: false 
 #| error: false
@@ -425,8 +558,8 @@ ggplot() +
 
 ```
 
-![](images/prompt3_2025.jpg){fig-alt="packed circle graph displaying Bachelors degrees awarded by field"}
+![](images/prompt4_2025.jpg){fig-alt="packed circle graph displaying Bachelors degrees awarded by field"}
 
 There you have it, academic Bachelor's degrees awarded by Danish universities in 2023. The Social Sciences category accounts for more than twice as many degrees as the next field. Again, the next interesting step would be to visualize the disaggregation of the main fields, and see what subfields are the most popular. It would also be interesting to track the numbers over time, see which majors rose or fell.
 
-*created and posted March 25, 2025*
+*created and posted April 2, 2025*
