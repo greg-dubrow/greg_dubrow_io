@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
-<meta name="dcterms.date" content="2025-04-01">
+<meta name="dcterms.date" content="2025-04-03">
 <meta name="description" content="Let’s make some charts!">
 
 <title>30 Day Chart Challenge 2025 – gregers kjerulf dubrow</title>
@@ -234,7 +234,7 @@ cookieconsent.run({
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 1, 2025</p>
+        <p class="date">April 3, 2025</p>
       </div>
     </div>
     
@@ -255,6 +255,7 @@ cookieconsent.run({
   <li><a href="#prompt2" id="toc-prompt2" class="nav-link" data-scroll-target="#prompt2">Prompt #2 - Slope</a></li>
   <li><a href="#prompt3" id="toc-prompt3" class="nav-link" data-scroll-target="#prompt3">Prompt #3 - Circular</a></li>
   <li><a href="#prompt4" id="toc-prompt4" class="nav-link" data-scroll-target="#prompt4">Prompt #4 - Big or Small</a></li>
+  <li><a href="#prompt5" id="toc-prompt5" class="nav-link" data-scroll-target="#prompt5">Prompt #5 - Ranking</a></li>
   </ul>
 </nav>
     </div>
@@ -279,7 +280,7 @@ cookieconsent.run({
 <li>I will post contributions to social media via my <a href="https://bsky.app/profile/gregerskjerulf.bsky.social">Bluesky</a>, and <a href="https://www.linkedin.com/in/dubrowg/">LinkedIn</a> accounts.</li>
 <li>I will add contributions to this post, meaning the posting date will refresh to the date I’ve added the chart. So If I get to a lot or even all of them, this will be a long post.</li>
 <li>Use the table of contents to the right to navigate to a specific chart.</li>
-<li>Images are “lightboxed”, so click on them to enlarge. Click outside the image to return.</li>
+<li>Images are “lightboxed”, so click on them to enlarge. Click <code>esc</code> or outside the image to restore the page.</li>
 </ul>
 <p>One major change is that this year I am going to only pull data from Danmarks Statistik (Statistics Danmark, the national statistics agency) via the <a href="https://github.com/ValeriVoev/danstat"><code>danstat</code></a> package for r. To the extent possible I’ll be focusing on education data. These constraints will help me by not having to figure out which data source to use each day, plus I’ll hopefully be telling a story of the coming weeks.</p>
 <p>It may not be a straight linear narrative and not every post will necessarily connect to the whole. I may not even know exactly what I have until I’m done. I have sketched out ideas for many of the prompts, but things may change as I go along. If the daily prompt just doesn’t lend itself to Danish education data, or Danish data at all, the subject for that chart will be something else.</p>
@@ -707,6 +708,151 @@ cookieconsent.run({
 <p><a href="images/prompt4_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="images/prompt4_2025.jpg" class="img-fluid" alt="packed circle graph displaying Bachelors degrees awarded by field"></a></p>
 <p>There you have it, academic Bachelor’s degrees awarded by Danish universities in 2023. The Social Sciences category accounts for more than twice as many degrees as the next field. Again, the next interesting step would be to visualize the disaggregation of the main fields, and see what subfields are the most popular. It would also be interesting to track the numbers over time, see which majors rose or fell.</p>
 <p><em>created and posted April 2, 2025</em></p>
+</section>
+<section id="prompt5" class="level2">
+<h2 class="anchored" data-anchor-id="prompt5">Prompt #5 - Ranking</h2>
+<p>For this prompt I desperately wanted to do something relating to music from the band The English Beat because of Ranking Roger. But I’d already committed to the Danish education bit, and Spotify shut down all the interesting API endpoints and don’t seem to be reanimating them any time soon. Something about “safety”, but it’s likely AI crawlers, the same ones increasing hosting costs for Wikipedia and other websites as they steal content for their models. And funny for Spotify to complain about someone els using their work to monetize a product.</p>
+<p>But anyway, let’s talk ranks. Specifically let’s look at the rankings of Bachelor degrees awarded in Denmark in 2023. I’ll focus on the academic (4-year) degrees because I wanted to look at majors within broader disciplines and look at differences by gender.</p>
+<p>Again, data comes from Danmarks Statistik via the <code>danstat</code> package.</p>
+<p>So first, let’s get the data. It’s from the same table used in <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2025/#prompt4">prompt 4</a> but retreived slightly differently so I’ll show it again. This time we’re getting all the majors within the broader disciplines so in the list call we use <code>list(code = "uddannelse", values = "*")</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for getting and cleaning data</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(danstat) <span class="co"># package to get Danish statistics via api</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(packcircles) <span class="co"># makes the circles!</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext) <span class="co"># enhancements for text in ggplot</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel) <span class="co"># helps with label offsets</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># some custom functions</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># this table is UDDAKT60, set to all lower-case in the table_id call</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>table_meta <span class="ot">&lt;-</span> danstat<span class="sc">::</span><span class="fu">get_table_metadata</span>(<span class="at">table_id =</span> <span class="st">"uddakt60"</span>, <span class="at">variables_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># create variable list using the ID value in the variable.</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>variables_ed <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"uddannelse"</span>, <span class="at">values =</span> <span class="st">"*"</span>),</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"fstatus"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"F"</span>)),</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"køn"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"M"</span>, <span class="st">"K"</span>)),</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">#list(code = "alder", values = c("TOT")),</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"tid"</span>, <span class="at">values =</span> <span class="dv">2023</span>))</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>bacdegs1 <span class="ot">&lt;-</span> <span class="fu">get_data</span>(<span class="st">"uddakt60"</span>, variables_ed, <span class="at">language =</span> <span class="st">"en"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>()</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>bacdegs <span class="ot">&lt;-</span> bacdegs1 <span class="sc">%&gt;%</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean up the degree text and code field</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_code =</span> <span class="fu">str_extract</span>(UDDANNELSE, <span class="st">"^[^ ]+"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">sub</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">S+</span><span class="sc">\\</span><span class="st">s+"</span>, <span class="st">''</span>, UDDANNELSE)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">str_remove</span>(deg_name, <span class="st">", BACH"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">str_remove</span>(deg_name, <span class="st">" BACH"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        deg_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"H6020"</span>, <span class="st">"H6025"</span>, <span class="st">"H6030"</span>, <span class="st">"H6035"</span>, <span class="st">"H6039"</span>,</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">"H6059"</span>, <span class="st">"H6075"</span>, <span class="st">"H6080"</span>, <span class="st">"H6090"</span>) <span class="sc">~</span> <span class="st">"Main"</span>,</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>        deg_code <span class="sc">==</span> <span class="st">"H60"</span> <span class="sc">~</span> <span class="st">"All"</span>,</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Sub"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create discipline category for making individual plots.</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_field =</span>  <span class="fu">case_when</span>(</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6020"</span>) <span class="sc">~</span> <span class="st">"Education"</span>,</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6025"</span>) <span class="sc">~</span> <span class="st">"Humanities"</span>,</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6030"</span>) <span class="sc">~</span> <span class="st">"Arts"</span>,</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6035"</span>) <span class="sc">~</span> <span class="st">"Science"</span>,</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6039"</span>) <span class="sc">~</span> <span class="st">"Social Sciences"</span>,</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6059"</span>) <span class="sc">~</span> <span class="st">"Technical sciences"</span>,</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6075"</span>) <span class="sc">~</span> <span class="st">"Technical sciences"</span>,</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6080"</span>) <span class="sc">~</span> <span class="st">"Agriculture &amp; Veterinary"</span>,</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6090"</span>) <span class="sc">~</span> <span class="st">"Health science"</span>,</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"no"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">degs_n =</span> INDHOLD, <span class="at">sex =</span> KØN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now that we have tidy data, let’s make the charts. This time out it’s horizontal bar charts, ordered by number of degrees awarded. Note that because I’m faceting by gender, and because I want to show the top majors in descending order for each gender, I use the <code>scales = "free_y"</code> option in the <code>facet</code> function.</p>
+<p>A few things before we see the work. First, I had hoped to write a function and output all the by-discipline charts but it was too complicated to get each chart to look exactly as I wanted, and I realized I’d have to do lots of individual formatting anyway. So sadly it’s “copy-paste-amend” for all the charts. I’ll only show the code for the chart showing all degrees and for one of the discipline charts, as the rest of the discipline charts were essentially the same, just minor edits on the <code>geom_text()</code> code.</p>
+<p>Second, I had to make a design choice regarding the x axes. I decided to keep them standard to the maximum number of degrees by major within each discipline, so the x axes for men &amp; women is the same. To me, having different x axes maximums in the same chart was distorting the scope of the bars, making different numbers look the same.</p>
+<p>Third, I am only displaying degree counts, not percentages. I went back and forth on that as well, and decided to go with the counts. Maybe I’ll redo the analysis later and switch to or add percentages.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the charts</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>bacdegs <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_group <span class="sc">==</span> <span class="st">"Main"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    {. <span class="ot">-&gt;&gt;</span> tmp} <span class="sc">%&gt;%</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> degs_n, <span class="at">y =</span> <span class="fu">reorder_within</span>(deg_name, degs_n, sex), <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E66100"</span>, <span class="st">"#5D3A9B"</span>)) <span class="sc">+</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_reordered</span>() <span class="sc">+</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">"All Bachelor degrees by field &amp; sex, 2023"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"*Total degrees earned = 19,199: Men = 8,694, Women = 10,505*"</span>),</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik via danstat package*"</span>) <span class="sc">+</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> sex, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, degs_n <span class="sc">&gt;</span> <span class="dv">3000</span>),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">comma</span>(degs_n)), <span class="at">hjust =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, degs_n <span class="sc">&lt;</span> <span class="dv">3000</span>),</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">comma</span>(degs_n)), <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">5</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>())</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># agriculture and veterinary sciences</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>bacdegs <span class="sc">%&gt;%</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_group <span class="sc">==</span> <span class="st">"Sub"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_field <span class="sc">==</span> <span class="st">"Agriculture &amp; Veterinary"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    {. <span class="ot">-&gt;&gt;</span> tmp} <span class="sc">%&gt;%</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> degs_n, <span class="at">y =</span> <span class="fu">reorder_within</span>(deg_name, degs_n, sex), <span class="at">fill =</span> sex)) <span class="sc">+</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E66100"</span>, <span class="st">"#5D3A9B"</span>)) <span class="sc">+</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_reordered</span>() <span class="sc">+</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>             <span class="at">title =</span> <span class="st">"Agriculture &amp; Veterinary Science Bachelor degrees by field &amp; sex, 2023"</span>,</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>             <span class="at">subtitle =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"*Total degrees earned = 308: Men = 55, Women = 253*"</span>)) <span class="sc">+</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> sex, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, degs_n <span class="sc">&gt;</span> <span class="dv">100</span>),</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">comma</span>(degs_n)), <span class="at">hjust =</span> <span class="fl">1.5</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, degs_n <span class="sc">&lt;</span> <span class="dv">100</span>),</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>                        <span class="fu">aes</span>(<span class="at">label =</span> degs_n), <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">5</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>                <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="images/prompt5_1_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="images/prompt5_1_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>This first chart shows all degrees awarded by discipline and sex. The most immediate thing to notice is that more Bachelor degrees were awarded to women than to men. But that tracks with a chart I did last year, <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt5">showing rates of educational attainment by sex</a> and it’s similar to other countries, including the US.</p>
+<p>Social science degrees were the most popular for both men and women. After that it changes a bit. Humanities were 2nd most popular for women, technical sciences next for men. And so forth. To be honest, it’s kind of a shock to see degree fields so starkly gendered now. I would have though some disciplines would have been a bit more evenly split.</p>
+<p>Below are the rest of the charts, one for each major discipline. They are lightboxed, so click on the image to enlarge it, and click <code>esc</code> or outside the image to restore it to the page.</p>
+<p>The only one I did not make was for Education degrees because there’s only one major. There were 134 degrees awarded, 117 to women, 17 to men. If you’re interested you can comb through and see which majors were most popular in each discipline.</p>
+<p>This makes me think I probably should have done this as a Tableau chart to let the user filter by discipline. Or I could have done parameterized charts in Quarto. Then I could have added other degree levels. Lots of data prep, but it would be a useful chart. Maybe after the 30 Day Challenge is over.</p>
+<p>Agriculture &amp; Veterinary Sciences</p>
+<p>
+</p><p><a href="images/prompt5_2_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="images/prompt5_2_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>Arts</p>
+<p>
+</p><p><a href="images/prompt5_3_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="images/prompt5_3_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>Health Sciences</p>
+<p>
+</p><p><a href="images/prompt5_4_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="images/prompt5_4_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>Humanities</p>
+<p>
+</p><p><a href="images/prompt5_5_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="images/prompt5_5_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>Science</p>
+<p>
+</p><p><a href="images/prompt5_6_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="images/prompt5_6_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>Social Science</p>
+<p>
+</p><p><a href="images/prompt5_7_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="images/prompt5_7_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>Technical Science</p>
+<p>
+</p><p><a href="images/prompt5_8_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="images/prompt5_8_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><em>created and posted April 3, 2025</em></p>
 
 
 </section>
@@ -1163,7 +1309,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","selector":".lightbox","loop":false});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
