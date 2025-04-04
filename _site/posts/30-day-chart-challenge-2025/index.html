@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
-<meta name="dcterms.date" content="2025-04-03">
+<meta name="dcterms.date" content="2025-04-04">
 <meta name="description" content="Let’s make some charts!">
 
 <title>30 Day Chart Challenge 2025 – gregers kjerulf dubrow</title>
@@ -234,7 +234,7 @@ cookieconsent.run({
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 3, 2025</p>
+        <p class="date">April 4, 2025</p>
       </div>
     </div>
     
@@ -772,7 +772,7 @@ cookieconsent.run({
 <p>Now that we have tidy data, let’s make the charts. This time out it’s horizontal bar charts, ordered by number of degrees awarded. Note that because I’m faceting by gender, and because I want to show the top majors in descending order for each gender, I use the <code>scales = "free_y"</code> option in the <code>facet</code> function.</p>
 <p>A few things before we see the work. First, I had hoped to write a function and output all the by-discipline charts but it was too complicated to get each chart to look exactly as I wanted, and I realized I’d have to do lots of individual formatting anyway. So sadly it’s “copy-paste-amend” for all the charts. I’ll only show the code for the chart showing all degrees and for one of the discipline charts, as the rest of the discipline charts were essentially the same, just minor edits on the <code>geom_text()</code> code.</p>
 <p>Second, I had to make a design choice regarding the x axes. I decided to keep them standard to the maximum number of degrees by major within each discipline, so the x axes for men &amp; women is the same. To me, having different x axes maximums in the same chart was distorting the scope of the bars, making different numbers look the same.</p>
-<p>Third, I am only displaying degree counts, not percentages. I went back and forth on that as well, and decided to go with the counts. Maybe I’ll redo the analysis later and switch to or add percentages.</p>
+<p>Third, I am only displaying degree counts, not percentages. I went back and forth on that as well, and decided to go with the counts and save the percentages for the “Diverging” prompt on Day 9.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show code for making the charts</summary>
@@ -825,34 +825,34 @@ cookieconsent.run({
 <span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>                <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><a href="images/prompt5_1_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="images/prompt5_1_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><a href="images/prompt5_all_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="images/prompt5_all_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
 <p>This first chart shows all degrees awarded by discipline and sex. The most immediate thing to notice is that more Bachelor degrees were awarded to women than to men. But that tracks with a chart I did last year, <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt5">showing rates of educational attainment by sex</a> and it’s similar to other countries, including the US.</p>
-<p>Social science degrees were the most popular for both men and women. After that it changes a bit. Humanities were 2nd most popular for women, technical sciences next for men. And so forth. To be honest, it’s kind of a shock to see degree fields so starkly gendered now. I would have though some disciplines would have been a bit more evenly split.</p>
-<p>Below are the rest of the charts, one for each major discipline. They are lightboxed, so click on the image to enlarge it, and click <code>esc</code> or outside the image to restore it to the page.</p>
-<p>The only one I did not make was for Education degrees because there’s only one major. There were 134 degrees awarded, 117 to women, 17 to men. If you’re interested you can comb through and see which majors were most popular in each discipline.</p>
-<p>This makes me think I probably should have done this as a Tableau chart to let the user filter by discipline. Or I could have done parameterized charts in Quarto. Then I could have added other degree levels. Lots of data prep, but it would be a useful chart. Maybe after the 30 Day Challenge is over.</p>
-<p>Agriculture &amp; Veterinary Sciences</p>
+<p>Social science degrees were the most popular for both men and women. After that it changes a bit. Humanities were 2nd most popular for women, technical sciences next for men. And so forth. To be honest, it’s kind of a shock to see degree fields so starkly gendered now. I would have though some disciplines would have been a bit more evenly split. Again, we’ll dive deeper into the percentage differences on Day 9 for the “Diverging” prompt.</p>
+<p>Below are the rest of the charts, one for each major discipline. If you’re interested you can comb through and see which majors were most popular in each discipline. They are lightboxed, so click on the image to enlarge it, and click <code>esc</code> or outside the image to restore it to the page.</p>
+<p>The only ones I did not make were for <em>Education</em> and the <em>Food-Biotech-Lab Tech</em> degrees as each only had one major with degrees awarded. In Education there were 134 degrees awarded, 117 to women, 17 to men. For Food-Bio-Lab Tech there were 61 degrees total, 20 to Men, 41 to Women all in a general Food &amp; Nutrition Science major.</p>
+<p>This makes me think I could have done this as a Tableau chart to let the user filter by discipline. Or I could have done parameterized charts in Quarto. Either way I could have added other degree levels. Lots of data prep, but it would be a useful chart. Maybe after the 30 Day Challenge is over.</p>
+<p><span style="text-decoration: underline;">Agriculture, Nature, &amp; Environment</span></p>
 <p>
-</p><p><a href="images/prompt5_2_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="images/prompt5_2_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p>Arts</p>
+</p><p><a href="images/prompt5_ag_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="images/prompt5_ag_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><span style="text-decoration: underline;">Arts</span></p>
 <p>
-</p><p><a href="images/prompt5_3_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="images/prompt5_3_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p>Health Sciences</p>
+</p><p><a href="images/prompt5_art_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="images/prompt5_art_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><span style="text-decoration: underline;">Health Sciences</span></p>
 <p>
-</p><p><a href="images/prompt5_4_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="images/prompt5_4_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p>Humanities</p>
+</p><p><a href="images/prompt5_health_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="images/prompt5_health_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><span style="text-decoration: underline;">Humanities</span></p>
 <p>
-</p><p><a href="images/prompt5_5_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="images/prompt5_5_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p>Science</p>
+</p><p><a href="images/prompt5_hum_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="images/prompt5_hum_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><span style="text-decoration: underline;">Science</span></p>
 <p>
-</p><p><a href="images/prompt5_6_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="images/prompt5_6_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p>Social Science</p>
+</p><p><a href="images/prompt5_sci_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="images/prompt5_sci_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><span style="text-decoration: underline;">Social Science</span></p>
 <p>
-</p><p><a href="images/prompt5_7_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="images/prompt5_7_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p>Technical Science</p>
+</p><p><a href="images/prompt5_soc_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="images/prompt5_soc_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><span style="text-decoration: underline;">Technical Science</span></p>
 <p>
-</p><p><a href="images/prompt5_8_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="images/prompt5_8_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p><em>created and posted April 3, 2025</em></p>
+</p><p><a href="images/prompt5_tech_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="images/prompt5_tech_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p><em>created and posted April 4, 2025</em></p>
 
 
 </section>
@@ -1309,7 +1309,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","loop":false});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
