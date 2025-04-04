@@ -566,7 +566,7 @@ There you have it, academic Bachelor's degrees awarded by Danish universities in
 
 ## Prompt #5 - Ranking {#prompt5}
 
-For this prompt I desperately wanted to do something relating to music from the band The English Beat because of Ranking Roger. But I'd already committed to the Danish education bit, and Spotify shut down all the interesting API endpoints and don't seem to be reanimating them any time soon. Something about "safety", but it's likely AI crawlers, the same ones increasing hosting costs for Wikipedia and other websites as they steal content for their models. And funny for Spotify to complain about someone els using their work to monetize a product.
+For this prompt I desperately wanted to do something relating to music from the band The English Beat because of Ranking Roger. But I'd already committed to the Danish education bit, and Spotify shut down all the interesting API endpoints and don't seem to be reanimating them any time soon. Something about "safety", but it's likely AI crawlers, the same ones increasing hosting costs for Wikipedia and other websites as they steal content for their models. And funny for Spotify to complain about someone else using their work to monetize a product.
 
 But anyway, let's talk ranks. Specifically let's look at the rankings of Bachelor degrees awarded in Denmark in 2023. I'll focus on the academic (4-year) degrees because I wanted to look at majors within broader disciplines and look at differences by gender.
 
@@ -709,54 +709,42 @@ bacdegs %>%
 
 This first chart shows all degrees awarded by discipline and sex. The most immediate thing to notice is that more Bachelor degrees were awarded to women than to men. But that tracks with a chart I did last year, [showing rates of educational attainment by sex](https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt5) and it's similar to other countries, including the US.
 
-Social science degrees were the most popular for both men and women. After that it changes a bit. Humanities were 2nd most popular for women, technical sciences next for men. And so forth. To be honest, it's kind of a shock to see degree fields so starkly gendered now. I would have though some disciplines would have been a bit more evenly split. Again, we'll dive deeper into the percentage differences on Day 9 for the "Diverging" prompt.
+Social science degrees were the most popular for both men and women. After that it changes a bit. Humanities were 2nd most popular for women, Technical Sciences next for men. And so forth. To be honest, it's kind of a shock to see degree fields so starkly gendered now. I would have though some disciplines would have been a bit more evenly split. Again, we'll dive deeper into the percentage differences on Day 9 for the "Diverging" prompt.
 
-Below are the rest of the charts, one for each major discipline. If you're interested you can comb through and see which majors were most popular in each discipline. They are lightboxed, so click on the image to enlarge it, and click `esc` or outside the image to restore it to the page.
+In the tab set below are the rest of the charts, one for each major discipline. If you're interested you can comb through and see which majors were most popular in each discipline. They are lightboxed, so click on the image to enlarge it, and click `esc` or outside the image to restore it to the page.
 
-The only ones I did not make were for *Education* and the *Food-Biotech-Lab Tech* degrees as each only had one major with degrees awarded. In Education there were 134 degrees awarded, 117 to women, 17 to men. For Food-Bio-Lab Tech there were 61 degrees total, 20 to Men, 41 to Women all in a general Food & Nutrition Science major.
+The only ones I did not make were for Education and the Food-Biotech-Lab Tech degrees as each only had one major with degrees awarded. In Education there were 134 degrees awarded, 117 to women, 17 to men. For Food-Bio-Lab Tech there were 61 degrees total, 20 to Men, 41 to Women all in a general Food & Nutrition Science major.
 
-This makes me think I could have done this as a Tableau chart to let the user filter by discipline. Or I could have done parameterized charts in Quarto. Either way I could have added other degree levels. Lots of data prep, but it would be a useful chart. Maybe after the 30 Day Challenge is over.
+This makes me think I could have done this in Tableau and let the user filter by discipline. Or I could have done parameterized charts in Quarto. Either way I could have added other degree levels. Lots of data prep, but it would be a useful chart. Maybe after the 30 Day Challenge is over.
 
-[Agriculture, Nature, & Environment]{style="text-decoration: underline;"}
-
-<p>
+::: {.panel-tabset group="disciplne"}
+# Agriculture, Nature, & Environment
 
 ![](images/prompt5_ag_2025.jpg){fig-alt="horizontal bar graph displaying Bachelors degrees awarded by field & sex"}
 
-[Arts]{style="text-decoration: underline;"}
-
-<p>
+# Arts
 
 ![](images/prompt5_art_2025.jpg){fig-alt="horizontal bar graph displaying Bachelors degrees awarded by field & sex"}
 
-[Health Sciences]{style="text-decoration: underline;"}
-
-<p>
+# Health Sciences
 
 ![](images/prompt5_health_2025.jpg){fig-alt="horizontal bar graph displaying Bachelors degrees awarded by field & sex"}
 
-[Humanities]{style="text-decoration: underline;"}
-
-<p>
+# Humanities
 
 ![](images/prompt5_hum_2025.jpg){fig-alt="horizontal bar graph displaying Bachelors degrees awarded by field & sex"}
 
-[Science]{style="text-decoration: underline;"}
-
-<p>
+# Science
 
 ![](images/prompt5_sci_2025.jpg){fig-alt="horizontal bar graph displaying Bachelors degrees awarded by field & sex"}
 
-[Social Science]{style="text-decoration: underline;"}
-
-<p>
+# Social Science
 
 ![](images/prompt5_soc_2025.jpg){fig-alt="horizontal bar graph displaying Bachelors degrees awarded by field & sex"}
 
-[Technical Science]{style="text-decoration: underline;"}
-
-<p>
+# Technical Science
 
 ![](images/prompt5_tech_2025.jpg){fig-alt="horizontal bar graph displaying Bachelors degrees awarded by field & sex"}
+:::
 
 *created and posted April 4, 2025*

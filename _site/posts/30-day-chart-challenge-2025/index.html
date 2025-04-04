@@ -711,7 +711,7 @@ cookieconsent.run({
 </section>
 <section id="prompt5" class="level2">
 <h2 class="anchored" data-anchor-id="prompt5">Prompt #5 - Ranking</h2>
-<p>For this prompt I desperately wanted to do something relating to music from the band The English Beat because of Ranking Roger. But I’d already committed to the Danish education bit, and Spotify shut down all the interesting API endpoints and don’t seem to be reanimating them any time soon. Something about “safety”, but it’s likely AI crawlers, the same ones increasing hosting costs for Wikipedia and other websites as they steal content for their models. And funny for Spotify to complain about someone els using their work to monetize a product.</p>
+<p>For this prompt I desperately wanted to do something relating to music from the band The English Beat because of Ranking Roger. But I’d already committed to the Danish education bit, and Spotify shut down all the interesting API endpoints and don’t seem to be reanimating them any time soon. Something about “safety”, but it’s likely AI crawlers, the same ones increasing hosting costs for Wikipedia and other websites as they steal content for their models. And funny for Spotify to complain about someone else using their work to monetize a product.</p>
 <p>But anyway, let’s talk ranks. Specifically let’s look at the rankings of Bachelor degrees awarded in Denmark in 2023. I’ll focus on the academic (4-year) degrees because I wanted to look at majors within broader disciplines and look at differences by gender.</p>
 <p>Again, data comes from Danmarks Statistik via the <code>danstat</code> package.</p>
 <p>So first, let’s get the data. It’s from the same table used in <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2025/#prompt4">prompt 4</a> but retreived slightly differently so I’ll show it again. This time we’re getting all the majors within the broader disciplines so in the list call we use <code>list(code = "uddannelse", values = "*")</code>.</p>
@@ -827,31 +827,36 @@ cookieconsent.run({
 </div>
 <p><a href="images/prompt5_all_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="images/prompt5_all_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
 <p>This first chart shows all degrees awarded by discipline and sex. The most immediate thing to notice is that more Bachelor degrees were awarded to women than to men. But that tracks with a chart I did last year, <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt5">showing rates of educational attainment by sex</a> and it’s similar to other countries, including the US.</p>
-<p>Social science degrees were the most popular for both men and women. After that it changes a bit. Humanities were 2nd most popular for women, technical sciences next for men. And so forth. To be honest, it’s kind of a shock to see degree fields so starkly gendered now. I would have though some disciplines would have been a bit more evenly split. Again, we’ll dive deeper into the percentage differences on Day 9 for the “Diverging” prompt.</p>
-<p>Below are the rest of the charts, one for each major discipline. If you’re interested you can comb through and see which majors were most popular in each discipline. They are lightboxed, so click on the image to enlarge it, and click <code>esc</code> or outside the image to restore it to the page.</p>
-<p>The only ones I did not make were for <em>Education</em> and the <em>Food-Biotech-Lab Tech</em> degrees as each only had one major with degrees awarded. In Education there were 134 degrees awarded, 117 to women, 17 to men. For Food-Bio-Lab Tech there were 61 degrees total, 20 to Men, 41 to Women all in a general Food &amp; Nutrition Science major.</p>
-<p>This makes me think I could have done this as a Tableau chart to let the user filter by discipline. Or I could have done parameterized charts in Quarto. Either way I could have added other degree levels. Lots of data prep, but it would be a useful chart. Maybe after the 30 Day Challenge is over.</p>
-<p><span style="text-decoration: underline;">Agriculture, Nature, &amp; Environment</span></p>
-<p>
-</p><p><a href="images/prompt5_ag_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="images/prompt5_ag_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p><span style="text-decoration: underline;">Arts</span></p>
-<p>
-</p><p><a href="images/prompt5_art_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="images/prompt5_art_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p><span style="text-decoration: underline;">Health Sciences</span></p>
-<p>
-</p><p><a href="images/prompt5_health_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="images/prompt5_health_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p><span style="text-decoration: underline;">Humanities</span></p>
-<p>
-</p><p><a href="images/prompt5_hum_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="images/prompt5_hum_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p><span style="text-decoration: underline;">Science</span></p>
-<p>
-</p><p><a href="images/prompt5_sci_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="images/prompt5_sci_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p><span style="text-decoration: underline;">Social Science</span></p>
-<p>
-</p><p><a href="images/prompt5_soc_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="images/prompt5_soc_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
-<p><span style="text-decoration: underline;">Technical Science</span></p>
-<p>
-</p><p><a href="images/prompt5_tech_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="images/prompt5_tech_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<p>Social science degrees were the most popular for both men and women. After that it changes a bit. Humanities were 2nd most popular for women, Technical Sciences next for men. And so forth. To be honest, it’s kind of a shock to see degree fields so starkly gendered now. I would have though some disciplines would have been a bit more evenly split. Again, we’ll dive deeper into the percentage differences on Day 9 for the “Diverging” prompt.</p>
+<p>In the tab set below are the rest of the charts, one for each major discipline. If you’re interested you can comb through and see which majors were most popular in each discipline. They are lightboxed, so click on the image to enlarge it, and click <code>esc</code> or outside the image to restore it to the page.</p>
+<p>The only ones I did not make were for Education and the Food-Biotech-Lab Tech degrees as each only had one major with degrees awarded. In Education there were 134 degrees awarded, 117 to women, 17 to men. For Food-Bio-Lab Tech there were 61 degrees total, 20 to Men, 41 to Women all in a general Food &amp; Nutrition Science major.</p>
+<p>This makes me think I could have done this in Tableau and let the user filter by discipline. Or I could have done parameterized charts in Quarto. Either way I could have added other degree levels. Lots of data prep, but it would be a useful chart. Maybe after the 30 Day Challenge is over.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="disciplne">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Agriculture, Nature, &amp; Environment</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Arts</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Health Sciences</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Humanities</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Science</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">Social Science</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-7" role="tab" aria-controls="tabset-1-7" aria-selected="false">Technical Science</a></li></ul>
+<div class="tab-content" data-group="disciplne">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p><a href="images/prompt5_ag_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="images/prompt5_ag_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p><a href="images/prompt5_art_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="images/prompt5_art_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p><a href="images/prompt5_health_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-9"><img src="images/prompt5_health_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<p><a href="images/prompt5_hum_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-10"><img src="images/prompt5_hum_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<p><a href="images/prompt5_sci_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-11"><img src="images/prompt5_sci_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<p><a href="images/prompt5_soc_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-12"><img src="images/prompt5_soc_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-1-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-7-tab">
+<p><a href="images/prompt5_tech_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="images/prompt5_tech_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+</div>
+</div>
 <p><em>created and posted April 4, 2025</em></p>
 
 
@@ -1309,7 +1314,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"closeEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom","selector":".lightbox","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
