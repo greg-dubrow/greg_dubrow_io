@@ -257,6 +257,7 @@ cookieconsent.run({
   <li><a href="#prompt4" id="toc-prompt4" class="nav-link" data-scroll-target="#prompt4">Prompt #4 - Big or Small</a></li>
   <li><a href="#prompt5" id="toc-prompt5" class="nav-link" data-scroll-target="#prompt5">Prompt #5 - Ranking</a></li>
   <li><a href="#prompt6" id="toc-prompt6" class="nav-link" data-scroll-target="#prompt6">Prompt #6 - Florence Nightingale</a></li>
+  <li><a href="#prompts7and8" id="toc-prompts7and8" class="nav-link" data-scroll-target="#prompts7and8">Prompts #7 &amp; 8 - Outliers &amp; Histogram</a></li>
   </ul>
 </nav>
     </div>
@@ -913,9 +914,9 @@ cookieconsent.run({
 <span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">national_origin =</span> <span class="fu">ifelse</span>(</span>
 <span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>        national_origin <span class="sc">==</span> <span class="st">"Persons of Danish origin"</span>, <span class="st">"Danish origin"</span>, national_origin)) <span class="sc">%&gt;%</span></span>
 <span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">national_origin =</span></span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>                    <span class="fu">factor</span>(national_origin,</span>
-<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Total"</span>, <span class="st">"Danish origin"</span>, <span class="st">"Descendant"</span>,</span>
-<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>                                                     <span class="st">"Immigrants"</span>, <span class="st">"Unknown origin"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">factor</span>(national_origin,</span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Total"</span>, <span class="st">"Danish origin"</span>, <span class="st">"Descendant"</span>,</span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Immigrants"</span>, <span class="st">"Unknown origin"</span>))) <span class="sc">%&gt;%</span></span>
 <span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Sex, total"</span>, <span class="st">"Total"</span>, sex))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
@@ -944,6 +945,149 @@ cookieconsent.run({
 <li>How do SOSU degree demographics compare to nursing degrees and other medical fields?</li>
 <li>What’s the demographic picture in other vocational fields? Or in academic secondary, or academic higher education?</li>
 </ul>
+<p><em>created and posted April 5, 2025</em></p>
+</section>
+<section id="prompts7and8" class="level2">
+<h2 class="anchored" data-anchor-id="prompts7and8">Prompts #7 &amp; 8 - Outliers &amp; Histogram</h2>
+<p>Taking another look at vocational degrees, it turned out to be best to combine these prompts into one post. So we’ll use the same table UDDAKT35, from Danmarks Statistik via the <code>danstat</code> package.</p>
+<p>This time we’ll look at all degrees awarded and see the overall distribution (histogram), and degrees which had the most and fewest awarded (outliers). So reversing the prompts I guess, but keeping with the spirit of the challenge.</p>
+<p>As always, we’ll fetch and clean the data first. Some slight changes to the previous prompt where we used this table. This time we’ll get all degree programs and just for 2024. We won’t worry about demographics this time.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for getting and cleaning data</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(danstat) <span class="co"># package to get Danish statistics via api</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext) <span class="co"># enhancements for text in ggplot</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidytext)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># some custom functions</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># UDDAKT35 - get english and danish versions of metadata to make sure we get the right degree codes.</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>table_meta <span class="ot">&lt;-</span> danstat<span class="sc">::</span><span class="fu">get_table_metadata</span>(<span class="at">table_id =</span> <span class="st">"uddakt35"</span>, <span class="at">variables_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>table_meta_dk <span class="ot">&lt;-</span> danstat<span class="sc">::</span><span class="fu">get_table_metadata</span>(<span class="at">table_id =</span> <span class="st">"uddakt35"</span>, <span class="at">variables_only =</span> <span class="cn">TRUE</span>, <span class="at">language =</span> <span class="st">"da"</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># create variable list using the ID value in the variable</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"># getting all education programs, pare down</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>variables_ed <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"uddannelse"</span>, <span class="at">values =</span> <span class="st">"*"</span>),</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"fstatus"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"F"</span>)),</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"tid"</span>, <span class="at">values =</span> <span class="dv">2024</span>))</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co"># fetch all the data</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>vet1 <span class="ot">&lt;-</span> <span class="fu">get_data</span>(<span class="st">"uddakt35"</span>, variables_ed, <span class="at">language =</span> <span class="st">"en"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>()</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co"># clean up a bit, create category fields to help with charts</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>vet_all <span class="ot">&lt;-</span> vet1 <span class="sc">%&gt;%</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_code =</span> <span class="fu">str_extract</span>(uddannelse, <span class="st">"^[^ ]+"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"H29"</span>, deg_code)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"Total"</span>, deg_code)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_level =</span> <span class="fu">if_else</span>(<span class="fu">str_length</span>(deg_code) <span class="sc">==</span> <span class="dv">5</span>, <span class="st">"Main"</span>, <span class="st">"Sub"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_level =</span> <span class="fu">if_else</span>(deg_code <span class="sc">==</span> <span class="st">"H30"</span>, <span class="st">"All"</span>, deg_level)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">sub</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">S+</span><span class="sc">\\</span><span class="st">s+"</span>, <span class="st">''</span>, uddannelse)) </span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="co"># create outlier categories. only majors with +0 degrees</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>vet_majors <span class="ot">&lt;-</span> vet_all <span class="sc">%&gt;%</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_level <span class="sc">==</span> <span class="st">"Sub"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(indhold <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degs_mean =</span> <span class="fu">mean</span>(indhold),</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>                 <span class="at">degs_std =</span> <span class="fu">sd</span>(indhold),</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>                 <span class="at">degs_pctl10 =</span> <span class="fu">quantile</span>(indhold, <span class="fl">0.10</span>),</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>                 <span class="at">degs_pctl90 =</span> <span class="fu">quantile</span>(indhold, <span class="fl">0.90</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">outlier =</span> <span class="fu">case_when</span>(</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>        indhold <span class="sc">&gt;=</span> degs_pctl90 <span class="sc">~</span> <span class="st">"outlier+ &gt; 90thpctl"</span>,</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>        indhold <span class="sc">&lt;=</span> degs_pctl10 <span class="sc">~</span> <span class="st">"outlier- &lt; 10thpctl"</span>,</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"not outlier"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">outlier =</span> <span class="fu">factor</span>(outlier,</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"outlier+ &gt; 90thpctl"</span>, <span class="st">"not outlier"</span>, <span class="st">"outlier- &lt; 10thpctl"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The <code>vet_majors</code> dataframe created at the end is what we’ll use for outlier analysis – it keeps only the majors (not the top-line category) and only for degrees awarded greater-than 0. As we’ll see in the histogram, the distributions were so skewed I set outlier status at equal-or-above the 90th percentile and equal-or-below the 10th percentiles.</p>
+<p>Ok, let’s build the histogram. I added vertical lines at the median and mean to highlight the skew.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the histogram</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>vet_majors <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(indhold)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"#CC79A7"</span>, <span class="at">bins =</span> <span class="dv">100</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(indhold)), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(indhold)), <span class="at">color=</span><span class="st">"#A9A9A9"</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">title =</span> <span class="st">"Eight programs with +1,000 degrees awarded accounted for 43% of the H30 Vocational degrees awarded in 2024"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"*Total H30 degrees awarded in 2024 = 30,570*"</span>,</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik table UDDAKT35 via danstat package*"</span>) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(.<span class="dv">001</span>, <span class="dv">0</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">20</span>),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">9</span>, <span class="dv">12</span>, <span class="dv">15</span>, <span class="dv">18</span>, <span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>, <span class="dv">1000</span>, <span class="dv">2000</span>, <span class="dv">3000</span>, <span class="dv">4000</span>, <span class="dv">5000</span>, <span class="dv">6000</span>),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">hjust =</span> <span class="dv">0</span>),</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">hjust =</span> <span class="dv">0</span>),</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(.<span class="dv">98</span>, .<span class="dv">05</span>),</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box.just =</span> <span class="st">"right"</span>,</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>),</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="images/prompt7&amp;8_hist_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-20"><img src="images/prompt7&amp;8_hist_2025.jpg" class="img-fluid" alt="histogram displaying H30 degrees awarded 2024"></a></p>
+<p>Most of the fields awarded fewer than 500 degrees. Only 8 awarded more than 1,000. So a heavy left skew to the distribution.</p>
+<p>So which fields had the most and least relative to the others? The code is below, we’ll talk about the chart below the image. I used the white-space resulting from the array of data as space for the legend and explanatory notes. For those annotations I created a couple of text vectors to plug in, one with coloring to use as <code>richtext</code> in the <code>annotate</code> call.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the outlier chart</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># horizontal bar with fills based on outlier status, bars for mean and median</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for annotation,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>caption1 <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">strwrap</span>(<span class="st">"Health, education, business (office, retail, trading (mercantile)), and</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="st">        craft trades (electrician, carpentry, mechanic) are by far the most popular vocational degree choices."</span>, <span class="dv">75</span>), <span class="at">collapse =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>caption2 <span class="ot">&lt;-</span> glue<span class="sc">::</span><span class="fu">glue</span>(</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"&lt;span style = 'color:#A9A9A9;'&gt;Median = 97   &lt;/span&gt;&lt;span style = 'color:#000000;'&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="st">    Mean = 392&lt;/span&gt;"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>vet_majors <span class="sc">%&gt;%</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> indhold, <span class="at">y =</span> <span class="fu">reorder</span>(deg_name, indhold), <span class="at">fill =</span> outlier)) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#0072B2"</span>, <span class="st">"#CC79A7"</span>, <span class="st">"#D55E00"</span>)) <span class="sc">+</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">mean</span>(indhold)), <span class="at">color=</span><span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="fu">aes</span>(<span class="at">xintercept =</span> <span class="fu">median</span>(indhold)), <span class="at">color=</span><span class="st">"#A9A9A9"</span>) <span class="sc">+</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="sc">~</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">max</span>(.x) <span class="sc">+</span> <span class="fl">0.1</span>), <span class="at">breaks =</span> <span class="fu">pretty_breaks</span>(),</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">labels =</span> comma) <span class="sc">+</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Total H30 degrees awarded in 2024 = 30,570"</span>,</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik table UDDAKT35 via danstat package*"</span>) <span class="sc">+</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">2000</span>, <span class="at">y =</span> <span class="st">"Storage, port and terminal education"</span>,</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> caption1, <span class="at">size =</span> <span class="dv">5</span>, <span class="at">hjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">"richtext"</span>, <span class="at">x =</span> <span class="dv">4700</span>, <span class="at">y =</span> <span class="st">"Train preparation educations"</span>,</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> caption2,</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">4.5</span>, <span class="at">label.color =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>),</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="fu">c</span>(.<span class="dv">98</span>, .<span class="dv">05</span>),</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.justification =</span> <span class="fu">c</span>(<span class="st">"right"</span>, <span class="st">"bottom"</span>),</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.direction =</span> <span class="st">"horizontal"</span>,</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box.just =</span> <span class="st">"right"</span>,</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.margin =</span> <span class="fu">margin</span>(<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>),</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="images/prompt7&amp;8_outl_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-21"><img src="images/prompt7&amp;8_outl_2025.jpg" class="img-fluid" alt="horizontal bar displaying H30 degrees awarded by field 2024"></a></p>
+<p>What we see is there are outliers, if we define an outlier as outside the 10th or 90th percentiles. We knew from <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt6">prompt 6</a> that SOSU degrees (social health and education) would account for the greatest proportion of vocational degrees, so no surprise that’s tops. We also see business &amp; commerce related fields as well as craft &amp; trades also being very popular. Glazier and fitness instructor are among the low outliers, below the 10th percentile in the distribution.</p>
+<p>A quick note on what might look like odd degree names. Obviously the original names were in Danish. But the translation to English isn’t always perfect. So for example, <em>gartneruddannelsen</em> translates to “Gartner Education” but what it should be is “Gardening”, or training to be a florist or work in landscaping. “Trading Education” comes from <em>handelsuddannelsen</em> which is essentially training to be a merchant - sourcing, logistics, etc.</p>
 <p><em>created and posted April 5, 2025</em></p>
 
 
@@ -1401,7 +1545,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","descPosition":"bottom","closeEffect":"zoom","loop":false});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"descPosition":"bottom","closeEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

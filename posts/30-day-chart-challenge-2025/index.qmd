@@ -815,9 +815,9 @@ sosu_all <- sosu1 %>%
 	mutate(national_origin = ifelse(
 		national_origin == "Persons of Danish origin", "Danish origin", national_origin)) %>%
 	mutate(national_origin =
-				 	factor(national_origin,
-				 				 levels = c("Total", "Danish origin", "Descendant",
-				 				 					 "Immigrants", "Unknown origin"))) %>%
+		factor(national_origin,
+		levels = c("Total", "Danish origin", "Descendant",
+		"Immigrants", "Unknown origin"))) %>%
 	mutate(sex = ifelse(sex == "Sex, total", "Total", sex))
 
 ```
@@ -866,5 +866,183 @@ There's plenty more to examine here, for instance:
 
 -   How do SOSU degree demographics compare to nursing degrees and other medical fields?
 -   What's the demographic picture in other vocational fields? Or in academic secondary, or academic higher education?
+
+*created and posted April 5, 2025*
+
+## Prompts #7 & 8 - Outliers & Histogram {#prompts7and8}
+
+Taking another look at vocational degrees, it turned out to be best to combine these prompts into one post. So we'll use the same table UDDAKT35, from Danmarks Statistik via the `danstat` package.
+
+This time we'll look at all degrees awarded and see the overall distribution (histogram), and degrees which had the most and fewest awarded (outliers). So reversing the prompts I guess, but keeping with the spirit of the challenge.
+
+As always, we'll fetch and clean the data first. Some slight changes to the previous prompt where we used this table. This time we'll get all degree programs and just for 2024. We won't worry about demographics this time.
+
+```{r prompt7&8_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting and cleaning data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(danstat) # package to get Danish statistics via api
+library(ggtext) # enhancements for text in ggplot
+library(scales)
+library(tidytext)
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+# UDDAKT35 - get english and danish versions of metadata to make sure we get the right degree codes.
+table_meta <- danstat::get_table_metadata(table_id = "uddakt35", variables_only = TRUE)
+table_meta_dk <- danstat::get_table_metadata(table_id = "uddakt35", variables_only = TRUE, language = "da")
+
+# create variable list using the ID value in the variable
+# getting all education programs, pare down
+variables_ed <- list(
+	list(code = "uddannelse", values = "*"),
+	list(code = "fstatus", values = c("F")),
+	list(code = "tid", values = 2024))
+
+# fetch all the data
+vet1 <- get_data("uddakt35", variables_ed, language = "en") %>%
+	as_tibble() %>%
+	clean_names()
+
+# clean up a bit, create category fields to help with charts
+vet_all <- vet1 %>%
+	mutate(deg_code = str_extract(uddannelse, "^[^ ]+")) %>%
+	filter(!grepl("H29", deg_code)) %>%
+	filter(!grepl("Total", deg_code)) %>%
+	mutate(deg_level = if_else(str_length(deg_code) == 5, "Main", "Sub")) %>%
+	mutate(deg_level = if_else(deg_code == "H30", "All", deg_level)) %>%
+	mutate(deg_name = sub("^\\S+\\s+", '', uddannelse)) 
+
+# create outlier categories. only majors with +0 degrees
+vet_majors <- vet_all %>%
+	filter(deg_level == "Sub") %>%
+	filter(indhold > 0) %>%
+	mutate(degs_mean = mean(indhold),
+				 degs_std = sd(indhold),
+				 degs_pctl10 = quantile(indhold, 0.10),
+				 degs_pctl90 = quantile(indhold, 0.90)) %>%
+	mutate(outlier = case_when(
+		indhold >= degs_pctl90 ~ "outlier+ > 90thpctl",
+		indhold <= degs_pctl10 ~ "outlier- < 10thpctl",
+		TRUE ~ "not outlier")) %>%
+	mutate(outlier = factor(outlier,
+		levels = c("outlier+ > 90thpctl", "not outlier", "outlier- < 10thpctl")))
+
+```
+
+The `vet_majors` dataframe created at the end is what we'll use for outlier analysis -- it keeps only the majors (not the top-line category) and only for degrees awarded greater-than 0. As we'll see in the histogram, the distributions were so skewed I set outlier status at equal-or-above the 90th percentile and equal-or-below the 10th percentiles.
+
+Ok, let's build the histogram. I added vertical lines at the median and mean to highlight the skew.
+
+```{r prompt7&8_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the histogram"
+
+vet_majors %>%
+	ggplot(aes(indhold)) +
+	geom_histogram(fill = "#CC79A7", bins = 100) +
+	geom_vline(aes(xintercept = mean(indhold)), color="black") +
+	geom_vline(aes(xintercept = median(indhold)), color="#A9A9A9") +
+	labs(x = "", y = "",
+			title = "Eight programs with +1,000 degrees awarded accounted for 43% of the H30 Vocational degrees awarded in 2024",
+		subtitle = "*Total H30 degrees awarded in 2024 = 30,570*",
+		caption = "*Data from Danmarks Statistik table UDDAKT35 via danstat package*") +
+	scale_y_continuous(expand = c(.001, 0), limits = c(0, 20),
+			breaks = c(0, 1, 3, 6, 9, 12, 15, 18, 20)) +
+	scale_x_continuous(breaks = c(0, 500, 1000, 2000, 3000, 4000, 5000, 6000),
+		labels = comma) +
+	theme_minimal() +
+	theme(plot.title = element_markdown(size = 16, hjust = 0),
+		plot.subtitle = element_markdown(size = 14, hjust = 0),
+		plot.caption = element_markdown(),
+		legend.title = element_blank(),
+		legend.position = c(.98, .05),
+		legend.justification = c("right", "bottom"),
+		legend.direction = "horizontal",
+		legend.box.just = "right",
+		legend.margin = margin(6, 6, 6, 6),
+		panel.grid = element_blank(),
+		panel.border = element_blank())
+
+```
+
+![](images/prompt7&8_hist_2025.jpg){fig-alt="histogram displaying H30 degrees awarded 2024"}
+
+Most of the fields awarded fewer than 500 degrees. Only 8 awarded more than 1,000. So a heavy left skew to the distribution.
+
+So which fields had the most and least relative to the others? The code is below, we'll talk about the chart below the image. I used the white-space resulting from the array of data as space for the legend and explanatory notes. For those annotations I created a couple of text vectors to plug in, one with coloring to use as `richtext` in the `annotate` call.
+
+```{r prompt7&8_3}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the outlier chart"
+
+# horizontal bar with fills based on outlier status, bars for mean and median
+# for annotation,
+caption1 <- paste(strwrap("Health, education, business (office, retail, trading (mercantile)), and
+		craft trades (electrician, carpentry, mechanic) are by far the most popular vocational degree choices.", 75), collapse = "\n")
+
+caption2 <- glue::glue(
+	"<span style = 'color:#A9A9A9;'>Median = 97   </span><span style = 'color:#000000;'>
+	Mean = 392</span>"
+)
+
+vet_majors %>%
+	ggplot(aes(x = indhold, y = reorder(deg_name, indhold), fill = outlier)) +
+	geom_bar(stat = "identity") +
+	scale_fill_manual(values = c("#0072B2", "#CC79A7", "#D55E00")) +
+	geom_vline(aes(xintercept = mean(indhold)), color="black") +
+	geom_vline(aes(xintercept = median(indhold)), color="#A9A9A9") +
+	scale_x_continuous(limits = ~ c(0, max(.x) + 0.1), breaks = pretty_breaks(),
+		expand = c(0, 0), labels = comma) +
+	labs(x = "", y = "",
+		title = "Total H30 degrees awarded in 2024 = 30,570",
+		caption = "*Data from Danmarks Statistik table UDDAKT35 via danstat package*") +
+	annotate("text", x = 2000, y = "Storage, port and terminal education",
+		label = caption1, size = 5, hjust = 0) +
+	annotate("richtext", x = 4700, y = "Train preparation educations",
+		label = caption2,
+		size = 4.5, label.color = NA) +
+	theme_minimal() +
+	theme(plot.title = element_markdown(size = 16),
+		plot.caption = element_markdown(),
+		axis.text.y = element_text(size = 7),
+		legend.title = element_blank(),
+		legend.position = c(.98, .05),
+		legend.justification = c("right", "bottom"),
+		legend.direction = "horizontal",
+		legend.box.just = "right",
+		legend.margin = margin(6, 6, 6, 6),
+		panel.grid = element_blank(),
+		panel.border = element_blank())
+
+```
+
+![](images/prompt7&8_outl_2025.jpg){fig-alt="horizontal bar displaying H30 degrees awarded by field 2024"}
+
+What we see is there are outliers, if we define an outlier as outside the 10th or 90th percentiles. We knew from [prompt 6](https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt6) that SOSU degrees (social health and education) would account for the greatest proportion of vocational degrees, so no surprise that's tops. We also see business & commerce related fields as well as craft & trades also being very popular. Glazier and fitness instructor are among the low outliers, below the 10th percentile in the distribution.
+
+A quick note on what might look like odd degree names. Obviously the original names were in Danish. But the translation to English isn't always perfect. So for example, *gartneruddannelsen* translates to "Gartner Education" but what it should be is "Gardening", or training to be a florist or work in landscaping. "Trading Education" comes from *handelsuddannelsen* which is essentially training to be a merchant - sourcing, logistics, etc.
 
 *created and posted April 5, 2025*
