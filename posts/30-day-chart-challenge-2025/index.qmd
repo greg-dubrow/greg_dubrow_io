@@ -2,7 +2,7 @@
 title: "30 Day Chart Challenge 2025"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
-date: '2025-04-04'
+date: '2025-04-05'
 categories: [post, rstats, ggplot, dataviz, chartchallenge, denmark, education, higher education]
 image: "prompts_2025.png"
 toc: true
@@ -748,3 +748,123 @@ This makes me think I could have done this in Tableau and let the user filter by
 :::
 
 *created and posted April 4, 2025*
+
+## Prompt #6 - Florence Nightingale {#prompt6}
+
+The obvious association with Florence Nightingale is that of nursing, so today let's look at health-care degrees, and who gets them. I'm especially interested in degrees for a job called in shorthand here SOSU, or *"social- og sundhedsassistent"*. Essentially a nurses aid/nursing assistant. When I was in the hospital after my bicycle accident in 2024 I noticed almost all SOSUs were women and many first or second-generation immigrants.
+
+Which makes sense when you think of recent immigrants to any country and the types of jobs the first wave immigrants, mainly those who don't come in with college degrees or professional credentials, tend to get...merchants, housekeeping, health care assistants. They establish a stable life and their kids tend to get more education and higher paying jobs. It's the immigration story told often over the decades and in many countries.
+
+I feel like I need to make clear here that this is not intended to "other" immigrants to Denmark. I want to help explain SOSU degrees in the conext of their paths to economic and social stability through education and decently paying stable jobs.
+
+You can read more about the path to a SOSU degree and job [in this explainer](https://static.uvm.dk/publikationer/2008/facts/kap01.html) and more about vocational secondary education in particular on [pages 10-11 here in this PDF report](https://ufm.dk/en/publications/2022/files/the-danish-education-system.pdf).
+
+Again, data comes from Danmarks Statistik via the `danstat` package. This time we'll look at table UDDAKT35, which has degrees completed and includes immigration category.
+
+First we'll get the data.
+
+```{r prompt6_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting and cleaning data"
+
+# Nursing and SOSU degrees by gender and immigrant status
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(danstat) # package to get Danish statistics via api
+library(ggtext) # enhancements for text in ggplot
+library(scales)
+library(tidytext)
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+# UDDAKT35 - get english and danish versions of metadata to make sure we get the right degree codes.
+table_meta <- danstat::get_table_metadata(table_id = "uddakt35", variables_only = TRUE)
+table_meta_dk <- danstat::get_table_metadata(table_id = "uddakt35", variables_only = TRUE, language = "da")
+
+# create variable list using the ID value in the variable
+variables_ed <- list(
+	list(code = "uddannelse", values = c("H30", "H3010", "H301020")),
+	list(code = "fstatus", values = c("F")),
+	list(code = "køn", values = "*"),
+	list(code = "herkomst", values = "*"),
+	list(code = "tid", values = c(2019, 2020, 2021, 2022, 2023, 2024)))
+
+# fetch the data using the variable list
+sosu1 <- get_data("uddakt35", variables_ed, language = "en") %>%
+	as_tibble() %>%
+	clean_names()
+
+# set up the main dataset...create a main degree field, clean up the national origin field
+sosu_all <- sosu1 %>%
+	rename(sex = kon, national_origin = herkomst, year = tid, n = indhold) %>%
+	select(-fstatus) %>%
+	mutate(deg_code = str_extract(uddannelse, "^[^ ]+")) %>%
+	mutate(deg_name = case_when(
+		deg_code == "H30" ~ "VET All",
+		deg_code == "H3010" ~ "Health care/Educ All",
+		deg_code == "H301020" ~ "SOSU")) %>%
+	mutate(national_origin = ifelse(
+		national_origin == "Persons of Danish origin", "Danish origin", national_origin)) %>%
+	mutate(national_origin =
+				 	factor(national_origin,
+				 				 levels = c("Total", "Danish origin", "Descendant",
+				 				 					 "Immigrants", "Unknown origin"))) %>%
+	mutate(sex = ifelse(sex == "Sex, total", "Total", sex))
+
+```
+
+We have the base frame now from which to make a few charts. All of them will cover the years 2019 to 2024. The chart code isn't all that complicated so I won't include them in this post. If you're interested you can find them in the [github repo for this year's challenge](https://github.com/greg-dubrow/30DayChartChallenge/blob/main/2025/06_florence_n.R).
+
+We'll first look at total SOSU degrees, then SOSU as a percent of all the vocational degrees in it's main group. We'll also look at sex and national origin.
+
+![](images/prompt6_sosu_all_2025.jpg){fig-alt="bar graph displaying SOSU degrees awarded 2019 to 2024"}
+
+The key insight that jumps out here is the more than 200% increase in SOSU degrees awarded during this period. The one thing I'm not sure of here if that has to do with any policy change or something else that helped the numbers increase so much over the last five years.
+
+How about SOSU degrees about relative to all H30 vocational programs?
+
+![](images/prompt6_sosu_pct_vet_2025.jpg){fig-alt="bar graph displaying SOSU degrees awarded 2019 to 2024 as a pct of all vocational degrees"}
+
+SOSU degrees were 2% of the H30 vocational category in 2019 and 4% in 2024. The H30 group grew by almost 1,900 (6%) during that period, meaning SOSU degrees were responsible for more than the growth of all degrees in this group.
+
+So who gets SOSU degrees in terms of gender and national origin status? Unsurprisingly, given the very gendered nature of nursing health care assistant jobs, about 90% of SOSU degrees go to women.
+
+![](images/prompt6_sosu_sex_2025.jpg){fig-alt="bar graph displaying SOSU degrees awarded 2019 to 2024"}
+
+What about national origin? First it helps to explain how that's [defined in Denmark for these statistics](https://www.dst.dk/da/Statistik/dokumentation/Times/moduldata-for-befolkning-og-valg/ie-type) (page is in Danish). Someone of *Danish origin* has at least 1 parent born in and a citizen of Denmark, regardless of where the person was born. A *Descendant* is considered someone to born in Denmark but neither parent is a citizen or born in Denmark. However if at least one of a Descendant's parents acquire Danish citizenship, then that person is now of Danish origin. Finally, an *Immingrant* is considered as someone born abroad and neither parent is a citizen of or born in Denmark. Immigrants can of course gain citizenship, but I'm not sure if they then become considered of Danish origin for these statistics.
+
+![](images/prompt6_sosu_nat_org_2025.jpg){fig-alt="bar graph displaying SOSU degrees awarded 2019 to 2024"}
+
+For the past few years, immigrants have comprised about 30% or so of all who earned a SOSU degree.
+
+So how do these gender and national origin percentages compare to all H30 vocational programs?
+
+![](images/prompt6_allvet_sex_2025.jpg){fig-alt="bar graph displaying H30 degrees awarded 2019 to 2024"}
+
+Well, the H30 degrees are not only much more balanced, a slight majority are awarded to men.
+
+As for national origin...
+
+![](images/prompt6_allvet_natorg_2025.jpg){fig-alt="bar graph displaying H30 degrees awarded 2019 to 2024"}
+
+<p>
+
+...immigrants are growing as a percent of all who earn H30 vocational degrees, at 14% in 2024 up from 8% in 2019. but that's less than half the 34% percent of SOSU degrees awarded to immigrants.
+
+So to sum up, its as expected; a vast majority of SOSU degrees go to women, and the percentage of SOSU degrees going to immigrants has been rising.
+
+There's plenty more to examine here, for instance:
+
+-   How do SOSU degree demographics compare to nursing degrees and other medical fields?
+-   What's the demographic picture in other vocational fields? Or in academic secondary, or academic higher education?
+
+*created and posted April 5, 2025*
