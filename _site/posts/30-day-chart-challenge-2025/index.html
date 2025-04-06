@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
-<meta name="dcterms.date" content="2025-04-05">
+<meta name="dcterms.date" content="2025-04-06">
 <meta name="description" content="Let’s make some charts!">
 
 <title>30 Day Chart Challenge 2025 – gregers kjerulf dubrow</title>
@@ -234,7 +234,7 @@ cookieconsent.run({
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 5, 2025</p>
+        <p class="date">April 6, 2025</p>
       </div>
     </div>
     
@@ -258,6 +258,7 @@ cookieconsent.run({
   <li><a href="#prompt5" id="toc-prompt5" class="nav-link" data-scroll-target="#prompt5">Prompt #5 - Ranking</a></li>
   <li><a href="#prompt6" id="toc-prompt6" class="nav-link" data-scroll-target="#prompt6">Prompt #6 - Florence Nightingale</a></li>
   <li><a href="#prompts7and8" id="toc-prompts7and8" class="nav-link" data-scroll-target="#prompts7and8">Prompts #7 &amp; 8 - Outliers &amp; Histogram</a></li>
+  <li><a href="#prompt9" id="toc-prompt9" class="nav-link" data-scroll-target="#prompt9">Prompt #9 - Diverging</a></li>
   </ul>
 </nav>
     </div>
@@ -949,7 +950,8 @@ cookieconsent.run({
 </section>
 <section id="prompts7and8" class="level2">
 <h2 class="anchored" data-anchor-id="prompts7and8">Prompts #7 &amp; 8 - Outliers &amp; Histogram</h2>
-<p>Taking another look at vocational degrees, it turned out to be best to combine these prompts into one post. So we’ll use the same table UDDAKT35, from Danmarks Statistik via the <code>danstat</code> package.</p>
+<p>These next six prompts are under a general theme of Distributions, or how data is arrayed or spread out by one of more factors.</p>
+<p>Taking another look at vocational degrees, it turned out to be best to combine these first two prompts, outliers and histogram, into one post. So we’ll use the same table UDDAKT35, from Danmarks Statistik via the <code>danstat</code> package.</p>
 <p>This time we’ll look at all degrees awarded and see the overall distribution (histogram), and degrees which had the most and fewest awarded (outliers). So reversing the prompts I guess, but keeping with the spirit of the challenge.</p>
 <p>As always, we’ll fetch and clean the data first. Some slight changes to the previous prompt where we used this table. This time we’ll get all degree programs and just for 2024. We won’t worry about demographics this time.</p>
 <div class="cell">
@@ -1089,6 +1091,311 @@ cookieconsent.run({
 <p>What we see is there are outliers, if we define an outlier as outside the 10th or 90th percentiles. We knew from <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt6">prompt 6</a> that SOSU degrees (social health and education) would account for the greatest proportion of vocational degrees, so no surprise that’s tops. We also see business &amp; commerce related fields as well as craft &amp; trades also being very popular. Glazier and fitness instructor are among the low outliers, below the 10th percentile in the distribution.</p>
 <p>A quick note on what might look like odd degree names. Obviously the original names were in Danish. But the translation to English isn’t always perfect. So for example, <em>gartneruddannelsen</em> translates to “Gartner Education” but what it should be is “Gardening”, or training to be a florist or work in landscaping. “Trading Education” comes from <em>handelsuddannelsen</em> which is essentially training to be a merchant - sourcing, logistics, etc.</p>
 <p><em>created and posted April 5, 2025</em></p>
+</section>
+<section id="prompt9" class="level2">
+<h2 class="anchored" data-anchor-id="prompt9">Prompt #9 - Diverging</h2>
+<p>For the <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompt5">Diverging prompt last year</a> I looked at educational attainment by gender in Denmark. This year I’ll do a similar chart, and we’ll take a different look at the same data used in the Day 5 Ranking prompt. Here though, instead of arraying degrees and majors in terms of raw counts, we’ll look at the percentage differences between gender by discipline and major.</p>
+<p>We will go back to the UDDAKT60 table from from Danmarks Statistik via the <code>danstat</code> package.</p>
+<p>It’s a bit of a long post because I’m walking though the process of building the nine discipline charts via a function. If you’re most interested in the charts, scroll through the how-to parts.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for getting and cleaning data</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(danstat) <span class="co"># package to get Danish statistics via api</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(packcircles) <span class="co"># makes the circles!</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext) <span class="co"># enhancements for text in ggplot</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggrepel) <span class="co"># helps with label offsets</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># some custom functions</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co"># this table is UDDAKT60, set to all lower-case in the table_id call</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>table_meta <span class="ot">&lt;-</span> danstat<span class="sc">::</span><span class="fu">get_table_metadata</span>(<span class="at">table_id =</span> <span class="st">"uddakt60"</span>, <span class="at">variables_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co"># create variable list using the ID value in the variable</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>variables_ed <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"uddannelse"</span>, <span class="at">values =</span> <span class="st">"*"</span>),</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"fstatus"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"F"</span>)),</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"køn"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"M"</span>, <span class="st">"K"</span>)),</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">#list(code = "alder", values = c("TOT")),</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"tid"</span>, <span class="at">values =</span> <span class="dv">2023</span>))</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co"># fetch the data, use the janitor package to clean the names</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>bacdegs1 <span class="ot">&lt;-</span> <span class="fu">get_data</span>(<span class="st">"uddakt60"</span>, variables_ed, <span class="at">language =</span> <span class="st">"en"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>()</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a><span class="co"># build the main dataset for charting</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>bacdegs <span class="ot">&lt;-</span> bacdegs1 <span class="sc">%&gt;%</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>fstatus) <span class="sc">%&gt;%</span></span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create categories for filtering - deg_group is category for all, discipline, or major </span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># deg_name is major, deg_field is discipline, </span></span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_code =</span> <span class="fu">str_extract</span>(uddannelse, <span class="st">"^[^ ]+"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">sub</span>(<span class="st">"^</span><span class="sc">\\</span><span class="st">S+</span><span class="sc">\\</span><span class="st">s+"</span>, <span class="st">''</span>, uddannelse)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">str_remove</span>(deg_name, <span class="st">", BACH"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">str_remove</span>(deg_name, <span class="st">" BACH"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>        deg_code <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"H6020"</span>, <span class="st">"H6025"</span>, <span class="st">"H6030"</span>, <span class="st">"H6035"</span>, <span class="st">"H6039"</span>,</span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a>                <span class="st">"H6059"</span>, <span class="st">"H6075"</span>, <span class="st">"H6080"</span>, <span class="st">"H6090"</span>) <span class="sc">~</span> <span class="st">"Main"</span>,</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a>        deg_code <span class="sc">==</span> <span class="st">"H60"</span> <span class="sc">~</span> <span class="st">"All"</span>,</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Sub"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_field =</span>  <span class="fu">case_when</span>(</span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6020"</span>) <span class="sc">~</span> <span class="st">"Education"</span>,</span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6025"</span>) <span class="sc">~</span> <span class="st">"Humanities"</span>,</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6030"</span>) <span class="sc">~</span> <span class="st">"Arts"</span>,</span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6035"</span>) <span class="sc">~</span> <span class="st">"Science"</span>,</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6039"</span>) <span class="sc">~</span> <span class="st">"Social Sciences"</span>,</span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6059"</span>) <span class="sc">~</span> <span class="st">"Technical sciences"</span>,</span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6075"</span>) <span class="sc">~</span> <span class="st">"Food/Biotech/Lab Tech"</span>,</span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6080"</span>) <span class="sc">~</span> <span class="st">"Agriculture Nature Environment"</span>,</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a>        <span class="fu">str_detect</span>(deg_code, <span class="st">"H6090"</span>) <span class="sc">~</span> <span class="st">"Health science"</span>,</span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a>        <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"All"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_field =</span> <span class="fu">factor</span>(deg_field,</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"All"</span>, <span class="st">"Agriculture Nature Environment"</span>, <span class="st">"Arts"</span>, <span class="st">"Education"</span>, <span class="st">"Food/Biotech/Lab Tech"</span>,</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Health science"</span>, <span class="st">"Humanities"</span>, <span class="st">"Science"</span>, <span class="st">"Social Sciences"</span>, <span class="st">"Technical sciences"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rename</span>(<span class="at">degs_n =</span> indhold, <span class="at">sex =</span> kon)</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a><span class="do">## dataframe to create faint highlight lines in chart</span></span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>vlines_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">xintercept =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Putting this together I first built a chart at the discipline level, showing the percentage differences by gender on a diverging graph. It’s a bit of a remix of last year’s chart for the same prompt. The code for that is below as is the chart.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the first chart</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>bacdegs <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_group <span class="sc">==</span> <span class="st">"Main"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(deg_field, sex, degs_n) <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(deg_field) <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_field_tot =</span> <span class="fu">sum</span>(degs_n)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(deg_field, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_sex_pct =</span> <span class="fu">round</span>(degs_n <span class="sc">/</span>deg_field_tot, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_sex_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Men"</span>, deg_sex_pct <span class="sc">*-</span><span class="dv">1</span>, deg_sex_pct)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_sex_pct2 =</span> <span class="fu">round</span>(deg_sex_pct <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_field =</span> <span class="fu">fct_reorder</span>(deg_field, <span class="fu">desc</span>(deg_field))) <span class="sc">%&gt;%</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    {. <span class="ot">-&gt;&gt;</span> tmp} <span class="sc">%&gt;%</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">50</span>, <span class="at">y =</span> deg_field), <span class="at">width =</span> <span class="fl">0.75</span>, <span class="at">fill =</span> <span class="st">"#e0e0e0"</span>) <span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">50</span>, <span class="at">y =</span> deg_field), <span class="at">width =</span> <span class="fl">0.75</span>, <span class="at">fill =</span> <span class="st">"#e0e0e0"</span>) <span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> deg_sex_pct2, <span class="at">y =</span> deg_field, <span class="at">fill =</span> sex, <span class="at">color =</span> sex), <span class="at">width =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> <span class="cf">function</span>(x) <span class="fu">abs</span>(x), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">data =</span> vlines_df, <span class="fu">aes</span>(<span class="at">xintercept =</span> xintercept), <span class="at">color =</span> <span class="st">"#FFFFFF"</span>, <span class="at">size =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E66100"</span>, <span class="st">"#5D3A9B"</span>)) <span class="sc">+</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"white"</span>)) <span class="sc">+</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, sex <span class="sc">==</span> <span class="st">"Men"</span>),</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> deg_sex_pct2, <span class="at">y =</span> deg_field, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">abs</span>(deg_sex_pct2), <span class="st">"%"</span>)),</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">4</span>), <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.09</span>) <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(tmp, sex <span class="sc">==</span> <span class="st">"Women"</span>),</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> deg_sex_pct2, <span class="at">y =</span> deg_field, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">abs</span>(deg_sex_pct2), <span class="st">"%"</span>)),</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">4</span>), <span class="at">hjust =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">100</span>, <span class="at">y =</span> deg_field, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Total awarded = "</span>, <span class="fu">comma</span>(deg_field_tot))),</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"#3b3b3b"</span>, <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"&lt;span style = 'color: #5D3A9B;'&gt;Women&lt;/span&gt; earn more Bachelor's degrees than</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="st">        &lt;span style = 'color: #E66100;'&gt;men&lt;/span&gt; in all disciplines except Science and Technical sciences"</span>,</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"*Total degrees awarded = 19,199:</span></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a><span class="st">        &lt;span style = 'color: #E66100;'&gt;Men = 8,694 (45%)&lt;/span&gt;,</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a><span class="st">        &lt;span style = 'color: #5D3A9B;'&gt;Women = 10,505 (55%)&lt;/span&gt;*"</span>),</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik table UDDAKT60 via danstat package*"</span>) <span class="sc">+</span></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(tmp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>
+</p><p><a href="images/prompt9_all_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-22"><img src="images/prompt9_all_2025.jpg" class="img-fluid" alt="diverging horizontal bar displaying bachelor degrees by sex 2023"></a></p>
+<p>The next step is to repeat this chart for each discipline, showing the top 10 majors by overall degrees awarded. Rather than copy-paste-amend like in prompt 5, this time I set about doing it via a plot function. As you can see from the code for the first chart though, I wanted to add descriptive and informational text in the title and subtitle. It was a bit complicated to do this functionally and I’m sure it took me much longer to sort out the data structures and function mapping, but it worked. I’ll walk through the steps here before displaying the charts. After the challenge I’ll do a walk-through as a stand-alone post.</p>
+<p>First up is building dataframes for each discipline, each frame with consistent naming. I went about it this way to avoid errors in filtering when running the plot function across disciplines. I took a similar approach in my October 2024 post on <a href="https://www.gregdubrow.io/posts/if-you-sell-it-will-they-come/#attendance">attendance at football (soccer) matches</a> around the world.</p>
+<p>So first a function to build the dataframes.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the data frames</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">## function for individual discipline tables</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>disc_top10 <span class="ot">&lt;-</span> <span class="cf">function</span>(degfield, <span class="at">dfname =</span> <span class="st">"NA"</span>) {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>dfout <span class="ot">&lt;-</span> bacdegs <span class="sc">%&gt;%</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_group <span class="sc">==</span> <span class="st">"Sub"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_field <span class="sc">==</span> degfield) <span class="sc">%&gt;%</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(deg_field, deg_name, sex, degs_n) <span class="sc">%&gt;%</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degs_all_tot =</span> <span class="fu">sum</span>(degs_n)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># creates fields to use in plot dynamic subtitle</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(sex) <span class="sc">%&gt;%</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degs_all_sex_tot =</span> <span class="fu">sum</span>(degs_n)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degs_all_sex_pct =</span> <span class="fu">round</span>(degs_all_sex_tot <span class="sc">/</span> degs_all_tot, <span class="dv">3</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">degs_all_sex_pct =</span> <span class="fu">paste0</span>(degs_all_sex_pct, <span class="st">"%"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(deg_name) <span class="sc">%&gt;%</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_name_tot =</span> <span class="fu">sum</span>(degs_n)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(deg_name_tot), deg_name) <span class="sc">%&gt;%</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">rank=</span><span class="fu">row_number</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(deg_name, sex) <span class="sc">%&gt;%</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_sex_pct =</span> <span class="fu">round</span>(degs_n <span class="sc">/</span>deg_name_tot, <span class="dv">3</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_sex_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Men"</span>, deg_sex_pct <span class="sc">*-</span><span class="dv">1</span>, deg_sex_pct)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_sex_pct2 =</span> <span class="fu">round</span>(deg_sex_pct <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># more fields to use in plot dynamic subtitle </span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_all_men_tot =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Men"</span>, degs_all_sex_tot, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_all_women_tot =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Women"</span>, degs_all_sex_tot, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_all_men_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Men"</span>, degs_all_sex_pct, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_all_women_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Women"</span>, degs_all_sex_pct, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_field_men_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Men"</span>, <span class="fu">paste0</span>(<span class="fu">abs</span>(deg_sex_pct2), <span class="st">"%"</span>), <span class="cn">NA</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_field_women_pct =</span> <span class="fu">ifelse</span>(sex <span class="sc">==</span> <span class="st">"Women"</span>, <span class="fu">paste0</span>(deg_sex_pct2, <span class="st">"%"</span>), <span class="cn">NA</span>))  <span class="sc">%&gt;%</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(deg_name) <span class="sc">%&gt;%</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(deg_all_men_tot) <span class="sc">%&gt;%</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(deg_all_women_tot, <span class="at">.direction =</span> <span class="st">"up"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(deg_all_men_pct) <span class="sc">%&gt;%</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(deg_all_women_pct, <span class="at">.direction =</span> <span class="st">"up"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(deg_field_men_pct) <span class="sc">%&gt;%</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fill</span>(deg_field_women_pct, <span class="at">.direction =</span> <span class="st">"up"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>()</span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a><span class="co"># uses the second input to name the dataframe and put it in the global environment</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="fu">assign</span>(<span class="fu">str_c</span>(dfname, <span class="st">"_pcts"</span>), dfout, <span class="at">envir=</span>.GlobalEnv)</span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>To run the function once it’s <code>disc_top10("Science", "Science")</code>. The first input is the discipline name, the 2nd is for the dataframe name.</p>
+<p>But how do we map it across the disciplines? Well, we need a list of disciplines, and we do that by creating a list of fields.</p>
+<p><code>degfields &lt;- unique(bacdegs$deg_field)</code></p>
+<p>Now we map it over the function, passing each mapping component to the .x sign.</p>
+<p><code>map(degfields, ~disc_top10(degfield = .x, dfname = .x))</code></p>
+<p>Ok, let’s build the plot function.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for the plot function</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## plot function</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>majorplot <span class="ot">&lt;-</span> <span class="cf">function</span>(plotdf, degfield, <span class="at">plotname =</span> <span class="st">"NA"</span>) {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="do">## for faint highlight lines in chart</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    vlines_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">xintercept =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">20</span>))</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">#create plot</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    plotout <span class="ot">&lt;-</span> plotdf <span class="sc">%&gt;%</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(deg_field <span class="sc">==</span> degfield) <span class="sc">%&gt;%</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">filter</span>(rank <span class="sc">&lt;</span> <span class="dv">21</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># to get top 10 for plot sorted in order of total degrees in major</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">arrange</span>(<span class="fu">desc</span>(deg_name_tot)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">deg_name =</span> <span class="fu">fct_reorder</span>(deg_name, deg_name_tot)) <span class="sc">%&gt;%</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># not used, but this orders top 10 for plot in degree name order</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># mutate(deg_name = fct_reorder(deg_name, desc(deg_name))) %&gt;%</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># makes the grey bars</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">50</span>, <span class="at">y =</span> deg_name), <span class="at">width =</span> <span class="fl">0.75</span>, <span class="at">fill =</span> <span class="st">"#e0e0e0"</span>) <span class="sc">+</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">50</span>, <span class="at">y =</span> deg_name), <span class="at">width =</span> <span class="fl">0.75</span>, <span class="at">fill =</span> <span class="st">"#e0e0e0"</span>) <span class="sc">+</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># makes the bars for each gender, fill colors in the scale_fill_manual below</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="fu">aes</span>(<span class="at">x =</span> deg_sex_pct2, <span class="at">y =</span> deg_name, <span class="at">fill =</span> sex, <span class="at">color =</span> sex), <span class="at">width =</span> <span class="fl">0.75</span>) <span class="sc">+</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">labels =</span> <span class="cf">function</span>(x) <span class="fu">abs</span>(x), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">100</span>, <span class="dv">20</span>)) <span class="sc">+</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#E66100"</span>, <span class="st">"#5D3A9B"</span>)) <span class="sc">+</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># adds faint guide lines for the bars</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_vline</span>(<span class="at">data =</span> vlines_df, <span class="fu">aes</span>(<span class="at">xintercept =</span> xintercept), <span class="at">color =</span> <span class="st">"#FFFFFF"</span>, <span class="at">size =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">coord_cartesian</span>(<span class="at">clip =</span> <span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"white"</span>)) <span class="sc">+</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># adds text labels for each major's percent of men &amp; women</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(plotdf, sex <span class="sc">==</span> <span class="st">"Men"</span> <span class="sc">&amp;</span> rank <span class="sc">&lt;</span> <span class="dv">21</span>),</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> deg_sex_pct2, <span class="at">y =</span> deg_name, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">abs</span>(deg_sex_pct2), <span class="st">"%"</span>)),</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">4</span>), <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.09</span>) <span class="sc">+</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(plotdf, sex <span class="sc">==</span> <span class="st">"Women"</span> <span class="sc">&amp;</span> rank <span class="sc">&lt;</span> <span class="dv">21</span>),</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> deg_sex_pct2, <span class="at">y =</span> deg_name, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">abs</span>(deg_sex_pct2), <span class="st">"%"</span>)),</span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="dv">5</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> .<span class="dv">4</span>), <span class="at">hjust =</span> <span class="fl">1.1</span>) <span class="sc">+</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># inserts the total number of degrees for each discipline into the bars to the </span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># left or right of the percentage bars</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(plotdf, sex <span class="sc">==</span> <span class="st">"Men"</span> <span class="sc">&amp;</span> rank <span class="sc">&lt;</span> <span class="dv">21</span> <span class="sc">&amp;</span> deg_sex_pct <span class="sc">&gt;</span> <span class="sc">-</span><span class="fl">0.85</span>),</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">-</span><span class="dv">100</span>, <span class="at">y =</span> deg_name, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Total awarded = "</span>, <span class="fu">comma</span>(deg_name_tot))),</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">color =</span> <span class="st">"#3b3b3b"</span>, <span class="at">hjust =</span> <span class="sc">-</span>.<span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="fu">subset</span>(plotdf, sex <span class="sc">==</span> <span class="st">"Men"</span> <span class="sc">&amp;</span> rank <span class="sc">&lt;</span> <span class="dv">21</span> <span class="sc">&amp;</span> deg_sex_pct <span class="sc">&lt;</span> <span class="sc">-</span><span class="fl">0.85</span>),</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">80</span>, <span class="at">y =</span> deg_name, <span class="at">label =</span> <span class="fu">paste0</span>(<span class="st">"Total awarded = "</span>, <span class="fu">comma</span>(deg_name_tot))),</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">size =</span> <span class="fl">3.5</span>, <span class="at">color =</span> <span class="st">"#3b3b3b"</span>, <span class="at">hjust =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"*Data from Danmarks Statistik table UDDAKT60 via danstat package*"</span>,</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>        <span class="co"># uses html tags for color and fields from the input df to make the title</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>          <span class="co"># specific to the discipline</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> glue<span class="sc">::</span><span class="fu">glue</span>(<span class="st">"*Total degrees awarded in {degfield} = {comma(plotdf$degs_all_tot)}:</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;span style = 'color: #E66100;'&gt;Men =</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="st">            {comma(plotdf$deg_all_men_tot)} ({plotdf$deg_all_men_pct})&lt;/span&gt;,</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="st">            &lt;span style = 'color: #5D3A9B;'&gt;Women =</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a><span class="st">            {comma(plotdf$deg_all_women_tot)} ({plotdf$deg_all_women_pct})&lt;/span&gt;.</span></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="st">            Only top 10 majors displayed.*"</span>)) <span class="sc">+</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.title =</span> <span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">hjust =</span> <span class="dv">0</span>),</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.subtitle =</span> <span class="fu">element_markdown</span>(<span class="at">size =</span> <span class="dv">12</span>, <span class="at">hjust =</span> <span class="dv">0</span>),</span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>            <span class="at">plot.caption =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.position =</span> <span class="st">"none"</span>, <span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>            <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">10</span>))</span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># to create individual plot names and place plots in the global environment</span></span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">assign</span>(<span class="fu">str_c</span>(plotname, <span class="st">"_plot"</span>), plotout, <span class="at">envir=</span>.GlobalEnv)</span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a>    <span class="co"># outputs plots </span></span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(plotout)</span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The function takes three inputs - the dataframe to run it on, the filter for the discipline in the plot, and the output lot name. The 2nd &amp; 3rd input are the same. To map it over the nine disciplines we need the list of dataframes and the list of disciplines. The code below shows how to build those</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create list of data frames to mutate function over</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">mget</span>(<span class="fu">ls</span>(<span class="at">pattern =</span> <span class="st">"local"</span>)))[[<span class="dv">1</span>]]</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>df_list <span class="ot">=</span> <span class="fu">mget</span>(<span class="fu">ls</span>(<span class="at">pattern =</span> <span class="st">"_pcts"</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># for degree fields to loop over in function, need a character vector of just major names</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># first a df of just the field names</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>bacdegs_maj <span class="ot">&lt;-</span> bacdegs <span class="sc">%&gt;%</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(deg_group <span class="sc">==</span> <span class="st">"Sub"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">deg_fieldc =</span> <span class="fu">as.character</span>(deg_field)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(deg_fieldc)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># then output names to character vector, making sure to sort so that the filter matches to </span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a> <span class="co"># the </span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>degfieldsc <span class="ot">&lt;-</span> (<span class="fu">unique</span>(bacdegs_maj<span class="sc">$</span>deg_fieldc)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">str_sort</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we’re ready to build the charts. Because of the way the input dataframes were built we’ll have title and subtitle text specific to each discipline. Here’s the mapping call:</p>
+<p><code>map2(df_list, degfieldsc, ~majorplot(plotdf = .x, degfield = .y, plotname = .y))</code></p>
+<p>That outputs nine plots that only need minor customization for the explanatory title. Everything else was taken care of in the functions. Because Education and the Food Science disciplines only have one major each, no additional charts for them. The gender difference is in the main chart.</p>
+<p>I’ll display the seven annotated charts in the tabset below, showing the customization for the Humanities discipline. They are lightboxed, so click on the image to enlarge it, and click <code>esc</code> or outside the image to restore it to the page.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="disciplne">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Agriculture, Nature, &amp; Environment</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Arts</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Health Sciences</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Humanities</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">Science</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false">Social Science</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-7" role="tab" aria-controls="tabset-2-7" aria-selected="false">Technical Science</a></li></ul>
+<div class="tab-content" data-group="disciplne">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p><a href="images/prompt9_ag_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-23"><img src="images/prompt9_ag_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p><a href="images/prompt9_art_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-24"><img src="images/prompt9_art_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p><a href="images/prompt9_health_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-25"><img src="images/prompt9_health_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<p><a href="images/prompt9_hum_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-26"><img src="images/prompt9_hum_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Humanities_plot <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Humanities degrees mostly went to &lt;span style = 'color: #5D3A9B;'&gt;women&lt;/span&gt;.</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="st">             By major, &lt;span style = 'color: #E66100;'&gt;men&lt;/span&gt; only earned more degrees in History"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<p><a href="images/prompt9_sci_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-27"><img src="images/prompt9_sci_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
+<p><a href="images/prompt9_socsci_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-28"><img src="images/prompt9_socsci_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+<div id="tabset-2-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-7-tab">
+<p><a href="images/prompt9_techsci_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-29"><img src="images/prompt9_techsci_2025.jpg" class="img-fluid" alt="horizontal bar graph displaying Bachelors degrees awarded by field &amp; sex"></a></p>
+</div>
+</div>
+</div>
+<p>The overarching take-away is one of some noticeable difference or divergence by gender in many disciplines and majors. To be honest, I was surprised at the extent and size of some differences. I remember seeing it in some colleges and majors at UC Berkeley, but even in the so-called “male” majors women were becoming more and more evenly represented.</p>
+<p>The next step for this subject would be to look at some of the more gendered majors and examine whether or not the differences have held steady over time, and if anything explains the change or stasis. Maybe after the challenge or for one of the challenge time-series prompts.</p>
+<p><em>created and posted April 6, 2025</em></p>
 
 
 </section>
@@ -1545,7 +1852,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"descPosition":"bottom","closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","loop":false,"openEffect":"zoom","descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
