@@ -1430,3 +1430,257 @@ The overarching take-away is one of some noticeable difference or divergence by 
 The next step for this subject would be to look at some of the more gendered majors and examine whether or not the differences have held steady over time, and if anything explains the change or stasis. Maybe after the challenge or for one of the challenge time-series prompts.
 
 *created and posted April 6, 2025*
+
+## Prompt #14 - Kinship {#prompt14}
+
+Full disclosure...depending on when you read this, you may or may not see any posts between this one and prompt 9. As you can see by the "created and posted" date, if/when I've backfilled some prompts between 9 and here, this was the next post I completed after 9. Life gets in the way sometimes.
+
+Anyway, I knew when the prompts came out that for kinship that I'd want to make a sankey diagram to look at educational pathways depending on parent education. A sankey is a form of network graph, and I wanted to see the connection, or network effect, of parent education on their children's educational attainment.
+
+[StatBank's](https://www.statbank.dk/statbank5a/default.asp?w=1728) education section does have some tables for parent `->` child education, but they aren't as disaggregated as I'd like. So to see educational outcomes by parent educational attainment you have to choose whether to look at secondary outcomes or higher ed outcomes. We're going here with higher ed, so it's table *STATUSV2: 25-45 year-olds, by status for higher education, age and parents attainment*.
+
+Slight aside...there is micro-data that can answer the question as detailed as I would like. The [EduQuant project](https://www.economics.ku.dk/research/externally-funded-research_new/uddankvant/), located in the Economic Department at Københavns Universitet and funded by the Danish Education Ministry, has access to that data and has produced some work on [social mobility and education](https://researchprofiles.ku.dk/en/persons/kristian-bernt-karlson/publications/).
+
+There are a few ways to do sankeys in r. After some trial-and-error, I settled on using the [`networkD3` package](https://christophergandrud.github.io/networkD3/). A big reason being that the data comes aggregated, and some other packages like `ggsankey` and `ggalluvial` weren't handling the data as well as `networkD3`.
+
+To get the final result I was helped by [this post from Louise Sinks](https://lsinks.github.io/posts/2023-08-28-TidyTuesday-Refugees/TidyTuesday34-refugees.html) and [this video from the UK's NHS R community](https://youtu.be/3OvsW8OI1wo?feature=shared).
+
+Let's get started...first loading some packages and fetching and cleaning the data. The data cleaning is mainly to make the parent education levels easier to read, and to create age groups. I didn't use the age groups for this chart, but I think I will for the "complicated" prompt.
+
+```{r prompt14_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting and cleaning data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(danstat) # package to get Danish statistics via api
+library(infer) # tidy statistical inference
+library(scales)
+library(networkD3) # for Sankey plots
+library(htmlwidgets) # html widgets helps to handle the networkD3 objects
+library(htmltools) # for formatting html code
+library(gt)
+
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+table_meta <- danstat::get_table_metadata(table_id = "statusv2", variables_only = TRUE)
+table_meta_dk <- danstat::get_table_metadata(table_id = "statusv2", variables_only = TRUE, language = "da")
+
+# create variable list using the ID value in the variable
+variables_ed <- list(
+	list(code = "statusvid", values = "*"),
+	list(code = "alder1", values = "*"),
+	list(code = "forudd1", values = "*"),
+	list(code = "tid", values = 2023))
+
+# fetch the data
+ed_attain1 <- get_data("statusv2", variables_ed, language = "en") %>%
+	as_tibble() %>%
+	clean_names()
+
+# create a main data frame with cleaned up educational levels and renaming the variables
+ed_attain_main <- ed_attain1 %>%
+	# let's make the Total values easier to read
+	mutate(statusvid =
+			ifelse(statusvid == "Educational graduation statement, total", "Total", statusvid)) %>%
+	mutate(alder1 =
+			ifelse(alder1 == "Age, total", "Total", alder1)) %>%
+	# let's make the parent ed values a bit easier to read and understand
+	mutate(forudd1 =
+			case_when(forudd1 == "H10 Primary education" ~ "Primary",
+				forudd1 == "H20 Upper secondary education" ~
+					"HS-Academic",
+				forudd1 == "H30 Vocational Education and Training (VET)" ~
+					"HS-Vocational",
+				forudd1 == "H40 Short cycle higher education" ~
+					"Short-cycle college",
+				forudd1 == "H50 Vocational bachelors educations" ~
+					"Bachelor-Vocational",
+				forudd1 == "H60 Bachelors programs" ~
+					"Bachelor-Academic",
+				forudd1 == "H70 Masters programs" ~ "Masters",
+				forudd1 == "H80 PhD programs" ~ "PhD",
+				forudd1 == "H90 Not stated" ~ "Not stated",
+				TRUE ~ forudd1)) %>%
+	mutate(statusvid = ifelse(
+		statusvid == "No registrated education", "No registered education", statusvid)) %>%
+	# create age groups in case I want to disaggregate that way
+	mutate(child_age_group =
+			case_when(
+				alder1 %in% c("25 years", "26 years", "27 years", "28 years", "29 years") ~ "25-29",
+				alder1 %in% c("30 years", "31 years", "32 years", "33 years", "34 years") ~ "30-34",
+				alder1 %in% c("35 years", "36 years", "37 years", "38 years", "39 years") ~ "35-39",
+				alder1 %in% c("40 years", "41 years", "42 years",
+					"43 years", "44 years", "45 years") ~ "40-45",
+				TRUE ~ alder1)) %>%
+	select(parent_ed = forudd1, child_age = alder1, child_age_group, child_ed = statusvid, N = indhold)
+
+```
+
+```{r 14_dataload}
+#| message: false
+#| echo: false
+#| include: false
+
+#| warning: false 
+#| error: false
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(danstat) # package to get Danish statistics via api
+library(infer) # tidy statistical inference
+library(scales)
+library(networkD3) # for Sankey plots
+library(htmlwidgets) # html widgets helps to handle the networkD3 objects
+library(htmltools) # for formatting html code
+library(gt)
+
+## quietly loads RDS already created
+ed_attain_main <- 
+	readRDS("~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/ed_attain_main.Rda") 
+sankey_plot_id <- 
+	readRDS("~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/sankey_plot_id.Rda") 
+nodes_df <- 
+	readRDS("~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/nodes_df.Rda") 
+
+sankey_plot_id <- as.data.frame(sankey_plot_id)
+nodes_df <- as.data.frame(nodes_df)
+
+```
+
+Before we get to the sankey diagram, first a quick table so we can see the breakdown of parent educational attainment and children's higher education status, independent of each other.
+
+::: {layout-ncol="2"}
+```{r prompt14_3_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the descriptive tables"
+
+ed_attain_main %>%
+	filter(!parent_ed == "Total") %>%
+	filter(child_age == "Total") %>%
+	filter(child_ed == "Total") %>%
+	select(parent_ed, N) %>%
+	mutate(pct = N/ sum(N)) %>%
+	gt() %>%
+	cols_label(parent_ed = "Parent education level") %>%
+	fmt_number(columns = N, sep_mark = ",", decimals = 0) %>%
+	fmt_percent(columns = pct, decimals = 1) %>%
+	opt_stylize(style = 5)
+```
+
+```{r prompt14_3_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: false
+#| eval: true
+#| code-overflow: scroll
+
+ed_attain_main %>%
+	filter(parent_ed == "Total") %>%
+	filter(child_age == "Total") %>%
+	filter(!child_ed == "Total") %>%
+	select(child_ed, N) %>%
+	mutate(pct = N/ sum(N)) %>%
+	gt() %>%
+	cols_label(child_ed = "Higher ed status") %>%
+	fmt_number(columns = N, sep_mark = ",", decimals = 0) %>%
+	fmt_percent(columns = pct, decimals = 1) %>%
+	opt_stylize(style = 5)
+```
+:::
+
+Of the 1,580,506 people in this data sample, more than half have completed some form of higher education. About half of the parents of the entire pool completed a vocational high school or college degree. There is no education status for almost 20% of parents.
+
+To make the plot you need to data frames, one for the nodes and one with the data. The nodes frame contains all the unique values of parent and child educational attainment, or for this chart, the nodes. The `sankey_plot_id` frame has the frequencies and parent-to-child paths we need for the sankey band widths. Make sure to render them each as a `data.frame`, as that's the format needed for the sankey functions to work.
+
+```{r prompt14_4}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the sankey plot dfs"
+
+# make the nodes data frame
+nodes_df <- as.data.frame(ed_attain_allage %>%
+	select(parent_ed, child_ed) %>%
+	pivot_longer(c("parent_ed", "child_ed"),
+	names_to = "col_name", values_to = "name_match") %>%
+	# this removes dupes keeps only name match
+	# may need to clean names for labels to look nice
+	select("name_match") %>%
+	distinct())
+
+# create ID df for order of nodes from ed_path_freqs & nodes; -1 ensures 0 index
+sankey_plot_id <- as.data.frame(ed_attain_allage %>%
+  mutate(IDIn = match(parent_ed, nodes_df$name_match) -1,
+  			 IDOut = match(child_ed, nodes_df$name_match)-1))
+
+
+```
+
+Now we make the plot. We call the links from the df with the frequencies and the nodes fro the nodes df. Font size and family can be changed, as can the node widths and other aesthetic features. The `sinksRight` call places the data labels on the right side node, the end stage, outside the graph. There is no way to put the left-side labels outside the graph. Changing the size accommodates a title and caption added using `htmlwidgets`. Louise Sinks explained in her post that leaving the plot in native size from the `sankeyNetwork` call could truncate parts of the plot if you add a title.
+
+One important thing it took some searching to solve was the [order of the nodes](https://stackoverflow.com/a/46521992/10226848). You can see in the data cleaning that I set them up as factors with the levels I wanted them ordered. It worked in the `gt` tables but initially not in the sankey. It turns out you need to add `iterations = 0` to keep the auto-positioning from running.
+
+If you hover over the node bands of the chart, you can see the total number for that path.
+
+```{r prompt14_5}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the sankey plot"
+
+# create the plot as an object
+edattain_sankey <-
+sankeyNetwork(
+	Links = sankey_plot_id, Nodes = nodes_df, 
+	Source = "IDIn", Target = "IDOut",
+	# "Freq" from freq df, "name" from nodes_df 
+	Value = "N", NodeID = "name_match", 
+	sinksRight = FALSE, iterations = 0, 
+	width = 600,  height = 400,
+	fontSize = 16, fontFamily = "Arial", nodeWidth = 20)
+
+## add title and caption to plot object
+edattain_sankey <-
+  htmlwidgets::prependContent(
+  	edattain_sankey, htmltools::tags$h4("Higher education pathways for people depending on parent's educational attainment"))
+edattain_sankey <-
+  htmlwidgets::appendContent(
+  	edattain_sankey, htmltools::tags$em("Data from Danmarks Statistik table STATUSV2 via danstat package"))
+
+edattain_sankey
+
+```
+
+So what do we see? Well for parents who stopped out at the primary level, most of their kids are not recorded as having registered for higher education. Same for parents who stopped out at a vocational secondary diploma. We also see a lot of parents without any educational attainment recorded. But most of their kids have either completed higher education or started but then discontinued.
+
+Some of this could be an artifact of the Danish personal registry system not having complete parental education records for the upper end of the 25-45 age pool here, or for parents of immigrant or 1st generation born in Denmark. Some of it could be a product of the older students here being less likely to complete higher education, something we've seen in earlier posts.
+
+I'll break down by age groups in the "complicated" prompt. Sadly we don't have a table that shows both parent education and parent or child national origin status. I'd love to have access to micro-data to answer these more detailed questions; that would mean working for StatBank, the Education Ministry, or the EduQuant project (if it gets new funding). A man can dream...
+
+*created and posted April 18, 2025*

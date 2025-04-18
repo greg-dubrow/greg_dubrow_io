@@ -135,6 +135,10 @@ cookieconsent.run({
 });
 </script> 
   
+<script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../../site_libs/d3-4.9.1/d3.min.js"></script>
+<script src="../../site_libs/sankey-1/sankey.js"></script>
+<script src="../../site_libs/sankeyNetwork-binding-0.4.1/sankeyNetwork.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -259,6 +263,7 @@ cookieconsent.run({
   <li><a href="#prompt6" id="toc-prompt6" class="nav-link" data-scroll-target="#prompt6">Prompt #6 - Florence Nightingale</a></li>
   <li><a href="#prompts7and8" id="toc-prompts7and8" class="nav-link" data-scroll-target="#prompts7and8">Prompts #7 &amp; 8 - Outliers &amp; Histogram</a></li>
   <li><a href="#prompt9" id="toc-prompt9" class="nav-link" data-scroll-target="#prompt9">Prompt #9 - Diverging</a></li>
+  <li><a href="#prompt14" id="toc-prompt14" class="nav-link" data-scroll-target="#prompt14">Prompt #14 - Kinship</a></li>
   </ul>
 </nav>
     </div>
@@ -1396,6 +1401,1169 @@ cookieconsent.run({
 <p>The overarching take-away is one of some noticeable difference or divergence by gender in many disciplines and majors. To be honest, I was surprised at the extent and size of some differences. I remember seeing it in some colleges and majors at UC Berkeley, but even in the so-called “male” majors women were becoming more and more evenly represented.</p>
 <p>The next step for this subject would be to look at some of the more gendered majors and examine whether or not the differences have held steady over time, and if anything explains the change or stasis. Maybe after the challenge or for one of the challenge time-series prompts.</p>
 <p><em>created and posted April 6, 2025</em></p>
+</section>
+<section id="prompt14" class="level2">
+<h2 class="anchored" data-anchor-id="prompt14">Prompt #14 - Kinship</h2>
+<p>Full disclosure…depending on when you read this, you may or may not see any posts between this one and prompt 9. As you can see by the “created and posted” date, if/when I’ve backfilled some prompts between 9 and here, this was the next post I completed after 9. Life gets in the way sometimes.</p>
+<p>Anyway, I knew when the prompts came out that for kinship I wanted to make a sankey diagram to look at educational pathways depending on parent education. A sankey is a form of network graph, and I wanted to see the connection, or network effect, of parent education on their children’s educational attainment.</p>
+<p><a href="https://www.statbank.dk/statbank5a/default.asp?w=1728">StatBank’s</a> education section does have some tables for parent <code>-&gt;</code> child education, but they aren’t as disaggregated as I’d like. So to see educational outcomes by parent educational attainment you have to choose whether to look at secondary outcomes or higher ed outcomes. We’re going here with higher ed, so it’s table <em>STATUSV2: 25-45 year-olds, by status for higher education, age and parents attainment</em>.</p>
+<p>Slight aside…there is micro-data that can answer the question as detailed as I would like. The <a href="https://www.economics.ku.dk/research/externally-funded-research_new/uddankvant/">EduQuant project</a>, located in the Economic Department at Københavns Universitet and funded by the Danish Education Ministry, has access to that data and has produced some work on <a href="https://researchprofiles.ku.dk/en/persons/kristian-bernt-karlson/publications/">social mobility and education</a>.</p>
+<p>There are a few ways to do sankeys in r. After some trial-and-error, I settled on using the <a href="https://christophergandrud.github.io/networkD3/"><code>networkD3</code> package</a>. A big reason being that the data comes aggregated, and some other packages like <code>ggsankey</code> and <code>ggalluvial</code> weren’t handling the data as well as <code>networkD3</code>.</p>
+<p>To get the final result I was helped by <a href="https://lsinks.github.io/posts/2023-08-28-TidyTuesday-Refugees/TidyTuesday34-refugees.html">this post from Louise Sinks</a> and <a href="https://youtu.be/3OvsW8OI1wo?feature=shared">this video from the UK’s NHS R community</a>.</p>
+<p>Let’s get started…first loading some packages and fetching and cleaning the data. The data cleaning is mainly to make the parent education levels easier to read, and to create age groups. I didn’t use the age groups for this chart, but I think I will for the “complicated” prompt.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for getting and cleaning data</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># tools for data cleaning</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(danstat) <span class="co"># package to get Danish statistics via api</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer) <span class="co"># tidy statistical inference</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(networkD3) <span class="co"># for Sankey plots</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmlwidgets) <span class="co"># html widgets helps to handle the networkD3 objects</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(htmltools) <span class="co"># for formatting html code</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co"># some custom functions</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"~/Data/r/basic functions.R"</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>table_meta <span class="ot">&lt;-</span> danstat<span class="sc">::</span><span class="fu">get_table_metadata</span>(<span class="at">table_id =</span> <span class="st">"statusv2"</span>, <span class="at">variables_only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>table_meta_dk <span class="ot">&lt;-</span> danstat<span class="sc">::</span><span class="fu">get_table_metadata</span>(<span class="at">table_id =</span> <span class="st">"statusv2"</span>, <span class="at">variables_only =</span> <span class="cn">TRUE</span>, <span class="at">language =</span> <span class="st">"da"</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co"># create variable list using the ID value in the variable</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>variables_ed <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"statusvid"</span>, <span class="at">values =</span> <span class="st">"*"</span>),</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"alder1"</span>, <span class="at">values =</span> <span class="st">"*"</span>),</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"forudd1"</span>, <span class="at">values =</span> <span class="st">"*"</span>),</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">code =</span> <span class="st">"tid"</span>, <span class="at">values =</span> <span class="dv">2023</span>))</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="co"># fetch the data</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>ed_attain1 <span class="ot">&lt;-</span> <span class="fu">get_data</span>(<span class="st">"statusv2"</span>, variables_ed, <span class="at">language =</span> <span class="st">"en"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">clean_names</span>()</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a><span class="co"># create a main data frame with cleaned up educational levels and renaming the variables</span></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>ed_attain_main <span class="ot">&lt;-</span> ed_attain1 <span class="sc">%&gt;%</span></span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># let's make the Total values easier to read</span></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">statusvid =</span></span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(statusvid <span class="sc">==</span> <span class="st">"Educational graduation statement, total"</span>, <span class="st">"Total"</span>, statusvid)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">alder1 =</span></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(alder1 <span class="sc">==</span> <span class="st">"Age, total"</span>, <span class="st">"Total"</span>, alder1)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># let's make the parent ed values a bit easier to read and understand</span></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">forudd1 =</span></span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>            <span class="fu">case_when</span>(forudd1 <span class="sc">==</span> <span class="st">"H10 Primary education"</span> <span class="sc">~</span> <span class="st">"Primary"</span>,</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H20 Upper secondary education"</span> <span class="sc">~</span></span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"HS-Academic"</span>,</span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H30 Vocational Education and Training (VET)"</span> <span class="sc">~</span></span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"HS-Vocational"</span>,</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H40 Short cycle higher education"</span> <span class="sc">~</span></span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Short-cycle college"</span>,</span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H50 Vocational bachelors educations"</span> <span class="sc">~</span></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Bachelor-Vocational"</span>,</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H60 Bachelors programs"</span> <span class="sc">~</span></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"Bachelor-Academic"</span>,</span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H70 Masters programs"</span> <span class="sc">~</span> <span class="st">"Masters"</span>,</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H80 PhD programs"</span> <span class="sc">~</span> <span class="st">"PhD"</span>,</span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>                forudd1 <span class="sc">==</span> <span class="st">"H90 Not stated"</span> <span class="sc">~</span> <span class="st">"Not stated"</span>,</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>                <span class="cn">TRUE</span> <span class="sc">~</span> forudd1)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">statusvid =</span> <span class="fu">ifelse</span>(</span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a>        statusvid <span class="sc">==</span> <span class="st">"No registrated education"</span>, <span class="st">"No registered education"</span>, statusvid)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># create age groups in case I want to disaggregate that way</span></span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">child_age_group =</span></span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a>            <span class="fu">case_when</span>(</span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a>                alder1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"25 years"</span>, <span class="st">"26 years"</span>, <span class="st">"27 years"</span>, <span class="st">"28 years"</span>, <span class="st">"29 years"</span>) <span class="sc">~</span> <span class="st">"25-29"</span>,</span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a>                alder1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"30 years"</span>, <span class="st">"31 years"</span>, <span class="st">"32 years"</span>, <span class="st">"33 years"</span>, <span class="st">"34 years"</span>) <span class="sc">~</span> <span class="st">"30-34"</span>,</span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a>                alder1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"35 years"</span>, <span class="st">"36 years"</span>, <span class="st">"37 years"</span>, <span class="st">"38 years"</span>, <span class="st">"39 years"</span>) <span class="sc">~</span> <span class="st">"35-39"</span>,</span>
+<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>                alder1 <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40 years"</span>, <span class="st">"41 years"</span>, <span class="st">"42 years"</span>,</span>
+<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"43 years"</span>, <span class="st">"44 years"</span>, <span class="st">"45 years"</span>) <span class="sc">~</span> <span class="st">"40-45"</span>,</span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a>                <span class="cn">TRUE</span> <span class="sc">~</span> alder1)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="at">parent_ed =</span> forudd1, <span class="at">child_age =</span> alder1, child_age_group, <span class="at">child_ed =</span> statusvid, <span class="at">N =</span> indhold)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Before we get to the sankey diagram, first a quick table so we can see the breakdown of parent educational attainment and children’s higher education status, independent of each other.</p>
+<details class="code-fold">
+<summary>Show code for making the descriptive tables</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ed_attain_main <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>parent_ed <span class="sc">==</span> <span class="st">"Total"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(child_age <span class="sc">==</span> <span class="st">"Total"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(child_ed <span class="sc">==</span> <span class="st">"Total"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(parent_ed, N) <span class="sc">%&gt;%</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">pct =</span> N<span class="sc">/</span> <span class="fu">sum</span>(N)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cols_label</span>(<span class="at">parent_ed =</span> <span class="st">"Parent education level"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_number</span>(<span class="at">columns =</span> N, <span class="at">sep_mark =</span> <span class="st">","</span>, <span class="at">decimals =</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmt_percent</span>(<span class="at">columns =</span> pct, <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="cell-output-display">
+<div id="jlpqgbveat" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#jlpqgbveat table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#jlpqgbveat thead, #jlpqgbveat tbody, #jlpqgbveat tfoot, #jlpqgbveat tr, #jlpqgbveat td, #jlpqgbveat th {
+  border-style: none;
+}
+
+#jlpqgbveat p {
+  margin: 0;
+  padding: 0;
+}
+
+#jlpqgbveat .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 3px;
+  border-top-color: #D5D5D5;
+  border-right-style: solid;
+  border-right-width: 3px;
+  border-right-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #D5D5D5;
+  border-left-style: solid;
+  border-left-width: 3px;
+  border-left-color: #D5D5D5;
+}
+
+#jlpqgbveat .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#jlpqgbveat .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#jlpqgbveat .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#jlpqgbveat .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jlpqgbveat .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+}
+
+#jlpqgbveat .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#jlpqgbveat .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #004D80;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#jlpqgbveat .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #004D80;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#jlpqgbveat .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#jlpqgbveat .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#jlpqgbveat .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#jlpqgbveat .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#jlpqgbveat .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#jlpqgbveat .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  vertical-align: middle;
+}
+
+#jlpqgbveat .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#jlpqgbveat .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#jlpqgbveat .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D5D5D5;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: #D5D5D5;
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: #D5D5D5;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#jlpqgbveat .gt_stub {
+  color: #FFFFFF;
+  background-color: #929292;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D5D5D5;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jlpqgbveat .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#jlpqgbveat .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#jlpqgbveat .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#jlpqgbveat .gt_summary_row {
+  color: #FFFFFF;
+  background-color: #5F5F5F;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jlpqgbveat .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D5D5D5;
+}
+
+#jlpqgbveat .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#jlpqgbveat .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+}
+
+#jlpqgbveat .gt_grand_summary_row {
+  color: #FFFFFF;
+  background-color: #929292;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jlpqgbveat .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D5D5D5;
+}
+
+#jlpqgbveat .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D5D5D5;
+}
+
+#jlpqgbveat .gt_striped {
+  background-color: #F4F4F4;
+}
+
+#jlpqgbveat .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+}
+
+#jlpqgbveat .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jlpqgbveat .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jlpqgbveat .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#jlpqgbveat .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#jlpqgbveat .gt_left {
+  text-align: left;
+}
+
+#jlpqgbveat .gt_center {
+  text-align: center;
+}
+
+#jlpqgbveat .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#jlpqgbveat .gt_font_normal {
+  font-weight: normal;
+}
+
+#jlpqgbveat .gt_font_bold {
+  font-weight: bold;
+}
+
+#jlpqgbveat .gt_font_italic {
+  font-style: italic;
+}
+
+#jlpqgbveat .gt_super {
+  font-size: 65%;
+}
+
+#jlpqgbveat .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#jlpqgbveat .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#jlpqgbveat .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#jlpqgbveat .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#jlpqgbveat .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#jlpqgbveat .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#jlpqgbveat .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#jlpqgbveat .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#jlpqgbveat div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="parent_ed" class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">Parent education level</th>
+<th id="N" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">N</th>
+<th id="pct" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">pct</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">Primary</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="N">177,985</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="pct">11.3%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="parent_ed">HS-Academic</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">32,585</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">2.1%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">HS-Vocational</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="N">562,666</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="pct">35.6%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="parent_ed">Qualifying educ paths</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">587</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">0.0%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">Short-cycle college</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="N">75,482</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="pct">4.8%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="parent_ed">Bachelor-Vocational</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">282,343</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">17.9%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">Bachelor-Academic</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="N">12,126</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="pct">0.8%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="parent_ed">Masters</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">124,083</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">7.9%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">PhD</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="N">10,408</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="pct">0.7%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="parent_ed">Not stated</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">302,241</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">19.1%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="cell-output-display">
+<div id="aaryhozkka" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#aaryhozkka table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#aaryhozkka thead, #aaryhozkka tbody, #aaryhozkka tfoot, #aaryhozkka tr, #aaryhozkka td, #aaryhozkka th {
+  border-style: none;
+}
+
+#aaryhozkka p {
+  margin: 0;
+  padding: 0;
+}
+
+#aaryhozkka .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 3px;
+  border-top-color: #D5D5D5;
+  border-right-style: solid;
+  border-right-width: 3px;
+  border-right-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 3px;
+  border-bottom-color: #D5D5D5;
+  border-left-style: solid;
+  border-left-width: 3px;
+  border-left-color: #D5D5D5;
+}
+
+#aaryhozkka .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#aaryhozkka .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#aaryhozkka .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#aaryhozkka .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#aaryhozkka .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+}
+
+#aaryhozkka .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#aaryhozkka .gt_col_heading {
+  color: #FFFFFF;
+  background-color: #004D80;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#aaryhozkka .gt_column_spanner_outer {
+  color: #FFFFFF;
+  background-color: #004D80;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#aaryhozkka .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#aaryhozkka .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#aaryhozkka .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#aaryhozkka .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#aaryhozkka .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#aaryhozkka .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+  vertical-align: middle;
+}
+
+#aaryhozkka .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#aaryhozkka .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#aaryhozkka .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D5D5D5;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: #D5D5D5;
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: #D5D5D5;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#aaryhozkka .gt_stub {
+  color: #FFFFFF;
+  background-color: #929292;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D5D5D5;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aaryhozkka .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#aaryhozkka .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#aaryhozkka .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#aaryhozkka .gt_summary_row {
+  color: #FFFFFF;
+  background-color: #5F5F5F;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aaryhozkka .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D5D5D5;
+}
+
+#aaryhozkka .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#aaryhozkka .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+}
+
+#aaryhozkka .gt_grand_summary_row {
+  color: #FFFFFF;
+  background-color: #929292;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aaryhozkka .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D5D5D5;
+}
+
+#aaryhozkka .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D5D5D5;
+}
+
+#aaryhozkka .gt_striped {
+  background-color: #F4F4F4;
+}
+
+#aaryhozkka .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D5D5D5;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D5D5D5;
+}
+
+#aaryhozkka .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#aaryhozkka .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aaryhozkka .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#aaryhozkka .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#aaryhozkka .gt_left {
+  text-align: left;
+}
+
+#aaryhozkka .gt_center {
+  text-align: center;
+}
+
+#aaryhozkka .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#aaryhozkka .gt_font_normal {
+  font-weight: normal;
+}
+
+#aaryhozkka .gt_font_bold {
+  font-weight: bold;
+}
+
+#aaryhozkka .gt_font_italic {
+  font-style: italic;
+}
+
+#aaryhozkka .gt_super {
+  font-size: 65%;
+}
+
+#aaryhozkka .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#aaryhozkka .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#aaryhozkka .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#aaryhozkka .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#aaryhozkka .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#aaryhozkka .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#aaryhozkka .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#aaryhozkka .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#aaryhozkka div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="child_ed" class="gt_col_heading gt_columns_bottom_border gt_left" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">Higher ed status</th>
+<th id="N" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">N</th>
+<th id="pct" class="gt_col_heading gt_columns_bottom_border gt_right" style="text-align: left;" data-quarto-table-cell-role="th" scope="col">pct</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="child_ed">Completed education</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="N">826,652</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="pct">52.3%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="child_ed">Undergoing education</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">51,141</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">3.2%</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" style="text-align: left;" headers="child_ed">Discontinued education</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="N">78,037</td>
+<td class="gt_row gt_right" style="text-align: left;" headers="pct">4.9%</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="child_ed">No registered education</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">624,676</td>
+<td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">39.5%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Of the 1,580,506 people in this data sample, more than half have completed some form of higher education. About half of the parents of the entire pool completed a vocational high school or college degree. There is no education status for almost 20% of parents.</p>
+<p>To make the plot you need to data frames, one for the nodes and one with the data. The nodes frame contains all the unique values of parent and child educational attainment, or for this chart, the nodes. The <code>sankey_plot_id</code> frame has the frequencies and parent-to-child paths we need for the sankey band widths. Make sure to render them each as a <code>data.frame</code>, as that’s the format needed for the sankey functions to work.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the sankey plot dfs</summary>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make the nodes data frame</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>nodes_df <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ed_attain_allage <span class="sc">%&gt;%</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(parent_ed, child_ed) <span class="sc">%&gt;%</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">"parent_ed"</span>, <span class="st">"child_ed"</span>),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">"col_name"</span>, <span class="at">values_to =</span> <span class="st">"name_match"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># this removes dupes keeps only name match</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># may need to clean names for labels to look nice</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">"name_match"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>())</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># create ID df for order of nodes from ed_path_freqs &amp; nodes; -1 ensures 0 index</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>sankey_plot_id <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(ed_attain_allage <span class="sc">%&gt;%</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">IDIn =</span> <span class="fu">match</span>(parent_ed, nodes_df<span class="sc">$</span>name_match) <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">IDOut =</span> <span class="fu">match</span>(child_ed, nodes_df<span class="sc">$</span>name_match)<span class="sc">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now we make the plot. We call the links from the df with the frequencies and the nodes fro the nodes df. Font size and family can be changed, as can the node widths and other aesthetic features. The <code>sinksRight</code> call places the data labels on the right side node, the end stage, outside the graph. There is no way to put the left-side labels outside the graph. Changing the size accommodates a title and caption added using <code>htmlwidgets</code>. Louise Sinks explained in her post that leaving the plot in native size from the <code>sankeyNetwork</code> call could truncate parts of the plot if you add a title.</p>
+<p>One important thing it took some searching to solve was the <a href="https://stackoverflow.com/a/46521992/10226848">order of the nodes</a>. You can see in the data cleaning that I set them up as factors with the levels I wanted them ordered. It worked in the <code>gt</code> tables but initially not in the sankey. It turns out you need to add <code>iterations = 0</code> to keep the auto-positioning from running.</p>
+<p>If you hover over the node bands of the chart, you can see the total number for that path.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the sankey plot</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the plot as an object</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>edattain_sankey <span class="ot">&lt;-</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sankeyNetwork</span>(</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Links =</span> sankey_plot_id, <span class="at">Nodes =</span> nodes_df, </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Source =</span> <span class="st">"IDIn"</span>, <span class="at">Target =</span> <span class="st">"IDOut"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># "Freq" from freq df, "name" from nodes_df </span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Value =</span> <span class="st">"N"</span>, <span class="at">NodeID =</span> <span class="st">"name_match"</span>, </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">sinksRight =</span> <span class="cn">FALSE</span>, <span class="at">iterations =</span> <span class="dv">0</span>, </span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">600</span>,  <span class="at">height =</span> <span class="dv">400</span>,</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontSize =</span> <span class="dv">16</span>, <span class="at">fontFamily =</span> <span class="st">"Arial"</span>, <span class="at">nodeWidth =</span> <span class="dv">20</span>)</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="do">## add title and caption to plot object</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>edattain_sankey <span class="ot">&lt;-</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  htmlwidgets<span class="sc">::</span><span class="fu">prependContent</span>(</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    edattain_sankey, htmltools<span class="sc">::</span>tags<span class="sc">$</span><span class="fu">h4</span>(<span class="st">"Higher education pathways for people depending on parent's educational attainment"</span>))</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>edattain_sankey <span class="ot">&lt;-</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>  htmlwidgets<span class="sc">::</span><span class="fu">appendContent</span>(</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    edattain_sankey, htmltools<span class="sc">::</span>tags<span class="sc">$</span><span class="fu">em</span>(<span class="st">"Data from Danmarks Statistik table STATUSV2 via danstat package"</span>))</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>edattain_sankey</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<h4 class="anchored">Higher education pathways for people depending on parent's educational attainment</h4>
+<div id="htmlwidget-99f1bc8c40fd5849d2ef" style="width:100%;height:433px;" class="sankeyNetwork html-widget"></div>
+<em>Data from Danmarks Statistik table STATUSV2 via danstat package</em>
+<script type="application/json" data-for="htmlwidget-99f1bc8c40fd5849d2ef">{"x":{"links":{"source":[0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9],"target":[1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12],"value":[46572,16158,237502,42090,184619,8238,96503,8509,186166,4527,1491,17886,3279,13071,785,6133,688,3248,9516,2500,32888,4887,16824,772,6472,413,3719,117370,12436,274390,25226,67829,2331,14975,798,109108]},"nodes":{"name":["Primary","Completed education","HS-Academic","HS-Vocational","Short-cycle college","Bachelor-Vocational","Bachelor-Academic","Masters","PhD","Not stated","Undergoing education","Discontinued education","No registered education"],"group":["Primary","Completed education","HS-Academic","HS-Vocational","Short-cycle college","Bachelor-Vocational","Bachelor-Academic","Masters","PhD","Not stated","Undergoing education","Discontinued education","No registered education"]},"options":{"NodeID":"name_match","NodeGroup":"name_match","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":16,"fontFamily":"Arial","nodeWidth":20,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":0,"sinksRight":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>So what do we see? Well for parents who stopped out at the primary level, most of their kids are not recorded as having registered for higher education. Same for parents who stopped out at a vocational secondary diploma. We also see a lot of parents without any educational attainment recorded. But most of their kids have either completed higher education or started but then discontinued.</p>
+<p>Some of this could be an artifact of the Danish personal registry system not having complete parental education records for the upper end of the 25-45 age pool here, or for parents of immigrant or 1st generation born in Denmark. Some of it could be a product of the older students here being less likely to complete higher education, something we’ve seen in earlier posts.</p>
+<p>I’ll break down by age groups in the “complicated” prompt. Sadly we don’t have a table that shows both parent education and parent or child national origin status. I’d love to have access to micro-data to answer these more detailed questions; that would mean working for StatBank, the Education Ministry, or the EduQuant project (if it gets new funding). A man can dream…</p>
+<p><em>created and posted April 18, 2025</em></p>
 
 
 </section>
@@ -1852,7 +3020,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","loop":false,"openEffect":"zoom","descPosition":"bottom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","loop":false,"descPosition":"bottom","closeEffect":"zoom","openEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
