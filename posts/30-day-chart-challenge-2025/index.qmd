@@ -2,7 +2,7 @@
 title: "30 Day Chart Challenge 2025"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
-date: '2025-04-19'
+date: '2025-04-20'
 categories: [post, rstats, ggplot, dataviz, chartchallenge, denmark, education, higher education]
 image: "prompts_2025.png"
 toc: true
@@ -1824,7 +1824,7 @@ waffleplot <- function(plotdf, filter_expr) {
 
 Now that we have the function, it's easy to call. In this case we pass the data frame and age group filter. I suppose I could have added the dataframe name in the function, but since I may want to reuse the function I kept some things as generic as possible.
 
-Calling it simple: `waffleplot(ed_attain_waffle, "child_age_group == '25-29'")`. As you can see in the code below, we'll change the age group for each call, creating a plot object each time that we can edit before stitching together for the final plot.
+Calling the function is simple: `waffleplot(ed_attain_waffle, "child_age_group == '25-29'")`. As you can see in the code below, we'll change the age group for each call, creating a plot object each time that we can edit before stitching together for the final plot.
 
 ```{r 15_3}
 #| warning: false
@@ -1870,13 +1870,15 @@ plot_2529 + plot_3034 +  plot_3539 + plot_4045 +
 
 ![](images/prompt15_2025.jpg){fig-alt="waffle plot displaying higher ed completion by age group and parent education"}
 
-One complication I could not adequately solve is the size of the x-axis labels. There's something in the `facet_wrap` call to put together the parent ed levels that does not allow me to change the size the way I could in a stand-alone plot. Not sure why, so we'll have to live with the truncated axis lables. Otherwise I'm happy with the output.
+One complication I could not adequately solve is the size of the x-axis labels. There's something in the `facet_wrap` call to put together the parent ed levels that does not allow me to change the size the way I could in a stand-alone plot. Not sure why, so we'll have to live with the truncated axis labels. Otherwise I'm happy with the output.
+
+Also, for the legend, there was no way I know of to include it in only one plot that didn't change the proportions of that plot relative to the others, throwing off the symmetry in the stitched-together plots. So the legend is in every plot. I don't think it's possible to include it as an annotation or extra object in the stitched plot, but maybe there's a hack I don't know of in `patchwork`.
 
 A few things jump out here.
 
 -   First, the pattern is the same regardless of age. If your parents have higher levels of education, you are more likely to complete higher education. I know from my career doing higher ed policy analysis in the US, that the pattern is the same there.
--   Not surprisingly, the younger age group, 25-29, includes more people who are still in the proces of finishing their college education (the orange blocks).
--   The discontinued rates seemed similar-ish.
+-   Not surprisingly the younger age group, 25-29, includes more people who are still in the proces of finishing their college education (the orange blocks).
+-   The discontinued rates (blue blocks) seemed similar-ish across age-groups, so the likelihood of stopping out does not look to be affected by parental education level.
 
 Of course if this were a more in-depth report there'd be some descriptive tables to set the stage. And again, if I had access to the micro-data I'd be running regression models to explain factors leading to higher completion rates.
 

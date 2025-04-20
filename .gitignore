@@ -2,5 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
-
+*.Rda
+~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/*Rda
+~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/ed_attain_main.Rda
+~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/nodes_df.Rda
+~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/sankey_plot_id.Rda
 /.quarto/
