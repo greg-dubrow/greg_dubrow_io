@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="gregers kjerulf dubrow">
-<meta name="dcterms.date" content="2025-04-06">
+<meta name="dcterms.date" content="2025-04-19">
 <meta name="description" content="Let’s make some charts!">
 
 <title>30 Day Chart Challenge 2025 – gregers kjerulf dubrow</title>
@@ -238,7 +238,7 @@ cookieconsent.run({
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 6, 2025</p>
+        <p class="date">April 19, 2025</p>
       </div>
     </div>
     
@@ -264,6 +264,7 @@ cookieconsent.run({
   <li><a href="#prompts7and8" id="toc-prompts7and8" class="nav-link" data-scroll-target="#prompts7and8">Prompts #7 &amp; 8 - Outliers &amp; Histogram</a></li>
   <li><a href="#prompt9" id="toc-prompt9" class="nav-link" data-scroll-target="#prompt9">Prompt #9 - Diverging</a></li>
   <li><a href="#prompt14" id="toc-prompt14" class="nav-link" data-scroll-target="#prompt14">Prompt #14 - Kinship</a></li>
+  <li><a href="#prompt15" id="toc-prompt15" class="nav-link" data-scroll-target="#prompt15">Prompt #15 - Complicated</a></li>
   </ul>
 </nav>
     </div>
@@ -1405,7 +1406,7 @@ cookieconsent.run({
 <section id="prompt14" class="level2">
 <h2 class="anchored" data-anchor-id="prompt14">Prompt #14 - Kinship</h2>
 <p>Full disclosure…depending on when you read this, you may or may not see any posts between this one and prompt 9. As you can see by the “created and posted” date, if/when I’ve backfilled some prompts between 9 and here, this was the next post I completed after 9. Life gets in the way sometimes.</p>
-<p>Anyway, I knew when the prompts came out that for kinship I wanted to make a sankey diagram to look at educational pathways depending on parent education. A sankey is a form of network graph, and I wanted to see the connection, or network effect, of parent education on their children’s educational attainment.</p>
+<p>Anyway, I knew when the prompts came out that for kinship that I’d want to make a sankey diagram to look at educational pathways depending on parent education. A sankey is a form of network graph, and I wanted to see the connection, or network effect, of parent education on their children’s educational attainment.</p>
 <p><a href="https://www.statbank.dk/statbank5a/default.asp?w=1728">StatBank’s</a> education section does have some tables for parent <code>-&gt;</code> child education, but they aren’t as disaggregated as I’d like. So to see educational outcomes by parent educational attainment you have to choose whether to look at secondary outcomes or higher ed outcomes. We’re going here with higher ed, so it’s table <em>STATUSV2: 25-45 year-olds, by status for higher education, age and parents attainment</em>.</p>
 <p>Slight aside…there is micro-data that can answer the question as detailed as I would like. The <a href="https://www.economics.ku.dk/research/externally-funded-research_new/uddankvant/">EduQuant project</a>, located in the Economic Department at Københavns Universitet and funded by the Danish Education Ministry, has access to that data and has produced some work on <a href="https://researchprofiles.ku.dk/en/persons/kristian-bernt-karlson/publications/">social mobility and education</a>.</p>
 <p>There are a few ways to do sankeys in r. After some trial-and-error, I settled on using the <a href="https://christophergandrud.github.io/networkD3/"><code>networkD3</code> package</a>. A big reason being that the data comes aggregated, and some other packages like <code>ggsankey</code> and <code>ggalluvial</code> weren’t handling the data as well as <code>networkD3</code>.</p>
@@ -1501,23 +1502,23 @@ cookieconsent.run({
 <div class="quarto-layout-row">
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="cell-output-display">
-<div id="jlpqgbveat" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#jlpqgbveat table {
+<div id="prdlpwcckj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#prdlpwcckj table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#jlpqgbveat thead, #jlpqgbveat tbody, #jlpqgbveat tfoot, #jlpqgbveat tr, #jlpqgbveat td, #jlpqgbveat th {
+#prdlpwcckj thead, #prdlpwcckj tbody, #prdlpwcckj tfoot, #prdlpwcckj tr, #prdlpwcckj td, #prdlpwcckj th {
   border-style: none;
 }
 
-#jlpqgbveat p {
+#prdlpwcckj p {
   margin: 0;
   padding: 0;
 }
 
-#jlpqgbveat .gt_table {
+#prdlpwcckj .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1543,12 +1544,12 @@ cookieconsent.run({
   border-left-color: #D5D5D5;
 }
 
-#jlpqgbveat .gt_caption {
+#prdlpwcckj .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#jlpqgbveat .gt_title {
+#prdlpwcckj .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1560,7 +1561,7 @@ cookieconsent.run({
   border-bottom-width: 0;
 }
 
-#jlpqgbveat .gt_subtitle {
+#prdlpwcckj .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1572,7 +1573,7 @@ cookieconsent.run({
   border-top-width: 0;
 }
 
-#jlpqgbveat .gt_heading {
+#prdlpwcckj .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1584,13 +1585,13 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#jlpqgbveat .gt_bottom_border {
+#prdlpwcckj .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
 }
 
-#jlpqgbveat .gt_col_headings {
+#prdlpwcckj .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -1605,7 +1606,7 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#jlpqgbveat .gt_col_heading {
+#prdlpwcckj .gt_col_heading {
   color: #FFFFFF;
   background-color: #004D80;
   font-size: 100%;
@@ -1625,7 +1626,7 @@ cookieconsent.run({
   overflow-x: hidden;
 }
 
-#jlpqgbveat .gt_column_spanner_outer {
+#prdlpwcckj .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #004D80;
   font-size: 100%;
@@ -1637,15 +1638,15 @@ cookieconsent.run({
   padding-right: 4px;
 }
 
-#jlpqgbveat .gt_column_spanner_outer:first-child {
+#prdlpwcckj .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#jlpqgbveat .gt_column_spanner_outer:last-child {
+#prdlpwcckj .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#jlpqgbveat .gt_column_spanner {
+#prdlpwcckj .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
@@ -1657,11 +1658,11 @@ cookieconsent.run({
   width: 100%;
 }
 
-#jlpqgbveat .gt_spanner_row {
+#prdlpwcckj .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#jlpqgbveat .gt_group_heading {
+#prdlpwcckj .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1687,7 +1688,7 @@ cookieconsent.run({
   text-align: left;
 }
 
-#jlpqgbveat .gt_empty_group_heading {
+#prdlpwcckj .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1702,15 +1703,15 @@ cookieconsent.run({
   vertical-align: middle;
 }
 
-#jlpqgbveat .gt_from_md > :first-child {
+#prdlpwcckj .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#jlpqgbveat .gt_from_md > :last-child {
+#prdlpwcckj .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#jlpqgbveat .gt_row {
+#prdlpwcckj .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1729,7 +1730,7 @@ cookieconsent.run({
   overflow-x: hidden;
 }
 
-#jlpqgbveat .gt_stub {
+#prdlpwcckj .gt_stub {
   color: #FFFFFF;
   background-color: #929292;
   font-size: 100%;
@@ -1742,7 +1743,7 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#jlpqgbveat .gt_stub_row_group {
+#prdlpwcckj .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1756,15 +1757,15 @@ cookieconsent.run({
   vertical-align: top;
 }
 
-#jlpqgbveat .gt_row_group_first td {
+#prdlpwcckj .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#jlpqgbveat .gt_row_group_first th {
+#prdlpwcckj .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#jlpqgbveat .gt_summary_row {
+#prdlpwcckj .gt_summary_row {
   color: #FFFFFF;
   background-color: #5F5F5F;
   text-transform: inherit;
@@ -1774,16 +1775,16 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#jlpqgbveat .gt_first_summary_row {
+#prdlpwcckj .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D5D5D5;
 }
 
-#jlpqgbveat .gt_first_summary_row.thick {
+#prdlpwcckj .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#jlpqgbveat .gt_last_summary_row {
+#prdlpwcckj .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1793,7 +1794,7 @@ cookieconsent.run({
   border-bottom-color: #D5D5D5;
 }
 
-#jlpqgbveat .gt_grand_summary_row {
+#prdlpwcckj .gt_grand_summary_row {
   color: #FFFFFF;
   background-color: #929292;
   text-transform: inherit;
@@ -1803,7 +1804,7 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#jlpqgbveat .gt_first_grand_summary_row {
+#prdlpwcckj .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1813,7 +1814,7 @@ cookieconsent.run({
   border-top-color: #D5D5D5;
 }
 
-#jlpqgbveat .gt_last_grand_summary_row_top {
+#prdlpwcckj .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1823,11 +1824,11 @@ cookieconsent.run({
   border-bottom-color: #D5D5D5;
 }
 
-#jlpqgbveat .gt_striped {
+#prdlpwcckj .gt_striped {
   background-color: #F4F4F4;
 }
 
-#jlpqgbveat .gt_table_body {
+#prdlpwcckj .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -1836,7 +1837,7 @@ cookieconsent.run({
   border-bottom-color: #D5D5D5;
 }
 
-#jlpqgbveat .gt_footnotes {
+#prdlpwcckj .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1850,7 +1851,7 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#jlpqgbveat .gt_footnote {
+#prdlpwcckj .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1859,7 +1860,7 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#jlpqgbveat .gt_sourcenotes {
+#prdlpwcckj .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1873,7 +1874,7 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#jlpqgbveat .gt_sourcenote {
+#prdlpwcckj .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1881,72 +1882,72 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#jlpqgbveat .gt_left {
+#prdlpwcckj .gt_left {
   text-align: left;
 }
 
-#jlpqgbveat .gt_center {
+#prdlpwcckj .gt_center {
   text-align: center;
 }
 
-#jlpqgbveat .gt_right {
+#prdlpwcckj .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#jlpqgbveat .gt_font_normal {
+#prdlpwcckj .gt_font_normal {
   font-weight: normal;
 }
 
-#jlpqgbveat .gt_font_bold {
+#prdlpwcckj .gt_font_bold {
   font-weight: bold;
 }
 
-#jlpqgbveat .gt_font_italic {
+#prdlpwcckj .gt_font_italic {
   font-style: italic;
 }
 
-#jlpqgbveat .gt_super {
+#prdlpwcckj .gt_super {
   font-size: 65%;
 }
 
-#jlpqgbveat .gt_footnote_marks {
+#prdlpwcckj .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#jlpqgbveat .gt_asterisk {
+#prdlpwcckj .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#jlpqgbveat .gt_indent_1 {
+#prdlpwcckj .gt_indent_1 {
   text-indent: 5px;
 }
 
-#jlpqgbveat .gt_indent_2 {
+#prdlpwcckj .gt_indent_2 {
   text-indent: 10px;
 }
 
-#jlpqgbveat .gt_indent_3 {
+#prdlpwcckj .gt_indent_3 {
   text-indent: 15px;
 }
 
-#jlpqgbveat .gt_indent_4 {
+#prdlpwcckj .gt_indent_4 {
   text-indent: 20px;
 }
 
-#jlpqgbveat .gt_indent_5 {
+#prdlpwcckj .gt_indent_5 {
   text-indent: 25px;
 }
 
-#jlpqgbveat .katex-display {
+#prdlpwcckj .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#jlpqgbveat div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#prdlpwcckj div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1981,17 +1982,17 @@ cookieconsent.run({
 <td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">0.0%</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">Short-cycle college</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">Short-cycle coll</td>
 <td class="gt_row gt_right" style="text-align: left;" headers="N">75,482</td>
 <td class="gt_row gt_right" style="text-align: left;" headers="pct">4.8%</td>
 </tr>
 <tr class="even">
-<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="parent_ed">Bachelor-Vocational</td>
+<td class="gt_row gt_left gt_striped" style="text-align: left;" headers="parent_ed">Bach-Vocational</td>
 <td class="gt_row gt_right gt_striped" style="text-align: left;" headers="N">282,343</td>
 <td class="gt_row gt_right gt_striped" style="text-align: left;" headers="pct">17.9%</td>
 </tr>
 <tr class="odd">
-<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">Bachelor-Academic</td>
+<td class="gt_row gt_left" style="text-align: left;" headers="parent_ed">Bach-Academic</td>
 <td class="gt_row gt_right" style="text-align: left;" headers="N">12,126</td>
 <td class="gt_row gt_right" style="text-align: left;" headers="pct">0.8%</td>
 </tr>
@@ -2018,23 +2019,23 @@ cookieconsent.run({
 </div>
 <div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
 <div class="cell-output-display">
-<div id="aaryhozkka" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#aaryhozkka table {
+<div id="zrghutkrvn" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zrghutkrvn table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#aaryhozkka thead, #aaryhozkka tbody, #aaryhozkka tfoot, #aaryhozkka tr, #aaryhozkka td, #aaryhozkka th {
+#zrghutkrvn thead, #zrghutkrvn tbody, #zrghutkrvn tfoot, #zrghutkrvn tr, #zrghutkrvn td, #zrghutkrvn th {
   border-style: none;
 }
 
-#aaryhozkka p {
+#zrghutkrvn p {
   margin: 0;
   padding: 0;
 }
 
-#aaryhozkka .gt_table {
+#zrghutkrvn .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2060,12 +2061,12 @@ cookieconsent.run({
   border-left-color: #D5D5D5;
 }
 
-#aaryhozkka .gt_caption {
+#zrghutkrvn .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#aaryhozkka .gt_title {
+#zrghutkrvn .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2077,7 +2078,7 @@ cookieconsent.run({
   border-bottom-width: 0;
 }
 
-#aaryhozkka .gt_subtitle {
+#zrghutkrvn .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2089,7 +2090,7 @@ cookieconsent.run({
   border-top-width: 0;
 }
 
-#aaryhozkka .gt_heading {
+#zrghutkrvn .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2101,13 +2102,13 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#aaryhozkka .gt_bottom_border {
+#zrghutkrvn .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
 }
 
-#aaryhozkka .gt_col_headings {
+#zrghutkrvn .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -2122,7 +2123,7 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#aaryhozkka .gt_col_heading {
+#zrghutkrvn .gt_col_heading {
   color: #FFFFFF;
   background-color: #004D80;
   font-size: 100%;
@@ -2142,7 +2143,7 @@ cookieconsent.run({
   overflow-x: hidden;
 }
 
-#aaryhozkka .gt_column_spanner_outer {
+#zrghutkrvn .gt_column_spanner_outer {
   color: #FFFFFF;
   background-color: #004D80;
   font-size: 100%;
@@ -2154,15 +2155,15 @@ cookieconsent.run({
   padding-right: 4px;
 }
 
-#aaryhozkka .gt_column_spanner_outer:first-child {
+#zrghutkrvn .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#aaryhozkka .gt_column_spanner_outer:last-child {
+#zrghutkrvn .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#aaryhozkka .gt_column_spanner {
+#zrghutkrvn .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D5D5D5;
@@ -2174,11 +2175,11 @@ cookieconsent.run({
   width: 100%;
 }
 
-#aaryhozkka .gt_spanner_row {
+#zrghutkrvn .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#aaryhozkka .gt_group_heading {
+#zrghutkrvn .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2204,7 +2205,7 @@ cookieconsent.run({
   text-align: left;
 }
 
-#aaryhozkka .gt_empty_group_heading {
+#zrghutkrvn .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2219,15 +2220,15 @@ cookieconsent.run({
   vertical-align: middle;
 }
 
-#aaryhozkka .gt_from_md > :first-child {
+#zrghutkrvn .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#aaryhozkka .gt_from_md > :last-child {
+#zrghutkrvn .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#aaryhozkka .gt_row {
+#zrghutkrvn .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2246,7 +2247,7 @@ cookieconsent.run({
   overflow-x: hidden;
 }
 
-#aaryhozkka .gt_stub {
+#zrghutkrvn .gt_stub {
   color: #FFFFFF;
   background-color: #929292;
   font-size: 100%;
@@ -2259,7 +2260,7 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#aaryhozkka .gt_stub_row_group {
+#zrghutkrvn .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2273,15 +2274,15 @@ cookieconsent.run({
   vertical-align: top;
 }
 
-#aaryhozkka .gt_row_group_first td {
+#zrghutkrvn .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#aaryhozkka .gt_row_group_first th {
+#zrghutkrvn .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#aaryhozkka .gt_summary_row {
+#zrghutkrvn .gt_summary_row {
   color: #FFFFFF;
   background-color: #5F5F5F;
   text-transform: inherit;
@@ -2291,16 +2292,16 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#aaryhozkka .gt_first_summary_row {
+#zrghutkrvn .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D5D5D5;
 }
 
-#aaryhozkka .gt_first_summary_row.thick {
+#zrghutkrvn .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#aaryhozkka .gt_last_summary_row {
+#zrghutkrvn .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2310,7 +2311,7 @@ cookieconsent.run({
   border-bottom-color: #D5D5D5;
 }
 
-#aaryhozkka .gt_grand_summary_row {
+#zrghutkrvn .gt_grand_summary_row {
   color: #FFFFFF;
   background-color: #929292;
   text-transform: inherit;
@@ -2320,7 +2321,7 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#aaryhozkka .gt_first_grand_summary_row {
+#zrghutkrvn .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2330,7 +2331,7 @@ cookieconsent.run({
   border-top-color: #D5D5D5;
 }
 
-#aaryhozkka .gt_last_grand_summary_row_top {
+#zrghutkrvn .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2340,11 +2341,11 @@ cookieconsent.run({
   border-bottom-color: #D5D5D5;
 }
 
-#aaryhozkka .gt_striped {
+#zrghutkrvn .gt_striped {
   background-color: #F4F4F4;
 }
 
-#aaryhozkka .gt_table_body {
+#zrghutkrvn .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D5D5D5;
@@ -2353,7 +2354,7 @@ cookieconsent.run({
   border-bottom-color: #D5D5D5;
 }
 
-#aaryhozkka .gt_footnotes {
+#zrghutkrvn .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2367,7 +2368,7 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#aaryhozkka .gt_footnote {
+#zrghutkrvn .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2376,7 +2377,7 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#aaryhozkka .gt_sourcenotes {
+#zrghutkrvn .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2390,7 +2391,7 @@ cookieconsent.run({
   border-right-color: #D3D3D3;
 }
 
-#aaryhozkka .gt_sourcenote {
+#zrghutkrvn .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2398,72 +2399,72 @@ cookieconsent.run({
   padding-right: 5px;
 }
 
-#aaryhozkka .gt_left {
+#zrghutkrvn .gt_left {
   text-align: left;
 }
 
-#aaryhozkka .gt_center {
+#zrghutkrvn .gt_center {
   text-align: center;
 }
 
-#aaryhozkka .gt_right {
+#zrghutkrvn .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#aaryhozkka .gt_font_normal {
+#zrghutkrvn .gt_font_normal {
   font-weight: normal;
 }
 
-#aaryhozkka .gt_font_bold {
+#zrghutkrvn .gt_font_bold {
   font-weight: bold;
 }
 
-#aaryhozkka .gt_font_italic {
+#zrghutkrvn .gt_font_italic {
   font-style: italic;
 }
 
-#aaryhozkka .gt_super {
+#zrghutkrvn .gt_super {
   font-size: 65%;
 }
 
-#aaryhozkka .gt_footnote_marks {
+#zrghutkrvn .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#aaryhozkka .gt_asterisk {
+#zrghutkrvn .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#aaryhozkka .gt_indent_1 {
+#zrghutkrvn .gt_indent_1 {
   text-indent: 5px;
 }
 
-#aaryhozkka .gt_indent_2 {
+#zrghutkrvn .gt_indent_2 {
   text-indent: 10px;
 }
 
-#aaryhozkka .gt_indent_3 {
+#zrghutkrvn .gt_indent_3 {
   text-indent: 15px;
 }
 
-#aaryhozkka .gt_indent_4 {
+#zrghutkrvn .gt_indent_4 {
   text-indent: 20px;
 }
 
-#aaryhozkka .gt_indent_5 {
+#zrghutkrvn .gt_indent_5 {
   text-indent: 25px;
 }
 
-#aaryhozkka .katex-display {
+#zrghutkrvn .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#aaryhozkka div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#zrghutkrvn div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -2555,15 +2556,175 @@ cookieconsent.run({
 </details>
 <div class="cell-output-display">
 <h4 class="anchored">Higher education pathways for people depending on parent's educational attainment</h4>
-<div id="htmlwidget-99f1bc8c40fd5849d2ef" style="width:100%;height:433px;" class="sankeyNetwork html-widget"></div>
+<div id="htmlwidget-874ef86ab9d41fc89921" style="width:100%;height:433px;" class="sankeyNetwork html-widget"></div>
 <em>Data from Danmarks Statistik table STATUSV2 via danstat package</em>
-<script type="application/json" data-for="htmlwidget-99f1bc8c40fd5849d2ef">{"x":{"links":{"source":[0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9],"target":[1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12],"value":[46572,16158,237502,42090,184619,8238,96503,8509,186166,4527,1491,17886,3279,13071,785,6133,688,3248,9516,2500,32888,4887,16824,772,6472,413,3719,117370,12436,274390,25226,67829,2331,14975,798,109108]},"nodes":{"name":["Primary","Completed education","HS-Academic","HS-Vocational","Short-cycle college","Bachelor-Vocational","Bachelor-Academic","Masters","PhD","Not stated","Undergoing education","Discontinued education","No registered education"],"group":["Primary","Completed education","HS-Academic","HS-Vocational","Short-cycle college","Bachelor-Vocational","Bachelor-Academic","Masters","PhD","Not stated","Undergoing education","Discontinued education","No registered education"]},"options":{"NodeID":"name_match","NodeGroup":"name_match","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":16,"fontFamily":"Arial","nodeWidth":20,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":0,"sinksRight":false}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-874ef86ab9d41fc89921">{"x":{"links":{"source":[0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9,0,2,3,4,5,6,7,8,9],"target":[1,1,1,1,1,1,1,1,1,10,10,10,10,10,10,10,10,10,11,11,11,11,11,11,11,11,11,12,12,12,12,12,12,12,12,12],"value":[46572,16158,237502,42090,184619,8238,96503,8509,186166,4527,1491,17886,3279,13071,785,6133,688,3248,9516,2500,32888,4887,16824,772,6472,413,3719,117370,12436,274390,25226,67829,2331,14975,798,109108]},"nodes":{"name":["Primary","Completed education","HS-Academic","HS-Vocational","Short-cycle college","Bachelor-Vocational","Bachelor-Academic","Masters","PhD","Not stated","Undergoing education","Discontinued education","No registered education"],"group":["Primary","Completed education","HS-Academic","HS-Vocational","Short-cycle college","Bachelor-Vocational","Bachelor-Academic","Masters","PhD","Not stated","Undergoing education","Discontinued education","No registered education"]},"options":{"NodeID":"name_match","NodeGroup":"name_match","LinkGroup":null,"colourScale":"d3.scaleOrdinal(d3.schemeCategory20);","fontSize":16,"fontFamily":"Arial","nodeWidth":20,"nodePadding":10,"units":"","margin":{"top":null,"right":null,"bottom":null,"left":null},"iterations":0,"sinksRight":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>So what do we see? Well for parents who stopped out at the primary level, most of their kids are not recorded as having registered for higher education. Same for parents who stopped out at a vocational secondary diploma. We also see a lot of parents without any educational attainment recorded. But most of their kids have either completed higher education or started but then discontinued.</p>
 <p>Some of this could be an artifact of the Danish personal registry system not having complete parental education records for the upper end of the 25-45 age pool here, or for parents of immigrant or 1st generation born in Denmark. Some of it could be a product of the older students here being less likely to complete higher education, something we’ve seen in earlier posts.</p>
 <p>I’ll break down by age groups in the “complicated” prompt. Sadly we don’t have a table that shows both parent education and parent or child national origin status. I’d love to have access to micro-data to answer these more detailed questions; that would mean working for StatBank, the Education Ministry, or the EduQuant project (if it gets new funding). A man can dream…</p>
 <p><em>created and posted April 18, 2025</em></p>
+</section>
+<section id="prompt15" class="level2">
+<h2 class="anchored" data-anchor-id="prompt15">Prompt #15 - Complicated</h2>
+<p>I took complicated to mean trying to visualize multiple dimensions. As I mentioned in prompt 14 I wanted to look at higher education completion by parent educational attainment, but broken down a bit more by age groups.</p>
+<p>The chart for this prompt will be a waffle, which I did last year for <a href="https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompts3and4">prompts 3 &amp; 4</a>. We’ll use the <a href="https://github.com/hrbrmstr/waffle"><code>waffle</code> package</a> which has a built-in geom to make waffles. Well, not make actual waffles, but a waffle plot. Sorry if this is making you hungry for waffles.</p>
+<p>We’ll use the same data as prompt 14, so no need to redo the code to get it. We can get straight to making the charts. There was a bit of complication in making the charts, as I’ll explain.</p>
+<p>We do need to create a dataframe to make the plot, and that’s where the first complication came in. Because of rounding, some plots went to 101, some stopped at 99. So I needed to do a bit of cleaning to make each plot even out at 100. I suppose I could have done a more nuanced rounding with an <code>ifelse</code> but I likely still would have had to examine the plot and check the data.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the waffle plot data</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># to do tidyverse things</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidylog) <span class="co"># to get a log of what's happening to the data</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(waffle) <span class="co"># to make the waffle plots</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co"># stitching together the final plots</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># using the ed_attain_main df from prompt 14</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>ed_attain_waffle <span class="ot">&lt;-</span> ed_attain_main <span class="sc">%&gt;%</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>parent_ed <span class="sc">==</span> <span class="st">"Total"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>parent_ed <span class="sc">==</span> <span class="st">"Qualifying educ paths"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>child_ed <span class="sc">==</span> <span class="st">"Total"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>child_age_group <span class="sc">==</span> <span class="st">"Total"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(child_age_group, parent_ed) <span class="sc">%&gt;%</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_grp_par_ed_sum =</span> <span class="fu">sum</span>(N)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(child_age_group, parent_ed, child_ed) <span class="sc">%&gt;%</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_sum =</span> <span class="fu">sum</span>(N)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct =</span> age_par_ed_child_ed_sum <span class="sc">/</span> age_grp_par_ed_sum) <span class="sc">%&gt;%</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span> <span class="fu">round</span>(age_par_ed_child_ed_pct, <span class="dv">2</span>) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">distinct</span>(parent_ed, child_age_group, child_ed, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>child_age, <span class="sc">-</span>N) <span class="sc">%&gt;%</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">parent_ed =</span> <span class="fu">factor</span>(parent_ed,</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Primary"</span>, <span class="st">"HS-Vocational"</span>, <span class="st">"HS-Academic"</span>, <span class="st">"Short-cycle coll"</span>,</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Bach-Vocational"</span>, <span class="st">"Bach-Academic"</span>, <span class="st">"Masters"</span>, <span class="st">"PhD"</span>, <span class="st">"Not stated"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">child_ed =</span> <span class="fu">factor</span>(child_ed,</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Completed education"</span>, <span class="st">"Undergoing education"</span>, <span class="st">"Discontinued education"</span>,</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>            <span class="st">"No registered education"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># clean up pct vals to make charts even out</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"HS-Vocational"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Completed education"</span> <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"25-29"</span>,</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>                <span class="dv">40</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Short-cycle coll"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"No registered education"</span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"25-29"</span>, <span class="dv">31</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Masters"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Completed education"</span> <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"25-29"</span>,</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>        <span class="dv">69</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"HS-Academic"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Discontinued education"</span></span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"30-34"</span>, <span class="dv">9</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Short-cycle coll"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Completed education"</span></span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"30-34"</span>, <span class="dv">60</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"PhD"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Discontinued education"</span></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"30-34"</span>, <span class="dv">4</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Primary"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"No registered education"</span></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"35-39"</span>, <span class="dv">68</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"HS-Academic"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"No registered education"</span></span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"35-39"</span>, <span class="dv">39</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Short-cycle coll"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Discontinued education"</span></span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"35-39"</span>, <span class="dv">7</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Bach-Vocational"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Discontinued education"</span></span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"35-39"</span>, <span class="dv">5</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Primary"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"No registered education"</span></span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"40-45"</span>, <span class="dv">67</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"HS-Academic"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"No registered education"</span></span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"40-45"</span>, <span class="dv">39</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Bach-Vocational"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Undergoing education"</span></span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"40-45"</span>, <span class="dv">1</span>, age_par_ed_child_ed_pct2)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">age_par_ed_child_ed_pct2 =</span></span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>            <span class="fu">ifelse</span>(parent_ed <span class="sc">==</span> <span class="st">"Not stated"</span> <span class="sc">&amp;</span> child_ed <span class="sc">==</span> <span class="st">"Undergoing education"</span></span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a>                <span class="sc">&amp;</span> child_age_group <span class="sc">==</span> <span class="st">"40-45"</span>, <span class="dv">1</span>, age_par_ed_child_ed_pct2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>If we are making more than one plot with the same variables, do we copy-paste-amend the code?</p>
+<p>Not if we can help it.</p>
+<p>Let’s make the basic plot into a function to limit the amount of overall code and chance for error. What we’ll do here is add a filter expression to the function call.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the plot function</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>waffleplot <span class="ot">&lt;-</span> <span class="cf">function</span>(plotdf, filter_expr) {</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert the string expression to an actual R expression</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    filter_expr <span class="ot">&lt;-</span> rlang<span class="sc">::</span><span class="fu">parse_expr</span>(filter_expr)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter the data</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    filtered_df <span class="ot">&lt;-</span> plotdf <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!!</span>filter_expr)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the plot</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(filtered_df, (<span class="fu">aes</span>(<span class="at">fill =</span> child_ed, <span class="at">values =</span> age_par_ed_child_ed_pct2))) <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_waffle</span>(<span class="at">na.rm=</span><span class="cn">TRUE</span>, <span class="at">n_rows=</span><span class="dv">10</span>, <span class="at">flip=</span><span class="cn">TRUE</span>, <span class="at">size =</span> <span class="fl">0.33</span>, <span class="at">colour =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="sc">~</span>parent_ed, <span class="at">nrow=</span><span class="dv">1</span>,<span class="at">strip.position =</span> <span class="st">"bottom"</span>, <span class="at">scales =</span> <span class="st">"free_x"</span>) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> ) <span class="sc">+</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(x) x <span class="sc">*</span> <span class="dv">10</span>, <span class="co"># make this multipler the same as n_rows</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">expand =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>, <span class="at">legend.justification =</span> <span class="st">"left"</span>,</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.spacing.x =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">'cm'</span>),</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.key.width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">'cm'</span>), <span class="at">legend.margin=</span><span class="fu">margin</span>(<span class="sc">-</span><span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>            <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>), <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>            <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">guides</span>(<span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">label.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>            <span class="at">title =</span> <span class="st">"Higher education completion status"</span>, <span class="at">title.position =</span> <span class="st">"top"</span>))</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Now that we have the function, it’s easy to call. In this case we pass the data frame and age group filter. I suppose I could have added the dataframe name in the function, but since I may want to reuse the function I kept some things as generic as possible.</p>
+<p>Calling it simple: <code>waffleplot(ed_attain_waffle, "child_age_group == '25-29'")</code>. As you can see in the code below, we’ll change the age group for each call, creating a plot object each time that we can edit before stitching together for the final plot.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show code for making the plots</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make each individual plot</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plot_2529 <span class="ot">&lt;-</span> <span class="fu">waffleplot</span>(ed_attain_waffle, <span class="st">"child_age_group == '25-29'"</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plot_3034 <span class="ot">&lt;-</span> <span class="fu">waffleplot</span>(ed_attain_waffle, <span class="st">"child_age_group == '30-34'"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plot_3539 <span class="ot">&lt;-</span> <span class="fu">waffleplot</span>(ed_attain_waffle, <span class="st">"child_age_group == '35-39'"</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plot_4045 <span class="ot">&lt;-</span> <span class="fu">waffleplot</span>(ed_attain_waffle, <span class="st">"child_age_group == '40-45'"</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="do">### add subtitles to the plots with age-group displayed</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>plot_2529 <span class="ot">&lt;-</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plot_2529 <span class="sc">+</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Age group 25-29"</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>plot_3034 <span class="ot">&lt;-</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    plot_3034 <span class="sc">+</span></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Age group 30-34"</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>plot_3539 <span class="ot">&lt;-</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>plot_3539 <span class="sc">+</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Age group 35-39"</span>)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>plot_4045 <span class="ot">&lt;-</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>plot_4045 <span class="sc">+</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="st">"Age group 40-45"</span>)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="co"># usepatchwork to stitch the plots together and add general annotations.</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>plot_2529 <span class="sc">+</span> plot_3034 <span class="sc">+</span>  plot_3539 <span class="sc">+</span> plot_4045 <span class="sc">+</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"In Denmark, regardless of age, the likelihood of completing higher education increases as level of parent education increases."</span>,</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Higher education completion status for people ages 25-45, by age group and parent educational attainment, 2023. Each block = 1 %"</span>,</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Data from Danmarks Statistik table STATUSV2 via danstat package"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><a href="images/prompt15_2025.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-30"><img src="images/prompt15_2025.jpg" class="img-fluid" alt="waffle plot displaying higher ed completion by age group and parent education"></a></p>
+<p>One complication I could not adequately solve is the size of the x-axis labels. There’s something in the <code>facet_wrap</code> call to put together the parent ed levels that does not allow me to change the size the way I could in a stand-alone plot. Not sure why, so we’ll have to live with the truncated axis lables. Otherwise I’m happy with the output.</p>
+<p>A few things jump out here.</p>
+<ul>
+<li>First, the pattern is the same regardless of age. If your parents have higher levels of education, you are more likely to complete higher education. I know from my career doing higher ed policy analysis in the US, that the pattern is the same there.</li>
+<li>Not surprisingly, the younger age group, 25-29, includes more people who are still in the proces of finishing their college education (the orange blocks).</li>
+<li>The discontinued rates seemed similar-ish.</li>
+</ul>
+<p>Of course if this were a more in-depth report there’d be some descriptive tables to set the stage. And again, if I had access to the micro-data I’d be running regression models to explain factors leading to higher completion rates.</p>
+<p><em>created and posted April 20, 2025</em></p>
 
 
 </section>

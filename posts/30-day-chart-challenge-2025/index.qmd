@@ -2,7 +2,7 @@
 title: "30 Day Chart Challenge 2025"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
-date: '2025-04-06'
+date: '2025-04-19'
 categories: [post, rstats, ggplot, dataviz, chartchallenge, denmark, education, higher education]
 image: "prompts_2025.png"
 toc: true
@@ -1684,3 +1684,200 @@ Some of this could be an artifact of the Danish personal registry system not hav
 I'll break down by age groups in the "complicated" prompt. Sadly we don't have a table that shows both parent education and parent or child national origin status. I'd love to have access to micro-data to answer these more detailed questions; that would mean working for StatBank, the Education Ministry, or the EduQuant project (if it gets new funding). A man can dream...
 
 *created and posted April 18, 2025*
+
+## Prompt #15 - Complicated {#prompt15}
+
+I took complicated to mean trying to visualize multiple dimensions. As I mentioned in prompt 14 I wanted to look at higher education completion by parent educational attainment, but broken down a bit more by age groups.
+
+The chart for this prompt will be a waffle, which I did last year for [prompts 3 & 4](https://www.gregdubrow.io/posts/30-day-chart-challenge-2024/#prompts3and4). We'll use the [`waffle` package](https://github.com/hrbrmstr/waffle) which has a built-in geom to make waffles. Well, not make actual waffles, but a waffle plot. Sorry if this is making you hungry for waffles.
+
+We'll use the same data as prompt 14, so no need to redo the code to get it. We can get straight to making the charts. There was a bit of complication in making the charts, as I'll explain.
+
+We do need to create a dataframe to make the plot, and that's where the first complication came in. Because of rounding, some plots went to 101, some stopped at 99. So I needed to do a bit of cleaning to make each plot even out at 100. I suppose I could have done a more nuanced rounding with an `ifelse` but I likely still would have had to examine the plot and check the data.
+
+```{r 15_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the waffle plot data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(waffle) # to make the waffle plots
+library(patchwork) # stitching together the final plots
+
+# using the ed_attain_main df from prompt 14
+ed_attain_waffle <- ed_attain_main %>%
+	filter(!parent_ed == "Total") %>%
+	filter(!parent_ed == "Qualifying educ paths") %>%
+	filter(!child_ed == "Total") %>%
+	filter(!child_age_group == "Total") %>%
+	group_by(child_age_group, parent_ed) %>%
+	mutate(age_grp_par_ed_sum = sum(N)) %>%
+	ungroup() %>%
+	group_by(child_age_group, parent_ed, child_ed) %>%
+	mutate(age_par_ed_child_ed_sum = sum(N)) %>%
+	ungroup() %>%
+	mutate(age_par_ed_child_ed_pct = age_par_ed_child_ed_sum / age_grp_par_ed_sum) %>%
+	mutate(age_par_ed_child_ed_pct2 = round(age_par_ed_child_ed_pct, 2) * 100) %>%
+	distinct(parent_ed, child_age_group, child_ed, .keep_all = TRUE) %>%
+	select(-child_age, -N) %>%
+	mutate(parent_ed = factor(parent_ed,
+		levels = c("Primary", "HS-Vocational", "HS-Academic", "Short-cycle coll",
+			"Bach-Vocational", "Bach-Academic", "Masters", "PhD", "Not stated"))) %>%
+	mutate(child_ed = factor(child_ed,
+		levels = c("Completed education", "Undergoing education", "Discontinued education",
+			"No registered education"))) %>%
+	# clean up pct vals to make charts even out
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "HS-Vocational" & child_ed == "Completed education" & child_age_group == "25-29",
+				40, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Short-cycle coll" & child_ed == "No registered education"
+				& child_age_group == "25-29", 31, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Masters" & child_ed == "Completed education" & child_age_group == "25-29",
+		69, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "HS-Academic" & child_ed == "Discontinued education"
+				& child_age_group == "30-34", 9, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Short-cycle coll" & child_ed == "Completed education"
+				& child_age_group == "30-34", 60, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "PhD" & child_ed == "Discontinued education"
+				& child_age_group == "30-34", 4, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Primary" & child_ed == "No registered education"
+				& child_age_group == "35-39", 68, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "HS-Academic" & child_ed == "No registered education"
+				& child_age_group == "35-39", 39, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Short-cycle coll" & child_ed == "Discontinued education"
+				& child_age_group == "35-39", 7, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Bach-Vocational" & child_ed == "Discontinued education"
+				& child_age_group == "35-39", 5, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Primary" & child_ed == "No registered education"
+				& child_age_group == "40-45", 67, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "HS-Academic" & child_ed == "No registered education"
+				& child_age_group == "40-45", 39, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Bach-Vocational" & child_ed == "Undergoing education"
+				& child_age_group == "40-45", 1, age_par_ed_child_ed_pct2)) %>%
+	mutate(age_par_ed_child_ed_pct2 =
+			ifelse(parent_ed == "Not stated" & child_ed == "Undergoing education"
+				& child_age_group == "40-45", 1, age_par_ed_child_ed_pct2))
+
+
+```
+
+If we are making more than one plot with the same variables, do we copy-paste-amend the code?
+
+Not if we can help it.
+
+Let's make the basic plot into a function to limit the amount of overall code and chance for error. What we'll do here is add a filter expression to the function call.
+
+```{r 15_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the plot function"
+
+waffleplot <- function(plotdf, filter_expr) {
+	
+	# Convert the string expression to an actual R expression
+	filter_expr <- rlang::parse_expr(filter_expr)
+	# Filter the data
+	filtered_df <- plotdf %>% filter(!!filter_expr)
+	
+	# Create the plot
+	ggplot(filtered_df, (aes(fill = child_ed, values = age_par_ed_child_ed_pct2))) +
+		geom_waffle(na.rm=TRUE, n_rows=10, flip=TRUE, size = 0.33, colour = "white") +
+		facet_wrap(~parent_ed, nrow=1,strip.position = "bottom", scales = "free_x") +
+		scale_x_discrete(labels = ) +
+		scale_y_continuous(labels = function(x) x * 10, # make this multipler the same as n_rows
+			expand = c(0,0)) +
+		scale_fill_brewer(palette = "Set2") +
+		theme_minimal() +
+		theme(legend.position = "bottom", legend.justification = "left",
+			legend.spacing.x = unit(0, 'cm'),
+			legend.key.width = unit(1, 'cm'), legend.margin=margin(-10, 0, 0, 0),
+			legend.title = element_text(size = 8), legend.text = element_text(size = 8),
+			panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+		guides(fill = guide_legend(label.position = "bottom",
+			title = "Higher education completion status", title.position = "top"))
+}
+
+```
+
+Now that we have the function, it's easy to call. In this case we pass the data frame and age group filter. I suppose I could have added the dataframe name in the function, but since I may want to reuse the function I kept some things as generic as possible.
+
+Calling it simple: `waffleplot(ed_attain_waffle, "child_age_group == '25-29'")`. As you can see in the code below, we'll change the age group for each call, creating a plot object each time that we can edit before stitching together for the final plot.
+
+```{r 15_3}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the plots"
+
+# make each individual plot
+plot_2529 <- waffleplot(ed_attain_waffle, "child_age_group == '25-29'")
+plot_3034 <- waffleplot(ed_attain_waffle, "child_age_group == '30-34'")
+plot_3539 <- waffleplot(ed_attain_waffle, "child_age_group == '35-39'")
+plot_4045 <- waffleplot(ed_attain_waffle, "child_age_group == '40-45'")
+
+### add subtitles to the plots with age-group displayed
+plot_2529 <-
+plot_2529 +
+	labs(subtitle = "Age group 25-29")
+
+plot_3034 <-
+	plot_3034 +
+	labs(subtitle = "Age group 30-34")
+
+plot_3539 <-
+plot_3539 +
+	labs(subtitle = "Age group 35-39")
+
+plot_4045 <-
+plot_4045 +
+	labs(subtitle = "Age group 40-45")
+
+# usepatchwork to stitch the plots together and add general annotations.
+plot_2529 + plot_3034 +  plot_3539 + plot_4045 +
+	plot_annotation(
+		title = "In Denmark, regardless of age, the likelihood of completing higher education increases as level of parent education increases.",
+		subtitle = "Higher education completion status for people ages 25-45, by age group and parent educational attainment, 2023. Each block = 1 %",
+		caption = "Data from Danmarks Statistik table STATUSV2 via danstat package")
+
+```
+
+![](images/prompt15_2025.jpg){fig-alt="waffle plot displaying higher ed completion by age group and parent education"}
+
+One complication I could not adequately solve is the size of the x-axis labels. There's something in the `facet_wrap` call to put together the parent ed levels that does not allow me to change the size the way I could in a stand-alone plot. Not sure why, so we'll have to live with the truncated axis lables. Otherwise I'm happy with the output.
+
+A few things jump out here.
+
+-   First, the pattern is the same regardless of age. If your parents have higher levels of education, you are more likely to complete higher education. I know from my career doing higher ed policy analysis in the US, that the pattern is the same there.
+-   Not surprisingly, the younger age group, 25-29, includes more people who are still in the proces of finishing their college education (the orange blocks).
+-   The discontinued rates seemed similar-ish.
+
+Of course if this were a more in-depth report there'd be some descriptive tables to set the stage. And again, if I had access to the micro-data I'd be running regression models to explain factors leading to higher completion rates.
+
+*created and posted April 20, 2025*
