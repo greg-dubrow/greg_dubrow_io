@@ -1437,13 +1437,13 @@ For this "back to the future" post, a prompt coming between 9 (posted on April 6
 
 As always for this year's challenge, the data is from Danmarks Statistik via the `danstat` package. This time we're using table `RDCE05`, which is Expenses to R&D by sector and field of research and development. I'll mention it more than once, but all expense figures are in millions of Danish kroner. So 1,500 DKK here means 1.5 billion. As of the date of posting, one US dollar gets you about 6.57 kroner. That's about half a kroner lower than this time last year.
 
-It's also worth mentioning at least once that the unit of analysis is research *expenses*, not funding, though you could argue that expenses are a proxy for funding, because the money has to come from somewhere. Expenses as reported here means money spent on any and all R&D activity and the people who do it. The funding sources are irrelevant.
+It's also worth mentioning at least once that the unit of analysis is research *expenses*, not funding. Though you could argue that expenses are a proxy for funding, because the money has to come from somewhere. Expenses as reported here means money spent on any and all R&D activity and the people who do it. The funding sources are irrelevant.
 
 I would love to dig in a bit deeper and connect funding sources, the sectors that get funding, and for which fields. But that means at the very least connecting a number of tables or having micro-data access.
 
 I won't spend any time explaining the research fields and sectors. You can get a detailed look at how Danmarks Statistik [describes the data is here](https://www.dst.dk/en/Statistik/dokumentation/documentationofstatistics/research-and-development-in-the-public-sector/statistical-presentation). The research fields follow the rubric laid out in the [OECD's Frascati Manual](https://en.wikipedia.org/wiki/Frascati_Manual), with the fields themselves [enumerated here](https://en.wikipedia.org/wiki/Fields_of_Science_and_Technology).
 
-Do keep in mind however, that science is interdisciplinary. So data science work, for example, might be in the Engineering and Tech field per the Frascati Manual. But it's quite likely that data science work is happening in medical or social sciences. It's hard to know how every activity is being classified without access to microdata and then being able to tease out interdisciplinary overlaps.
+Do keep in mind that science is interdisciplinary. So data science work, for example, might be in the Engineering and Tech field per the Frascati Manual. But it's quite likely that data science work is happening in medical or social sciences. It's hard to know how every activity is being classified without access to microdata and then being able to tease out interdisciplinary overlaps.
 
 For the plot itself, I took inspiration for the scatterplot from [Nicola Rennie's cluster chart](https://github.com/nrennie/30DayChartChallenge/blob/main/2025/README.md#day-13-clusters-made-with-r), modifying the colors and other aesthetics a bit. But the code structure starts with Nicola's work, and I learned a bit about some good coding practice and tips. Which is the point of an exercise like this, right?
 
@@ -1682,7 +1682,7 @@ r_and_d_main %>%
 
 Now we build the plot. I wanted to add hover-over tool-tips so I'm using the [`ggiraph`](https://davidgohel.github.io/ggiraph/index.html) package. The only real coding difference from a static scatterplot is using the `geom_point_interactive` function. After we create the plot as an object, we call back to it using the `ggiraph::girafe` function to render it.
 
-When you over over the dots you'll see the sector/field combination and the amount of expenses they had in 2023, in millions of Danish kroner (DKK). Also note that hovering over say "Gov't / Eng & tech" not only brings up the tool-tip with 2023 expenses, it also highights all Government dots, so you can put the Engineering & Tech expenses in contrast with and comparison to other government R&D expenses. Note again, that expenses is essentially a proxy for funding, regardless of funding source.
+When you hover over the dots you'll see the sector/field combination and the amount of expenses they had in 2023, in millions of Danish kroner (DKK). Also note that hovering over say "Gov't / Eng & tech" not only brings up the tool-tip with 2023 expenses, it also highlights all Government dots, so you can put the Engineering & Tech expenses in contrast with and comparison to other government R&D expenses. Note again, that expenses is essentially a proxy for funding, regardless of funding source.
 
 ```{r prompt13_4}
 #| warning: false
