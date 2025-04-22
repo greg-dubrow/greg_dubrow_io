@@ -2,7 +2,7 @@
 title: "30 Day Chart Challenge 2025"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
-date: '2025-04-21'
+date: '2025-04-22'
 categories: [post, rstats, ggplot, dataviz, chartchallenge, denmark, education, higher education]
 image: "prompts_2025.png"
 toc: true
@@ -23,8 +23,6 @@ knitr::opts_chunk$set(
 ![](prompts_2025.png){width="75%" fig-align="left" fig-alt="image listing the prompts for the 30 day chart challenge 2025."}
 
 ## The Plan for the 2025 Challenge {#plan}
-
-*Quick note - if you're reading this before April 1 it's because due to something I need to do on April 2 that might keep me away from the computer for a day or two, I'm getting ahead of the challenge by doing some charts in late March. I'll have at least 3 done, if not more. To at least play within the spirit of the challenge I won't post them to social media until April 1 and I'm putting the first publish date on blog posts as April 1.*
 
 It's time again for the [30 Day Chart Challenge](https://github.com/30DayChartChallenge/Edition2025), a social-media-driven data viz challenge to create and share a data visualization on any topic, but somehow corresponding to the daily prompt as suggested by the organizers.
 
@@ -2207,3 +2205,246 @@ A few things jump out here.
 Of course if this were a more in-depth report there'd be some descriptive tables to set the stage. And again, if I had access to the micro-data I'd be running regression models to explain factors leading to higher completion rates.
 
 *created and posted April 20, 2025*
+
+## Prompt #20 - Urbanization {#prompt20}
+
+Let's look at educational attainment for people aged 15-69 by municipal group from 2008 to 2023. Given the prompt is "urbanization" within the theme of "time series", my main questions here are:
+
+-   To what extent the share of people living in the larger municipal areas grew between 2008 and 2023? (the years available on StatsBank)
+
+-   Did the percentages of educational attainment change by municipal group over time?
+
+The age range available is 15-69. I won't disaggregate by age in this analysis. That would be interesting but I'm trying to keep this somewhat simple.
+
+First, a quick primer on civic administrative divisions in Denmark, so we understand what the groups mean.
+
+Municipalities (kommuner) are incorporated entities for the purposes of budgets, schools, and other services. There are often smaller towns and villages with their own names within a municipality.
+
+For the purposes of this grouping, Danmarks Statistik has sorted municipalities into five groups. They do not correspond to the Regions, which are administrative units above the level of municipality. A municipality will often have separately named towns, villages or neighborhoods within it, for example Bellinge is a village that is part of the Odense kommune.
+
+The five municipal groups in these charts are:
+
+-   Capital municipalities (Hovedstadskommuner) is Copenhagen and the surrounding municipalities within roughly 45 minutes to an hour drive, as far south as Dragør just south of the airport, north almost to Helsingør, and west to Tastrup.
+
+-   The Metropolitan municipalities (Storbykommuner) are the three next biggest cities, Århus, Aalborg, and Odense.
+
+-   Provincial Municipalities (Provinsbykommuner) are smaller municipalities roughly more than an hour outside of Copenhagen and the metropolitan kommunes, for example Helsingør, Roskilde, and Viborg.
+
+-   Commuter Municipalities (Oplandskommuner) are on the outskirts of the metropolitan and provincial municipalities, like Fredensborg, Holbæk, and Nyborg.
+
+-   Rural municipalities (Landkommuner) are further away from the Commuter or Provincial municipalities.
+
+You can find the groups and smaller municipalities within [at this documentation page](https://www.dst.dk/da/Statistik/dokumentation/nomenklaturer/kommunegrupper)
+
+The data is from Statistiks Danmark via the `danstat` package. We'll be using table LABY19, Educational attainment by municipality groups.
+
+The first step is of course to get and clean the data.
+
+```{r prompt20_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting and cleaning data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(tidyverse) # to do tidyverse things
+library(danstat) # package to get Danish statistics via api
+library(waffle) # to make waffles
+library(gt)
+library(scales)
+library(patchwork)
+library(ggtext)
+
+
+source("~/Data/r/basic functions.R")
+
+# LABY19: Educational attainment (15-69 years) (number) by municipality groups,
+# highest education completed and age
+table_meta <- danstat::get_table_metadata(table_id = "laby19", variables_only = TRUE)
+table_meta_dk <- danstat::get_table_metadata(table_id = "laby19", variables_only = TRUE, language = "da")
+
+# create variable list using the ID value in the variable
+variables_ed <- list(
+	list(code = "komgrp", values = c(1, 2, 3, 4, 5)),
+	list(code = "hfudd2", values = c("TOT", "H10", "H20", "H30", "H35",
+		"H40", "H50", "H60", "H70", "H80", "H90")),
+	list(code = "alder", values = "TOT"),
+	list(code = "tid", values = "*"))
+
+ed_urban1 <- get_data("laby19", variables_ed, language = "en") %>%
+	as_tibble() %>%
+	clean_names()
+
+ed_urban_main <- ed_urban1 %>%
+	mutate(komgrp = str_remove(komgrp, " municipalities")) %>%
+	mutate(alder = ifelse(alder == "Age, total", "Total", alder)) %>%
+	mutate(hfudd2 = case_when(
+		hfudd2 == "H10 Primary education" ~ "Primary",
+		hfudd2 == "H20 Upper secondary education" ~
+			"HS-Academic",
+		hfudd2 == "H30 Vocational Education and Training (VET)" ~
+			"HS-Vocational",
+		hfudd2 == "H35 Qualifying educational programs" ~
+			"Qualifying educ paths",
+		hfudd2 == "H40 Short cycle higher education" ~
+			"Short-cycle coll",
+		hfudd2 == "H50 Vocational bachelors educations" ~
+			"Bach-Vocational",
+		hfudd2 == "H60 Bachelors programs" ~
+			"Bach-Academic",
+		hfudd2 == "H70 Masters programs" ~ "Masters",
+		hfudd2 == "H80 PhD programs" ~ "PhD",
+		hfudd2 == "H90 Not stated" ~ "Not stated",
+		TRUE ~ hfudd2)) %>%
+		mutate(hfudd2 = factor(hfudd2,
+		levels = c("Primary", "HS-Vocational", "HS-Academic", "Short-cycle coll",
+			"Qualifying educ paths", "Bach-Vocational", "Bach-Academic",
+			"Masters", "PhD", "Not stated", "Total"))) %>%
+		mutate(komgrp = factor(komgrp,
+		levels = c("Capital", "Metropolitan", "Commuter", "Provincial", "Rural"))) %>%
+	select(muni_grp = komgrp, ed_highest = hfudd2, age = alder, year = tid, N = indhold)
+
+```
+
+Now that we have a general data frame to work with, let's see if there's been a change in the percentage of people aged 15-69 living in each of the groups from 2008 onward.
+
+```{r prompt20_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making chart 1"
+
+# stacked bar chart x axis is year, y is pct, fill is municipal group
+ed_urban_main %>%
+	filter(ed_highest == "Total") %>%
+	select(muni_grp, year, N) %>%
+	group_by(year) %>%
+	mutate(muni_grp_pct = N /sum(N)) %>%
+	ungroup() %>%
+	select(-N) %>%
+	arrange(year, muni_grp) %>%
+	{. ->> tmp} %>%
+	ggplot(aes(x = year, y = muni_grp_pct, fill = muni_grp)) +
+	geom_bar(position = "stack", stat = "identity") +
+	scale_fill_brewer(palette = "Set3") +
+	geom_text(aes(label = scales::percent(round(muni_grp_pct, 3))),
+		position = position_stack(vjust = 0.5),
+		color = "grey20", size = 5) +
+	scale_y_continuous(limits = c(0, 1),
+		labels = label_percent()) +
+	scale_x_continuous(breaks = c(2008, 2011, 2013, 2015, 2017, 2019, 2021, 2023))+
+	coord_cartesian(expand = FALSE, clip = "off") +
+	labs(x = "", y = "") +
+	theme(
+		plot.title = element_markdown(size = 16), plot.subtitle = element_markdown(size = 12),
+		plot.caption = element_markdown(size = 8),
+		legend.position = "bottom", legend.justification = "left",
+		legend.spacing.x = unit(0, 'cm'),
+		legend.key.width = unit(1, 'cm'), legend.margin=margin(-12, 0, 0, 0),
+		legend.title = element_text(size = 8), legend.text = element_text(size = 8),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+	guides(fill = guide_legend(label.position = "bottom",
+		title = "Municipality group", title.position = "top"))
+rm(tmp)
+
+
+```
+
+![](images/prompt20_1_2025.jpg){fig-alt="stacked bar chart showing percent of people ages 15-69 in denmark by municipal group"}
+
+As we can see...share of people in the capital and bigger municipalties has been increasing, with provincial staying roughly the same, commuter declining slightly, and rural declining by 3 percentage points.
+
+So there has been a trend towards more urbanization.
+
+Slight aside... Using a stacked bar chart like this does bring up a data visualization conundrum that I want to highlight by showing the first almost finished version
+
+![](images/prompt20_no_2025.jpg){fig-alt="stacked bar chart showing percent of people ages 15-69 in denmark by municipal group"}
+
+Note how if you just look at the size of the bars within the bars and don't pay attention to the percent labels, your eyes might lead you to believe that Metropolitan (yellow) and Provincial (orange) are shrinking, because the top line angles downward.
+
+I solved that problem by adding `fct_rev` to the municipal group variable in the first `aes()`. I had ordered them as factors in the main dataset, and the ggplot honored that. But it didn't look right. So reversing them kept the visual inference mostly the same as the data. Though you could sort of be led to believe that the provincial group (now yellow) is decreasing, not growing as it actually is.
+
+The lesson here is be careful about your choice of visualization, and that it communicates exactly what you want it to, keeping in mind some people make inference by color, shape, and size, and some people go right to the numbers in the labels.
+
+Next is the change in ed attainment by municipal group. Here we'll facet out by municipal group, keeping year as the x axis. The image is "lightboxed" so click on it to enlarge. Hit `esc` to restore the screen.
+
+```{r prompt20_3}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making chart 2"
+
+# stacked bar chart x axis is year, y is pct, fill is ed attainment, facet my muni groups
+
+ed_urban_main %>%
+	filter(!ed_highest == "Total") %>%
+	select(muni_grp, ed_highest, year, N) %>%
+	arrange(year, muni_grp, ed_highest) %>%
+	group_by(year, muni_grp) %>%
+	mutate(muni_year_N = sum(N)) %>%
+	mutate(muni_ed_pct = N /sum(N)) %>%
+	ungroup() %>%
+	select(-N) %>%
+	{. ->> tmp} %>%
+	ggplot(aes(x = year, y = muni_ed_pct, fill = fct_rev(ed_highest))) +
+	geom_bar(position = "stack", stat = "identity") +
+	scale_fill_manual(values = c(
+		"#BC80BD", "#D9D9D9",	"#FCCDE5", "#B3DE69", "#FDB462",
+		"#80B1D3", "#FB8072", "#BEBADA", "#FFFFB3", "#8DD3C7")) +
+	geom_text(
+		data = subset(tmp, year %in% c(2008, 2015, 2023) & muni_ed_pct > 0.01),
+		aes(label = scales::percent(muni_ed_pct, accuracy = 1)),
+		position = position_stack(vjust = .5),
+		color = "grey20", size = 3) +
+	scale_y_continuous(labels = label_percent()) +
+	scale_x_continuous(breaks = c(2008, 2011, 2013, 2015, 2017, 2019, 2021, 2023))+
+	coord_cartesian(expand = FALSE, clip = "off") +
+	facet_wrap(~muni_grp, scales = "free") +
+	labs(x = "", y = "",
+		title = "Danes in all municipal groups are earning higher levels of education over time.
+		The Capital & Metropolitan groups have higher percentages of people with Bachelor & Master's degrees.",
+		subtitle = "Percentage of people ages 15-69 by municipal group in Denmark, 2008-2023.",
+		caption = "*Data from Danmarks Statistik table LABY19 via danstat package*") +
+	theme(
+		plot.title = element_markdown(size = 14), plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		axis.text.x = element_text(size = 7, color = "grey50"),
+		axis.text.y = element_text(size = 7, color = "grey50"),
+		strip.background.x = element_rect(fill = "grey90", color = "grey95"),
+		legend.position = "bottom", legend.justification = "left",
+		legend.spacing.x = unit(0, 'cm'),
+		legend.key.width = unit(1, 'cm'), legend.margin=margin(-12, 0, 0, 0),
+		legend.title = element_text(size = 8), legend.text = element_text(size = 8),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+	guides(fill = guide_legend(label.position = "bottom", nrow = 1, reverse=T,
+		title = "Highest level of education attained", title.position = "top"))
+rm(tmp)
+```
+
+![](images/prompt20_2_2025.jpg){fig-alt="stacked bar chart showing percent of people ages 15-69 in denmark by educatonal attainment and municipal group"}
+
+Here we see more people in all municipal groups attaining higher levels of education over time; the percentage of people stopping out after primary level is decreasing in all municipal groups. We also see a greater percentage of people with Bachelor's and Master's degrees in the Capital and Metropolitan regions.
+
+Or in relation to today's prompt - not only are more people gravitating to the larger urban areas or Copenhagen, Århus, Odense & Aalborg, those that do tend to have higher levels education.
+
+On a general visualization choice note, I'm not sure if these stacked bars were the way to go. Waffles might have been the better choice, but I had just done waffles in [prompt 15](https://www.gregdubrow.io/posts/30-day-chart-challenge-2025/#prompt15) so wanted something different here.
+
+Since I had been falling behind in getting charts posted, I wanted to keep this analysis simple. Because age is available (in groups of 5 years) I could go back and see if there's a difference in age composition that might explain changes to the educational attainment mix over time. Especially because we know from [prompt 2](https://www.gregdubrow.io/posts/30-day-chart-challenge-2025/#prompt2) that Danes are earning higher levels of education over time.
+
+Perhaps a deeper dive project after the chart challenge is over.
+
+*created and posted April 22, 2025*
