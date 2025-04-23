@@ -2206,6 +2206,291 @@ Of course if this were a more in-depth report there'd be some descriptive tables
 
 *created and posted April 20, 2025*
 
+## Prompt #19 - Smooth {#prompt19}
+
+For this very-out-of-prompt-order post (being posted after the prompt that should come after this one) I'm revisiting [prompt 9, "diverging"](https://www.gregdubrow.io/posts/30-day-chart-challenge-2025/#prompt9), to look at academic Bachelor degrees awarded by sex (as a percentage of the whole) but adding a time-series element to it as the theme for the week is time series. The "smooth" aspect will be either normalization or smoothing lines.
+
+As in prompt 9 we're using the `UDDAKT60` table from Danmarks Statistik StatBank via the `danstat` package. The fetching & cleaning is slightly different; this time I'm fetching all available years, 2005 to 2024.
+
+```{r prompt19_1}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for getting and cleaning data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(danstat) # package to get Danish statistics via api
+library(patchwork) # to join plots
+library(ggtext) # enhancements for text in ggplot
+library(ggrepel)
+library(scales)
+
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+# make sure numbers don't present in scientific notation
+options(scipen=999)
+
+# UDDAKT60
+table_meta <- danstat::get_table_metadata(table_id = "uddakt60", variables_only = TRUE)
+
+# create variable list using the ID value in the variable
+variables_ed <- list(
+	list(code = "uddannelse", values = "*"),
+	list(code = "fstatus", values = c("F")),
+	list(code = "køn", values = "*"),
+	#list(code = "alder", values = c("TOT")),
+	list(code = "tid", values = "*"))
+
+bacdegs1 <- get_data("uddakt60", variables_ed, language = "en") %>%
+	as_tibble() %>%
+	clean_names()
+
+## the main cleaned dataset
+bacdegs_main <- bacdegs1 %>%
+	mutate(kon = ifelse(kon == "Sex, total", "Total", kon)) %>%
+	mutate(deg_code = str_extract(uddannelse, "^[^ ]+")) %>%
+	mutate(deg_name = sub("^\\S+\\s+", '', uddannelse)) %>%
+	mutate(deg_name = str_remove(deg_name, ", BACH")) %>%
+	mutate(deg_name = str_remove(deg_name, " BACH")) %>%
+	mutate(deg_group = case_when(
+		deg_code %in% c("H6020", "H6025", "H6030", "H6035", "H6039",
+			"H6059", "H6075", "H6080", "H6090") ~ "Main",
+		deg_code == "H60" ~ "All",
+		TRUE ~ "Sub")) %>%
+	mutate(deg_field =  case_when(
+		str_detect(deg_code, "H6020") ~ "Education",
+		str_detect(deg_code, "H6025") ~ "Humanities",
+		str_detect(deg_code, "H6030") ~ "Arts",
+		str_detect(deg_code, "H6035") ~ "Science",
+		str_detect(deg_code, "H6039") ~ "Social Sciences",
+		str_detect(deg_code, "H6059") ~ "Technical sciences",
+		str_detect(deg_code, "H6075") ~ "Food/Biotech/Lab Tech",
+		str_detect(deg_code, "H6080") ~ "Agriculture/Nature/Environment",
+		str_detect(deg_code, "H6090") ~ "Health science",
+		TRUE ~ "All")) %>%
+	select(deg_code:deg_field, year = tid, sex = kon, degs_n = indhold)
+
+```
+
+We'll start with two charts; first, the number of degrees earned each year, along with a 3-year moving average smoothing line. Then one showing the year-to-year percent change along with a line showing the average percent change. The 3-year average is computed using the `rollmean` function in the [`zoo` package](https://cran.r-project.org/web/packages/zoo/index.html).
+
+The percent changes are computed using my custom `pctchange` function loaded with the call `source("~/Data/r/basic functions.R")` when I load packages at the top of a script.
+
+We can make one dataframe to do both charts, so I'll just create it as it's own object.
+
+I had planned on doing a chart normalizing the degrees awarded to 100 starting in 2005. But it didn't really show that much different than the total degrees chart. Though I decided against using the chart, I kept the process for creating the variable in the script for future use.
+
+```{r prompt19_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the next df"
+
+# create percent change and norm to 100 varaibles
+bacdegs_all <-
+bacdegs_main %>%
+	filter(deg_name == "Bachelors programs") %>%
+	filter(sex == "Total") %>%
+	select(year, degs_n) %>%
+	# creates the 3-year rolling average
+	mutate(degs_3yr = zoo::rollmean(degs_n, k = 3, fill = NA)) %>%
+	# percent change variables
+	mutate(pct_chg_degs = pctchange(degs_n)) %>%
+	mutate(pct_chg_degs2 = ifelse(year > 2005,
+		round(pct_chg_degs * 100, 3), pct_chg_degs)) %>%
+	mutate(pct_chg_degs2 = ifelse(is.na(pct_chg_degs2), 0, pct_chg_degs2)) %>%
+	# norming to 100 variables
+	mutate(cum_change = cumsum(pct_chg_degs2)) %>%
+	mutate(norm100 = cum_change + 100)
+
+```
+
+We have the dataframe, let's make the charts. Notice for both charts I used some `html` styling in the subtitle to use them as legends. For the percent-change chart I'm using not only `html` styling in the caption but including a dynamic call to the dataframe to include the value of the mean percent change in the caption and the `geom_hline`. We're using `patchwork` to join the plots into one image.
+
+```{r prompt19_3}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the 1st 2 charts"
+
+# line plot with all degs & 3 year average
+alldegs_plot <- 
+bacdegs_all %>%
+	ggplot(aes(x = year)) +
+	geom_line(aes(y = degs_n), color = "#80B1D3", size = 1 ) +
+	geom_line(aes(y = degs_3yr), color = "#FDB462", linetype = 2, size = 1) +
+	scale_x_continuous(breaks = c(2005, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024))+
+	scale_y_continuous(limits = c(8000, 21000),
+		labels = label_comma()) +
+	theme_minimal() +
+	labs(x = "", y = "",
+		title = "The number of academic bachelor's degrees awarded increased by 77% from 2005-2024",
+		subtitle = "<span style = 'color: #80B1D3;'> Blue line is total degrees awarded.</span>
+		<span style = 'color: #FDB462;'> Orange dotted line is 3-year rolling average.</span> ",
+		caption = "*Data from Danmarks Statistik table UDDAKT60 via danstat package*") +
+	theme(
+		panel.background = element_rect(fill = "grey95", colour = "grey95"),
+		plot.title = element_markdown(size = 14, color = "grey35"),
+		plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 7),
+		axis.text.x = element_text(size = 7, color = "grey50"),
+		axis.text.y = element_text(size = 7, color = "grey50"),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# percent changes
+pctchange_plot <-
+bacdegs_all %>%
+	ggplot(aes(x = year, y = pct_chg_degs)) +
+	geom_line(color = "#80B1D3", size = 1) +
+	geom_hline(aes(yintercept = mean(pct_chg_degs, na.rm = TRUE)),
+		color="#FDB462") +
+	scale_x_continuous(
+		breaks = c(2005, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024)) +
+	scale_y_continuous(
+		limits = c(-.2, .2), 
+		breaks = c(-.2, -.15, -.10, -.05, 0, .05, .10, .15, .2),
+		labels = label_percent()) +
+	theme_minimal() +
+	labs(x = "", y = "",
+		title = "The percent change in number of academic bachelor's degrees awarded has fluctuated year-to-year 
+		from 2005 to 2024",
+		subtitle = glue::glue("<span style = 'color: #80B1D3;'> Blue line is annual % change in 
+		degrees awarded starting in 2005.</span> 
+		<span style = 'color: #FDB462;'> Average year-to-year change is 
+		{round(mean(bacdegs_all$pct_chg_degs, na.rm = TRUE) *100, 2)}% </span> "),
+		caption = "*Data from Danmarks Statistik table UDDAKT60 via danstat package*") +
+	theme(
+		panel.background = element_rect(fill = "grey95", colour = "grey95"),
+		plot.title = element_markdown(size = 14, color = "grey35"),
+		plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		axis.text.x = element_text(size = 9, color = "grey50"),
+		axis.text.y = element_text(size = 9, color = "grey50"),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+alldegs_plot + pctchange_plot
+```
+
+![](images/prompt19_1&2_2025.jpg){fig-alt="line charts displaying degrees over time and percent change in degrees year to year"}
+
+The number of Bachelor's degrees awarded increased by 77% during the period covered here, albeit with some larger fluctuations in a few years. The 3-year average smoothing line doesn't deviate too far from the general trend line. The percent-change chart shows the fluctuations year to year, though the changes are perhaps magnified a bit by the y-axis scale. With wider limits that line would be more flat.
+
+For the next chart I'll present degrees by sex in each major discipline. The code for that one is below. We'll modify the main dataframe and pass right into the `ggplot()` calls, no need to create a separate object.
+
+Keep an eye out for what I noticed while doing these charts the first time...look at the trend for "Technical Sciences. We'll talk about that next.
+
+```{r prompt19_4}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the 1st deg by sex chart"
+
+bacdegs_main %>%
+	filter(!deg_name == "Bachelors programs") %>%
+	filter(deg_group == "Main") %>%
+	filter(!sex == "Total") %>%
+	select(year, deg_field, sex, degs_n) %>%
+	group_by(year, deg_field) %>%
+	mutate(pct_sex_field = degs_n / sum(degs_n)) %>%
+	ungroup() %>%
+	ggplot(aes(x = year, y = pct_sex_field, color = sex)) +
+	geom_point() +
+	geom_smooth() +
+	# for sex men (orange) & women (purple) colors
+	scale_color_manual(values = c("#E66100", "#5D3A9B")) +
+	scale_x_continuous(breaks =
+			c(2005, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024)) +
+	scale_y_continuous(labels = label_percent()) +
+	labs(x = "", y = "") +
+	facet_wrap(~ deg_field, scales = "free_x") +
+	theme(
+		legend.position = "none",
+		panel.background = element_rect(fill = "white", colour = "grey95"),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+		plot.title = element_markdown(size = 14, color = "grey35"),
+		plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		axis.text.x = element_text(size = 9, color = "grey50"),
+		axis.text.y = element_text(size = 9, color = "grey50"))
+
+```
+
+![](images/prompt19_3_2025.jpg){fig-alt="dot charts with smoothing lines displaying percent in degrees awarded by sex and academic discipline from 2005-2024"}
+
+Because the degree percentages by sex don't really change too much year-to-year the smoothing lines don't really show much. Where there is fluctuation and thus a smoothing line that runs between more spread out points, it's mostly in disciplines with lower numbers of degrees awarded, so prone highlighting the the more noticeable fluctuations.
+
+While making them I noticed a weird trend in the "Technical Sciences" discipline. It starts at near zero degrees awarded, and the first year the discipline has more degrees, the gendered nature appears. In prompt 9 I noticed the gender divide in lots of disciplines for year 2023, so one of the things I had wanted to examine at some point is the trend in gender splits over time.
+
+So let's dig a bit deeper into the Technical Sciences discipline and look at total degrees awarded by sex.
+
+```{r prompt19_5}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the 2nd deg by sex chart"
+
+bacdegs_main %>%
+	filter(!deg_name == "Bachelors programs") %>%
+	filter(deg_group == "Sub") %>%
+	filter(!sex == "Total") %>%
+	filter(deg_field == "Technical sciences") %>%
+	select(year, deg_name, sex, degs_n) %>%
+	ggplot(aes(x = year, y = degs_n, color = sex)) +
+	geom_point() +
+	geom_smooth() +
+	labs(x = "", y = "") +
+	scale_color_manual(values = c("#E66100", "#5D3A9B")) +
+	scale_x_continuous(breaks =
+			c(2005, 2008, 2010, 2012, 2014, 2016, 2018, 2020, 2022, 2024)) +
+	facet_wrap(~ deg_name, scales = "free") +
+	theme(
+		legend.position = "none",
+		panel.background = element_rect(fill = "white", colour = "grey95"),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+		plot.title = element_markdown(size = 14, color = "grey35"),
+		plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		axis.text.x = element_text(size = 9, color = "grey50"),
+		axis.text.y = element_text(size = 9, color = "grey50"))
+
+```
+
+![](images/prompt19_4_2025.jpg){fig-alt="dot charts with smoothing lines displaying percent in degrees awarded by sex and major in technical sciences from 2005-2024"}
+
+First we see that all degrees were nearly at zero in 2005, so I'm guessing this discipline was newly classified in the Danish education system around then. I'm sure computer science and engineering degrees were awarded before 2005, but I'm not sure what the broader discipline category was before 2005.
+
+Mostly what we notice is that the Electronics & IT major and the Engineering major are responsible for most of the gender split. Electronics & IT is by far the largest major and the gender split is quite stark. Women earn as many or more degrees in some fields, but not enough to make up for the split in Electronics & IT.
+
+The smoothing lines show us the predicted smoother pass through the trends.
+
+Now that I have a framework for the trends in degrees by sex, I can see doing a longer-form post and looking at majors in all disciplines.
+
+*created and posted April 23, 2025*
+
 ## Prompt #20 - Urbanization {#prompt20}
 
 Let's look at educational attainment for people aged 15-69 by municipal group from 2008 to 2023. Given the prompt is "urbanization" within the theme of "time series", my main questions here are:
