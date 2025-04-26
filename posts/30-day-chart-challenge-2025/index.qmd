@@ -2,7 +2,7 @@
 title: "30 Day Chart Challenge 2025"
 description: "Let's make some charts!"
 author: "gregers kjerulf dubrow"
-date: '2025-04-25'
+date: '2025-04-26'
 categories: [post, rstats, ggplot, dataviz, chartchallenge, denmark, education, higher education]
 image: "prompts_2025.png"
 toc: true
@@ -3105,3 +3105,295 @@ It's a bit surprising at first glance, because salaries for so many jobs are neg
 As this is already a very long post I won't dig deeper into job level, specific degree fields (humanities, sciences) within the degree levels (vocational or academic Bachelor, Masters, etc), but will get into that after the challenge is done.
 
 *created and posted April 25, 2025*
+
+## Prompts #24 & 25 - WHO data & Risk {#prompts24and25}
+
+Because I'm combining prompt 24, World Health Organization data, and prompt 25, risk, we're taking a break from Denmark-specific analysis on education and education outcomes and looking at global health data. But Denmark's included in the dataset so at least I'm mostly keeping to my own theme.
+
+But what specifically to look at? WHO has [a ton of health indicators](https://www.who.int/data/gho/data/indicators/indicators-index). It's hard to chose.
+
+For um, no specific reason, for this post let's look at measles vaccination rates worldwide, using [this table](https://www.who.int/data/gho/data/indicators/indicator-details/GHO/measles-containing-vaccine-second-dose-(mcv2)-immunization-coverage-by-the-nationally-recommended-age-(-)) from the [World Health Organization's](https://www.who.int) data portal, the [Global Health Observatory](https://www.who.int/data/gho). Specifically, the measure is "Measles-containing-vaccine second-dose (MCV2) immunization coverage by the locally recommended age (%)".
+
+As we know from decades of experience, there's a risk to life when people aren't vaccinated against preventable diseases. And we're seeing in real time that there is a risk when people forgo measles vaccinations for themselves and their kids; measles can be deadly.
+
+We'll use the [rgho package](https://github.com/aphp/rgho) to get the data. You don't necessarily need a package. As Kirstin Lyon [explains here](https://medium.com/@kirstin.lyon/connect-to-global-health-observatory-who-data-api-with-r-fef4315693a1), you can get data directly from the API using r. You could also download the data in a CSV by going to the indicator's data page.
+
+But I'll use the package. To get the data fully ready to analyse and visualise, we need to add country names, so we get that via another dataframe in the API. That's the left-join at the cleaning stage. We'll also add region names to the region codes, add European sub-regions, and create the tooltip fields for use in the interactive plots.
+
+```{r prompt24_25_1}
+#| warning: false 
+#| message: false 
+#| error: false 
+#| echo: true 
+#| eval: false 
+#| code-overflow: scroll 
+#| code-fold: true 
+#| code-summary: "Show code for getting and cleaning data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(rgho) # gets WHO data
+library(ggiraph) # for interactive plots
+library(ggtext) # enhancements for text in ggplot
+library(ggthemes) # more themes and colour palettes
+library(scales) # help with axis & data labels
+
+
+# country codes and names paired
+who_country <- get_gho_values(dimension = "COUNTRY") %>%
+	clean_names() %>%
+	select(country_code = code, country_name = title)
+
+# measles data 
+measles1 <- get_gho_data(code = "MCV2") %>%
+	clean_names()
+
+# create main visualization set
+measles <- measles1 %>%
+	# rename country
+	rename(country_code = country) %>%
+	# add country names
+	left_join(who_country) %>%
+	# fix country names
+	mutate(country_name = ifelse(country_name == "Netherlands (Kingdom of the)",
+		"Netherlands", country_name)) %>%
+	# make it easier to filter by region or country level
+	mutate(data_level = case_when(
+		!is.na(region) ~ "region",
+		!is.na(worldbankincomegroup) ~ "worldbank",
+		!is.na(global) ~ "global",
+		TRUE ~ "country")) %>%
+	# add name to region
+	mutate(region_name = case_when(
+		region == "AFR" ~	 "Africa",
+		region == "AMR" ~	"Americas",
+		region == "EMR" ~	"Eastern Mediterranean",
+		region == "EUR" ~	"Europe",
+		region == "SEAR" ~ "South-East Asia",
+		region == "WPR" ~ "Western Pacific",
+		TRUE ~ NA)) %>%
+	# create euro regions based on UN GeoScheme
+	# https://en.wikipedia.org/wiki/United_Nations_geoscheme
+	mutate(region_europe = case_when(
+		country_name %in% c("Belarus", "Bulgaria", "Czechia", "Hungary", "Poland", "Republic of Moldova",
+			"Romania", "Russian Federation", "Slovakia", "Ukraine") ~ "Eastern Europe",
+		country_name %in% c("Åland Islands", "Denmark", "Estonia", "Faroe Islands", "Finland", "Iceland",
+			"Ireland", "Isle of Man", "Latvia", "Lithuania", "Norway", "Svalbard and Jan Mayen Islands",
+			"Sweden", "United Kingdom of Great Britain and Northern Ireland") ~ "Northern Europe",
+		country_name %in% c("Albania", "Andorra", "Bosnia and Herzegovina", "Croatia", "Gibraltar", "Greece",
+			"Holy See", "Italy", "Malta", "Montenegro", "North Macedonia", "Portugal", "San Marino",
+			"Serbia", "Slovenia", "Spain") ~ "Southern Europe",
+		country_name %in% c("Austria", "Belgium", "France", "Germany", "Liechtenstein", "Luxembourg", "Monaco",
+			"Netherlands", "Switzerland") ~ "Western Europe",
+		TRUE ~ "Not Europe")) %>%
+	# more country name fixes for easier labeling
+	mutate(country_name = ifelse(country_name ==
+			"United Kingdom of Great Britain and Northern Ireland",
+		"United Kingdom", country_name)) %>%
+	mutate(country_name = ifelse(
+		country_name == "Republic of Moldova", "Moldova", country_name)) %>%
+	# create vacc rate for better axis labels
+	mutate(vacc_rate_pct = numeric_value / 100) %>%
+	# create tooltip objects for plot
+	mutate(tooltip1 = paste0(region_name, "; ", year, "; ", value, "%")) %>%
+	mutate(tooltip2 = paste0(country_name, "; ", year, "; ", value, "%")) %>%
+	select(id, indicator_code, data_level, parent_location_code, parent_location,
+		country_code, country_name, region_code = region, region_name, region_europe,
+		year, numeric_value, vacc_rate_pct,
+		tooltip1, tooltip2,
+		global, worldbankincomegroup, everything())
+
+
+```
+
+```{r prompt24_25_dataload}
+#| message: false
+#| echo: false
+#| include: false
+#| warning: false 
+#| error: false
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(rgho) # gets WHO data
+library(ggiraph) # for interactive plots
+library(ggtext) # enhancements for text in ggplot
+library(ggthemes) # more themes and colour palettes
+library(scales) # help with axis & data labels
+
+source("~/Data/r/basic functions.R")
+
+## quietly loads RDS already created
+measles <- 
+	readRDS("~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/measles.Rda") 
+
+
+```
+
+Yes, interactive plots again.
+
+This is the perfect situation for the `ggiraph` package for interactive charts. We already created tooltips with country and region name, year and vaccination rates, and we'll add a highlight feature to grey-out the lines not being hovered over.
+
+Let's start with a chart showing the vaccination rates by region.
+
+```{r prompt24_25_2}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: false
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true 
+#| code-summary: "Show code for making the chart by region"
+
+# create plot object
+plot_region <-
+	measles %>%
+	filter(data_level == "region") %>%
+	ggplot(aes(
+		x = year, y = vacc_rate_pct, col = region_name, data_id = region_name)) +
+	geom_line_interactive(linewidth = 1) +
+	geom_point_interactive(
+		aes(tooltip = tooltip1),
+		size = 2,
+		stroke = 1.5) +
+	scale_color_brewer(palette = "Set3") +
+	scale_x_continuous(breaks = c(2000, 2005, 2010, 2015, 2020, 2023)) +
+	scale_y_continuous(
+		limits = c(0,1),
+		labels = label_percent(),
+		breaks = pretty_breaks()) +
+	labs(x = "", y = "",
+		title = "Measles vaccine 2nd dose, percent covered by local age recomendation. By global region.",
+		subtitle = "*Hover over dots to highlight region line and show year & pct vaccinated.*",
+		caption = "*Data from World Health Organization, MCV2 Indicator*") +
+	theme(
+		plot.title = element_markdown(size = 13),
+		plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		legend.position = "bottom", legend.justification = "left",
+		legend.spacing.x = unit(0, 'cm'),
+		legend.key.width = unit(1, 'cm'), legend.margin=margin(-10, 0, 0, 0),
+		legend.title = element_text(size = 8), legend.text = element_text(size = 8),
+		panel.background = element_rect(fill = "#F2DFCE"),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+	guides(col = guide_legend(
+		label.position = "bottom", nrow = 1,
+		title = "Region", title.position = "top"))
+
+girafe(
+	ggobj = plot_region,
+	options = list(
+		opts_hover(css = ''), ## CSS code of line we're hovering over
+		opts_hover_inv(css = "opacity:0.1;"), ## CSS code of all other lines
+		opts_sizing(rescale = FALSE), ## Fixes sizes to dimensions below
+		opts_tooltip(
+			opacity = 0.8, #opacity of the background box
+			css = "background-color:#4c6061; color:white;")),
+	height_svg = 5,
+	width_svg = 8)
+
+```
+
+So what about those three regions that start at zero and then quickly ramp up? I'm guessing there's something going on with data collection, imputing missing values, and creating weighted averages. I did read the metadata section on the indicator page and skimmed through the complete data document, but didn't get a ton of clarity on how to evaluate those results from the early 2000s. I'm leaving them in, but be careful drawing too much inference.
+
+The plan was next to do charts for each major global region, faceted out by sub-regions. But just doing Europe took a lot of time with trial and iteration, so I stopped after Europe.
+
+What made the Euro chart complicated was getting the lines color separated enough to stand out. I used the [`ggthemes` tableau palettes](https://jrnold.github.io/ggthemes/index.html) to help a bit with color-blindness accessibility. I don't know that I fully solved the problem, or even if facted line charts was the best plan.
+
+The first thing I did was create a manual color scale, matching countries to colors. I did this by arraying countries within their Euro regions and then cycling though a color list of 10. Southern Europe was the only one where a color repeated, so I added red for Spain.
+
+Making the country-values object did take some trial and error; not just avoiding repetition within region but trying to avoid having colors too close in hue/saturation next to each other. There are times when data visualization really is a design task even more than an analytical task.
+
+```{r prompt24_25_3}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: false
+#| eval: true
+#| code-overflow: scroll
+#| code-fold: true 
+#| code-summary: "Show code for making the euro chart"
+
+# create custom color scale
+color_europe <-
+	c(
+		"Belarus" = "#4E79A7", "Bulgaria" = "#F28E2B", "Czechia" = "#59A14F", "Hungary" = "#FF9D9A",
+		"Moldova" = "#B07AA1", "Poland" = "#9D7660", "Romania" = "#499894", "Russian Federation" = "#F1CE63",
+		"Slovakia" = "#A0CBE8", "Ukraine" = "#FFBE7D", "Denmark" = "#B6992D", "Estonia" = "#86BCB6",
+		"Finland" = "#D4A6C8", "Iceland" = "#4E79A7", "Latvia" = "#F28E2B", "Lithuania" = "#59A14F",
+		"Norway" = "#FF9D9A", "Sweden" = "#B07AA1", "United Kingdom" = "#9D7660", "Albania" = "#499894",
+		"Andorra" = "#F1CE63", "Bosnia and Herzegovina" = "#A0CBE8", "Croatia" = "#FFBE7D", "Greece" = "#B6992D",
+		"Italy" = "#86BCB6", "Malta" = "#D4A6C8", "Montenegro" = "#4E79A7", "North Macedonia" = "#F28E2B",
+		"Portugal" = "#59A14F", "San Marino" = "#FF9D9A", "Serbia" = "#B07AA1", "Slovenia" = "#9D7660",
+		"Spain" = "#E15759", "Austria" = "#499894", "Belgium" = "#F1CE63", "France" = "#A0CBE8",
+		"Germany" = "#FFBE7D", "Luxembourg" = "#B6992D", "Monaco" = "#86BCB6", "Netherlands" = "#D4A6C8",
+		"Switzerland" = "#4E79A7")
+
+# create plot object
+plot_europe <-
+	measles %>%
+	filter(data_level == "country") %>%
+	filter(!region_europe == "Not Europe") %>%
+#	filter(country_name == "Denmark") %>%
+	 # select(year, numeric_value, vacc_rate_pct, region_europe, country_name) %>%
+	 # 	view()
+	ggplot(aes(
+		x = year, y = vacc_rate_pct, col = country_name, data_id = country_name)) +
+	geom_line_interactive(linewidth = 1) +
+	geom_point_interactive(
+		aes(tooltip = tooltip2),
+		size = 1.5,
+		stroke = 1.5) +
+#	scale_color_tableau(palette = "Tableau 20", type = "regular") +
+		scale_color_manual(values = color_europe) +
+		scale_x_continuous(breaks = c(2000, 2005, 2010, 2015, 2020, 2023)) +
+	scale_y_continuous(
+		limits = c(0,1),
+		labels = label_percent(),
+		breaks = pretty_breaks()) +
+	facet_wrap(~ region_europe, scales = "free_x") +
+#	theme(legend.position = "none") +
+	labs(x = "", y = "",
+		title = "Measles vaccine 2nd dose, percent covered by local age recomendation. By Euro regions.",
+		subtitle = "*Hover over dots to highlight country line and show country name, year & pct vaccinated.*",
+		caption = "*Data from World Health Organization, MCV2 Indicator. Euro regions per UN GeoSchema*") +
+	#	theme_minimal() +
+	theme(
+		plot.title = element_markdown(size = 13),
+		plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		legend.position = "none",
+		# legend.justification = "left",
+		# legend.spacing.x = unit(0, 'cm'),
+		# legend.key.width = unit(1, 'cm'), legend.margin=margin(-10, 0, 0, 0),
+		# legend.title = element_text(size = 8), legend.text = element_text(size = 8),
+		#panel.background = element_rect(fill = "#F2DFCE"),
+		panel.background = element_rect(fill = "white", color = "grey"),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+
+# crate interactive object of plot
+girafe(
+	ggobj = plot_europe,
+	options = list(
+		opts_hover(css = ''), ## CSS code of line we're hovering over
+		opts_hover_inv(css = "opacity:0.1;"), ## CSS code of all other lines
+		opts_sizing(rescale = FALSE), ## Fixes sizes to dimensions below
+		opts_tooltip(
+			opacity = 0.8, #opacity of the background box
+			css = "background-color:#4c6061; color:white;")),
+	height_svg = 7,
+	width_svg = 8)
+
+
+```
+
+We see most countries are clustered in the 80% - 100% area. There's some weird data points, like Iceland dropping to 10% in 2021. That's still peak COVID time, so maybe fewer kids got a 2nd measles vaccine? Or just a data anomaly?
+
+I'll stop here, as I think I've proven the concept and want to move on to the next prompt. There are certainly things I'd do differently in terms of design if this were a final project for a report or dashboard. More care to assigning colors to countries, refining plot themes, maybe more sub-regions with fewer countries, some other visual tweaks.
+
+Oh, in case you were wondering, in the US the rates were high 80s in the early 2000s and in 2023 was up to 95. Who knows what it will be in 3 or 4 years time?
+
+*created and posted April 26, 2025*
