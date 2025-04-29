@@ -2961,6 +2961,261 @@ Perhaps a deeper dive project after the chart challenge is over.
 
 *created and posted April 22, 2025*
 
+## Prompts #21 & 22 - Fossils & Stars {#prompts21and22}
+
+Filling in the gaps with this late and out of order post where I a) combine two prompts, b) perhaps take a few liberties with the themes and c) keep it super simple - a table and two line graphs.
+
+I won't lie, I'm perhaps losing some steam on the entire project. It's been an intense few weeks of work. So kind of phoning this one in. Overall I'm happy with the charts I've produced and I think there's good stuff here. I've certainly worked hard on most of the prompts. Just not so much this one.
+
+Anyway, I decided to interpret fossils and stars through the lens of research areas and used government appropriations to research areas for the data. Specifically table "FOUBUD5: Central Government appropriations for R&D by socio-economic objectives and type of appropriation". Amounts are in Danish kroner, fixed to 2024 amounts.
+
+To fulfill the fossils and stars prompts I took a few of the research areas and arbitrarily called them "fossil" because they were somehow Earth related and "stars" because they were space related.
+
+The fossil group is:
+
+-   Agriculture, forestry, hunting and construction
+-   Mining, trade and industry, building and construction and services
+-   Production and distribution of energy
+
+Stars is:
+
+-   Exploration and exploitation of Earth and atmosphere
+-   Space research
+
+So first we get the data and clean it up a bit.
+
+```{r prompt21_22_1}
+#| warning: false 
+#| message: false 
+#| error: false 
+#| echo: true 
+#| eval: false 
+#| code-overflow: scroll 
+#| code-fold: true 
+#| code-summary: "Show code for getting and cleaning data"
+
+library(tidyverse) # to do tidyverse things
+library(tidylog) # to get a log of what's happening to the data
+library(janitor) # tools for data cleaning
+library(tidyverse) # to do tidyverse things
+library(danstat) # package to get Danish statistics via api
+library(gt) # for making tables
+library(gtExtras) # extra functions for gt
+library(scales) # helps with labeling scales and text
+library(ggtext)
+
+# some custom functions
+source("~/Data/r/basic functions.R")
+
+# FOUBUD5: Central Government appropriations for R&D by socio-economic objectives and type of appropriation; fixed prices. DKK million
+# Unit : m DKK (fixed prices)
+table_meta <- danstat::get_table_metadata(table_id = "foubud5", variables_only = TRUE)
+table_meta_dk <- danstat::get_table_metadata(table_id = "foubud5", variables_only = TRUE, language = "da")
+
+# create variable list using the ID value in the variable
+variables_ed <- list(
+	list(code = "forskformaal", values = "*"),
+		#values = c("010", "020", "030", "130", "150", "200")),
+	list(code = "bevilling1", values = 1),
+	list(code = "tid", values = "*"))
+
+funding1 <- get_data("foubud5", variables_ed, language = "en") %>%
+	as_tibble() %>%
+	clean_names()
+
+# dataframe for total funding
+funding_tot <- funding1 %>%
+	select(-bevilling1) %>%
+	filter(forskformaal == "Total") %>%
+	mutate(dkk_mill = as.numeric(indhold)) %>%
+	mutate(year_pct_chg = pctchange(dkk_mill)) %>%
+	mutate(objective_pct_tot = 1) %>%
+	select(objective = forskformaal, year = tid, objective_sum = dkk_mill, objective_pct_tot)
+
+# create the main analytical df
+funding <- funding1 %>%
+	select(-bevilling1) %>%
+	filter(!forskformaal == "Total") %>%
+	filter(!forskformaal == "General advancement of knowledge") %>%
+	mutate(dkk_mill = as.numeric(indhold)) %>%
+	mutate(objective = case_when(
+		forskformaal == "Agriculture, forestry, hunting and construction" ~ "Fossils",
+		forskformaal ==
+			"Mining, trade and industry, building and construction and services" ~ "Fossils",
+		forskformaal == "Production and distribution of energy" ~ "Fossils",
+		forskformaal == "Exploration and exploitation of Earth and atmosphere" ~ "Stars",
+		forskformaal == "Space research" ~ "Stars",
+		TRUE ~ "Other"))%>%
+	group_by(objective, tid) %>%
+	mutate(objective_sum = sum(dkk_mill)) %>%
+	ungroup() %>%
+	distinct(objective, tid, .keep_all = TRUE) %>%
+	select(objective, year = tid, objective_sum) %>%
+	group_by(year) %>%
+	mutate(objective_pct_tot = objective_sum/sum(objective_sum)) %>%
+	ungroup() %>%
+	# add the total fudning df
+	rbind(funding_tot)%>%
+	group_by(objective) %>%
+	mutate(objective_pctchg = pctchange(objective_sum))
+
+```
+
+```{r prompt21_22_dataload}
+#| message: false
+#| echo: false
+#| include: false
+#| warning: false 
+#| error: false
+
+library(tidyverse)
+library(tidylog) 
+library(janitor) 
+library(scales) 
+library(gt)
+library(gtExtras)
+
+source("~/Data/r/basic functions.R")
+
+## quietly loads RDS already created
+funding <- 
+	readRDS("~/Data/greg_dubrow_io/posts/30-day-chart-challenge-2025/data/prompt2122_funding.Rda") 
+
+```
+
+First up is a brief overview of the current funding levels for the fossil and star groups and all government funding. I have come to like this table that the online publication The Athletic uses:
+
+![](images/athletic_chart_example.png){width="70%" fig-alt="table from The Athletic with data columns and sparklines"}
+
+I love the sparklines they use, but couldn't figure out how to add them to `gt`. Thankfully Thomas Mock's [`gtExtras` package](https://jthomasmock.github.io/gtExtras/) has a function for that! I couldn't get it to look exactly like The Athletic's sparkline, but no matter.
+
+So first let's make that table. The trick here is to first create a dataframe for the sparkline part, then merge that in with the code to make the main table. The sparkline df needs to have the data in a list...that's what the `summarise(fund_df = list(objective_sum), .groups = "drop")` call does. Even cooler is that `gtExtras` comes with some built-in themes, including a New York times theme. So we'll use that.
+
+```{r prompt21_22_2}
+#| warning: false 
+#| message: false 
+#| error: false 
+#| echo: true 
+#| eval: true
+#| code-overflow: scroll 
+#| code-fold: true 
+#| code-summary: "Show code for making the table"
+
+# dataframe for sparklines
+spark_df <-
+	funding %>%
+	filter(!objective == "Other") %>%
+	select(objective, year, objective_sum) %>%
+	group_by(objective) %>%
+	summarise(fund_df = list(objective_sum), .groups = "drop")
+
+# making the table
+funding %>%
+	filter(!objective == "Other") %>%
+	filter(year %in% c(2023, 2024)) %>%
+	select(objective, year, objective_sum) %>%
+	pivot_wider(names_from = year, values_from = objective_sum) %>%
+	mutate(pct_change = (`2024` - `2023`) / `2023`) %>%
+	ungroup() %>%
+	# merge the sparkline df
+	merge(spark_df) %>%
+	mutate(objective = ifelse(objective == "Total", "All R&D", objective)) %>%
+	# make and format the table
+	gt() %>%
+	gt_plt_sparkline(fund_df, type = "shaded") %>%
+	cols_label(
+		objective = (""),
+		pct_change = ("% change"),
+		fund_df = ("Trend 2007 - 2024")) %>%
+	fmt_number(columns = c(`2023`, `2024`), decimals = 0) %>%
+	fmt_percent(columns = pct_change, decimals = 1) %>%
+	tab_header(
+		title = "Government funding for R&D for Fossils & Stars",
+		subtitle = md("*In millions of Danish kroner (DKK), constant 2024 amounts.*")) %>%
+	tab_source_note(
+		(md("*Data from Danmarks Statistik table FOUBUD5 via danstat package* "))) %>%
+	gt_theme_nytimes()
+
+```
+
+Ok, now for two line graphs. The first shows funding in Danish kroner for the 2007-2024 period, and the next shows the year-over-year percent change.
+
+```{r prompt21_22_3}
+#| warning: false
+#| message: false 
+#| error: false
+#| echo: true
+#| eval: false
+#| code-overflow: scroll
+#| code-fold: true
+#| code-summary: "Show code for making the charts"
+
+# total funding
+funding %>%
+	filter(objective %in% c("Fossils", "Stars")) %>%
+	filter(year < 2025) %>%
+	ggplot(aes(x = year, y = objective_sum, color = objective)) +
+	geom_line()+
+	geom_line(size = 1.5) +
+	scale_y_continuous(limits = c(0, 4500), breaks = seq(0, 4500, by = 500),
+		labels = label_comma()) +
+	scale_x_continuous(breaks = c(2007, 2010, 2015, 2020, 2024)) +
+	labs(x = "", y = "",
+		title = "More funding for fossil group than stars group. Groups are made up for the purposes of the chart prompt.",
+		subtitle = "*Government budget allocations for R&D, 2007 to 2024. In millions of Danish kroner, constant 2024 amounts.*",
+		caption = "*Data from Danmarks Statistik table FOUBUD5 via danstat package*") +
+	theme_minimal() +
+	theme(
+		plot.title = element_markdown(size = 14), plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		axis.text.x = element_text(size = 7, color = "grey50"),
+		axis.text.y = element_text(size = 7, color = "grey50"),
+		strip.background.x = element_rect(fill = "grey90", color = "grey95"),
+		legend.position = "bottom", legend.justification = "left",
+		legend.spacing.x = unit(0, 'cm'),
+		legend.key.width = unit(1, 'cm'), legend.margin=margin(-12, 0, 0, 0),
+		legend.title = element_blank(), legend.text = element_text(size = 8),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+	guides(fill = guide_legend(label.position = "bottom", nrow = 1, reverse=T,
+		title.position = "none", title = ""))
+
+
+funding %>%
+	filter(objective %in% c("Fossils", "Stars")) %>%
+	filter(year < 2025) %>%
+	ggplot(aes(x = year, y = objective_pctchg, color = objective)) +
+	geom_line(size = 1.5) +
+	scale_y_continuous(limits = c(-.6, .6), labels = label_percent()) +
+	scale_x_continuous(breaks = c(2007, 2010, 2015, 2020, 2024)) +
+	labs(x = "", y = "",
+		title = "Year-over-year funding for these arbitrarily grouped research areas are kind of volatile.",
+		caption = "*Data from Danmarks Statistik table FOUBUD5 via danstat package*") +
+	theme_minimal() +
+	theme(
+		plot.title = element_markdown(size = 14), plot.subtitle = element_markdown(size = 11),
+		plot.caption = element_markdown(size = 8),
+		axis.text.x = element_text(size = 7, color = "grey50"),
+		axis.text.y = element_text(size = 7, color = "grey50"),
+		strip.background.x = element_rect(fill = "grey90", color = "grey95"),
+		legend.position = "bottom", legend.justification = "left",
+		legend.spacing.x = unit(0, 'cm'),
+		legend.key.width = unit(1, 'cm'), legend.margin=margin(-12, 0, 0, 0),
+		legend.title = element_blank(), legend.text = element_text(size = 8),
+		panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+	guides(fill = guide_legend(label.position = "bottom", nrow = 1, reverse=T,
+		title.position = "none", title = ""))
+
+
+```
+
+![](images/prompt21_22_1_2025.jpg){fig-alt="line graph with total funding for research areas in made up groups"}
+
+![](images/prompt21_22_2_2025.jpg){fig-alt="line graph with year to year percent change in total funding for research areas in made up groups"}
+
+Not going to add a ton of commentary here, as my fossils and stars categories were made up. This was more about the exercise of the `gt` table and nicely visualizing the percent changes for the two categories.
+
+*created and posted April 29, 2025*
+
 ## Prompt #23 - Log Scale {#prompt23}
 
 For this prompt I'm revisiting [prompt 3, circular](https://www.gregdubrow.io/posts/30-day-chart-challenge-2025/#prompt3), to once again look at earnings. I'll expand on that analysis to look across time, since the week's theme is time series. I'll also compare by sex and dig a bit deeper into education level to disaggregate by field or discipline where available.
