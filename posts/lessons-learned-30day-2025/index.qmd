@@ -165,6 +165,10 @@ Best of all, I got back into the habit of working with data. I hadn't done a new
 
 -   Challenge yourself - maybe identify one or two things you want to get better at. For instance, mine was functional programming.
 
+-   Contributing to things like the challenge is a good way to help build and sustain the data analysis and visualization community. Your craft and skill improves from doing the work, you pick up tips from what others share, and you hopefully help others learn.
+
+-   There are other contributions opportunities - [Tidy Tuesday](https://github.com/rfordatascience/tidytuesday), providing feedback on social media, answering questions on Stack Overflow or Reddit, going to and presenting at meetups, blogs, in-house lunch-and-learns or trainings where you work...however you can contribute, do something.
+
 ------------------------------------------------------------------------
 
 That's it for the 2025 challenge. I hope to redo a few charts and follow-up on some loose analytical threads in one-off posts. And of course finish up a few half-done posts.
